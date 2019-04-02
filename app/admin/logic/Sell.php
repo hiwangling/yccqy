@@ -441,6 +441,9 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
             }
         }
         //////////服务收费
+                      echo "<pre>";
+        print_r($data['Serviceinfo']);
+        echo "</pre>";
         foreach ($Serviceinfoitem as $key => $value) {
             $titleid = $value["id"];
             if (isset($data['Serviceinfo'][$titleid])) {
@@ -449,6 +452,7 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
                 $exechrm = $value["manager"];
                 $deptid = $value["deptid"];
                  $price=$price+$realprice;
+                  print_r($realprice);
                 $this->logicFinance->Finance($data["orderNO"], $data["cid"], $sellId, $data["paytype"], $data["financetype"], $data["orderstatus"], $realprice, $realprice, 1, $realprice, $title, $titleid, $data["isvoice"], 2);
                 $this->logicServicebill->add_Servicebill($data["orderNO"], $data["cid"], $sellId, $titleid, $title, $data["buyer"], $data['phone'], $exechrm, $deptid);
             }

@@ -568,7 +568,7 @@ module.exports = {
           });
         v == 'add' ? this.buryinfo.push(this.sellEditForm) : this.update_sell(this.sellEditForm)    //增加or修改
         }else{
-        this.$message.error('修改失败');
+        this.$message.error('操作失败');
         }
       })
     },
@@ -586,6 +586,7 @@ module.exports = {
   sell_info(){
       this.check = true
       this.dialogSell = true
+      this.sellEditForm = Object.assign({}, this.sellEditForm)
       Object.keys(this.sellEditForm).forEach(key => this.sellEditForm[key]= '');  //清空对象
     },
 

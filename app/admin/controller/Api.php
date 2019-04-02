@@ -471,6 +471,7 @@ class Api extends AdminBase
         $sellwhere["financetype"] = 3;
         $sellinfo = $this->logicSell->getsellinfo_ajax($sellwhere, FALSE);
         //////////
+
         // 收费项目
         $chargeitem = $this->logicChargeitem->getChargeitemStat_value(3, 0);
         ////////服务项目///////
@@ -521,7 +522,7 @@ class Api extends AdminBase
         $data= array(
           'chargeitem' => array_merge($chargeitem,$Serviceinfoitem),
           "bury" => $Buryinfo,
-          "orderNO" => $orderNO = !empty($linkmanlist) ? $linkmanlist[0]['orderNO'] : '',
+          "orderNO" => $orderNO = !empty($bury) ? $bury[0]['orderNO'] : '',
           "linkmanlist" => $linkmanlist,
         );
 
@@ -535,21 +536,26 @@ class Api extends AdminBase
             exit(json_encode($result));
         }
 
-       $chargeitem =array();
-       $Serviceinfo = array();
+       $chargeitem_pram =array();
+       $Serviceinfo_parm = array();
        $fklx= array();
        $fklxval = array();
 
         foreach ($this->param['chargeitemId'] as $key => $value) {
-             $chargeitem[$value] = $this->param['chargeitem'][$key];
+
+             $chargeitem_pram[$value] = $this->param['chargeitem'][$key];
         }
        foreach ($this->param['serviceinfoId'] as $key => $value) {
-             $Serviceinfo[$value] = $this->param['Serviceinfo'][$key];
+
+             $Serviceinfo_parm[$value] = $this->param['Serviceinfo'][$key];
         }
+ 
        foreach ($this->param['fklx'] as $key => $value) {
            array_push($fklx,$this->param['fklx'][$key]['fklx']);
            array_push($fklxval,$this->param['fklx'][$key]['fklxval']);
        }
+       $this->param['chargeitem'] = $chargeitem_pram;
+       $this->param['Serviceinfo'] = $Serviceinfo_parm;
        $this->param['fklx'] = array_filter($fklx);
        $this->param['fklxval'] = array_filter($fklxval);
 
@@ -578,6 +584,11 @@ class Api extends AdminBase
         $member = session('member_info');
         $this->param['seller'] = $member['id'];
         $this->param['sellname'] = $member['nickname'];
+       unset( $this->param['serviceinfoId']);
+       unset( $this->param['chargeitemId']);
+        echo "<pre>";
+        print_r($this->param['Serviceinfo']);
+        echo "</pre>";
         if (empty($this->param['id'])) {
            $result = $this->logicSell->Sell_add_submit($this->param, $chargeitemlist, $Serviceinfoitem, 3); ////增加
         } else {
