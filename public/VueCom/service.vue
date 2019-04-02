@@ -124,7 +124,7 @@
  <el-col :md="14">
       <el-form-item label="支付方式" >
       <div v-for="item in fklx" :key="item.value" style="width: 170px;float: left;">
-        <el-checkbox v-model="item.fklx" :label="item.text" class="pay"></el-checkbox>
+        <el-checkbox v-model="item.fklx" :label="item.text" class="pay" @change="fklxvalChange"></el-checkbox>
         <el-input v-model="item.fklxval" style="width:80px;" v-if="item.fklx == true"></el-input>
       </div>
     </el-form-item>
@@ -195,6 +195,13 @@
    
      },
      methods: {
+    fklxvalChange:function(val){
+       this.fklx.find((item)=>{
+           if(item.fklx === false){
+               item.fklxval = ''
+           }
+       })
+    },
      Servicehadd: function(){
        this.ServicedialogVisible = true;
      },
