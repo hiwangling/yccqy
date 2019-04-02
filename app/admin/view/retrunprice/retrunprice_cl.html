@@ -1,0 +1,107 @@
+<style>
+  .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 5px;
+    
+}  
+</style>
+
+<section>
+          <div class="row">
+          <div class="nav-tabs-custom">
+          
+            <div class="tab-content">
+            
+                  <div class="row">
+                      <div class="col-md-6" style=" border-right:  1px #000 dashed;">
+                                
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3 class="from_title-header">
+                                            <i class="fa fa-globe"></i>墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name}
+                                        </h3>
+                                    </div>
+  </div>        
+                         <div class="panel panel-default">
+    <div class="panel-heading">单据作废申请</div>
+      <ul class="list-group">
+          <li class="list-group-item">单据号:{$sellinfo.orderNO|default=''} </li>
+          <li class="list-group-item">类型:{$sellinfo.financetype|getfinancetype} </li>
+          <li class="list-group-item">申请人:{$Retrunpricelist.operatername|default=''} </li>
+        <li class="list-group-item"> 金额：{$Retrunpricelist.returnprice }  </li>
+        <li class="list-group-item">申请日期:{$Retrunpricelist.create_time}</li>
+         <li class="list-group-item">申请原因：{$Retrunpricelist.returndesc}</li>
+         <li class="list-group-item">处理状态：<b style=" color: red;">{$Retrunpricelist.isok|getisok}</b></li>
+    </ul>
+     
+</div>
+         
+                                   
+                             
+                                
+                            </div>
+   <form  id="formreserve">
+                        <input type="hidden" name="id" value="{$Retrunpricelist.id}"/>   
+                      
+                      
+                <div class="col-md-6"  >             
+         <div class="panel panel-success">
+    <div class="panel-heading">处理意见</div>
+       
+    <div class="panel-body">
+        <p>
+                <textarea class="form-control" name="vcnote" id="vcnote" rows="4" placeholder="处理意见 ">{$Retrunpricelist.vcnote|default=''}</textarea>  
+                               
+        </p>
+    </div> 
+</div>
+                   
+              </div> </form>                 
+    </div> 
+
+  <div class="modal-footer"  >
+          {if condition="$Retrunpricelist['isok'] eq 0"}
+                             <a   href="javascript:" onclick="Retrunprice_cl_ajax(2);"  type="button"  class="btn btn-default"><span class="ladda-label">
+                                    <i class="fa fa-check"></i>同意
+                                </span>
+                            </a>
+                            
+                           <a   href="javascript:" onclick="Retrunprice_cl_ajax(1);"  type="button"  class="btn btn-default"><span class="ladda-label">
+                                    <i class="fa fa-check"></i>不同意
+                                </span>
+                            </a>
+       {/if}
+                            <a type="button" class="btn btn-default" data-dismiss="modal"> 
+                                <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                    </form>
+                </div>
+                      
+                </div>          
+              
+            </div>
+            <!-- /.tab-content -->
+   
+          <!-- /.nav-tabs-custom -->
+       </section>
+ 
+ <script>
+ 
+
+ function Retrunprice_cl_ajax(type) {
+        url = "{:url('Retrunprice_cl_ajax')}";
+        sj = Math.random(1000);
+        data = $("#formreserve").serialize() + "&sj=" + sj+"&type="+type;
+        $.post(url, data, function(result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  alert(infodate.msg);
+                   location.reload();    
+            }
+            else
+            {
+              toast.error(infodate.msg);
+          }
+             $('#myModa2').modal('hide'); 
+          
+        });
+    }
+ </script>

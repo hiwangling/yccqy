@@ -1,0 +1,104 @@
+<style>
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 5px;
+
+    }  
+    .table_zhj > tbody > tr > td, .table-bordered > tfoot > tr > td {
+        border: 1px solid #0d0c0c;
+    }
+</style>
+
+<section>
+    <div class="row">
+        <div class="nav-tabs-custom">
+   <form  id="formreserve">
+         
+                     <div class="row">
+                            <div class="col-xs-12">
+                                <h3 class="from_title-header">
+                                    <i class="fa fa-globe"></i>墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name}
+                                     <span style=" margin-left: 50px"> 
+                                               <select class="form-control_zhj2 selectval" onchange="split()">
+                                                     <option value="">选择迁墓人</option>
+                                                    {foreach name="linkmanlist" item="vo"   }
+                                                    <option value="{$vo.linkname}|{$vo.phone}}">{$vo.linkname}|{$vo.phone}} </option>
+                                                    {/foreach}</select>
+                                            </span>   
+                                </h3>
+                            </div>
+                        </div>        
+                        <div class="row">
+                        <div class="col-xs-12">
+                            <div class="panel panel-success">
+
+                        
+                             <table class="table table_zhj">
+                                  <tr>
+                                      <td>迁墓人:</td>
+                                      <td style=""><input   name="buyer" value="{$moveinfo.buyer|default=''}"  class="form-control_zhj selval"   type="text"> </td>
+                                        <td>电话:</td>
+                                         <td><input name="phone"  value="{$moveinfo.phone|default=''}"  class="form-control_zhj  selval"   type="text"></td>
+                                          <td>迁墓日期</td>
+                                           <td><input   name="movedate"    value="{$moveinfo.movedate}"  class="form-control_zhj date "   type="text"  ></td>
+                                  </tr>
+                              </table>
+                                  
+                                <div class="panel-body">
+                                    <textarea class="form-control" name="vcdesc" id="vcdesc" rows="3" placeholder="迁墓说明">{$moveinfo.vcdesc|default=''}</textarea>  
+                                 </div>
+                            </div> 
+
+
+                        </div>
+                    </div>     
+
+
+
+             
+                <input type="hidden" name="cid" value="{$info.id}"/>   
+                    <input type="hidden" name="id" value="{$moveinfo.id|default='0'}"/> 
+                   
+                 
+         
+
+            <div class="modal-footer"  >
+                <a   href="javascript:" onclick="move_submit_ajax();"  type="button"  class="btn btn-default"><span class="ladda-label">
+                        <i class="fa fa-check"></i>提交 
+                    </span>
+                </a>
+  <a type="button" class="btn btn-default" data-dismiss="modal"> 
+                    <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                </form>
+            </div>
+
+         
+
+    </div>
+    <!-- /.tab-content -->
+
+    <!-- /.nav-tabs-custom -->
+</section>
+<script>
+ $('.date').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+
+   
+   function ischeck(param){
+      isshow= $(param).attr('class')
+      if($(param).is(':checked')){
+          $('.'+isshow).eq(1).show()
+        $('.'+isshow).eq(2).show()
+      }else{
+        $('.yhShow_').val(1)
+        yxblur()
+        $('.'+isshow).eq(1).hide()
+        $('.'+isshow).eq(2).hide()
+      }
+  }  
+  
+ </script>

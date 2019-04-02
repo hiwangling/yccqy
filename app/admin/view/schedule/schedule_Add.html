@@ -7,34 +7,9 @@
 <form  id="formreserve">
 <section>
       <!-- title row -->
-      <div class="row">
-        <div class="col-xs-12">
-          <h3 class="from_title-header">
-            <i class="fa fa-globe"></i>墓穴信息
-           </h3>
-        </div>
-        <!-- /.col -->
-      </div>
+      
       <!-- info row -->
-      <div class="row invoice-info">
-        <div class="col-xs-12 table-responsive">
-          <table class="table table_zhj">
-           <tbody>
-            <tr>
-              <td>墓穴：{$info.name}</td>
-              <td>墓园：{$info.gardename}</td>
-              <td>墓区：{$info.areaname}</td>
-             </tr>
-            <tr>
-              <td>穴位：{$info.typename}</td>
-              <td>风格：{$info.stylename}</td>
-              <td>朝向：{$info.orientation}</td>
-             </tr>
-             </tbody>
-          </table>
-        </div>
-       
-      </div>
+    
       <!-- /.row -->
 
       <!-- Table row -->
@@ -104,10 +79,7 @@
           {empty name="$sellinfo.id"}    <i class="fa fa-check"></i> 增加{else /}
            <i class="fa fa-edit"></i> 修改{/empty}
             </span></a>
-            {notempty name="$sellinfo['id']"}
-               <a   href="javascript:" onclick="schedule_delete({$sellinfo['id']|default=0});"  type="button"  class="btn btn-default">  <span class="ladda-label"> <i class="fa fa-trash"></i>撤销预订
-              </span></a>
-             {/notempty}
+             
         <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
       
       </div>
@@ -129,47 +101,5 @@
         minView: 'month',
         language: 'zh-CN' //语言
     });
-    
   
-function schedule_submit() {
-          url = "{:url('Schedule/Schedule_submit_ajax')}";
-        sj = Math.random(1000);
-         data = $("#formreserve").serialize() + "&sj=" + sj
-       $.post(url, data, function (result) {
-            infodate = JSON.parse(result);
-            if (infodate.code == 0) {
-                  toast.success("操作成功！");
-                $('#myModal').modal('hide');
-                 location.reload();   
-            } else
-            {
-                  toast.error(infodate.msg);
-            }
-           
-        });
-}
-
-function schedule_delete(id)
-{
-     var info=confirm("您确定要撤销该预订吗？");
-    if (info==true){
-         url = "{:url('Schedule/Schedule_delete_ajax')}";
-        sj = Math.random(1000);
-         data ="id=" +id+ "&sj=" + sj
-       $.post(url, data, function (result) {
-            infodate = JSON.parse(result);
-            if (infodate.code == 0) {
-                  toast.success("预订撤销操作成功！");
-                  $('#myModal').modal('hide');
-                 location.reload();   
-            } else
-            {
-                  toast.error(infodate.msg);
-            }
-           
-        });
-    }
-     
-     
-}
  </script>

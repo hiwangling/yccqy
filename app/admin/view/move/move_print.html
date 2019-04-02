@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$comapnyinfo[1]}-打印</title>
+  <script type="text/javascript" src="__STATIC__/module/common/jquery/jquery-2.2.3.min.js"></script>
+ <script src="__STATIC__/module/admin/js/jquery.PrintArea.min.js"></script>
+ 
+
+</head>
+
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="right"><img src="__STATIC__/module/admin/img/print.png"  border="0"  id="btnPrint3"/>&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+</table>
+<div id="printArea3">
+<style>
+.b
+{
+	font-family: "微软雅黑";
+	font-size: 26px;
+	line-height: 40px;
+	height: 40px;
+	width: 80px;
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-color: #333333;
+	border-top-style: none;
+	border-right-style: none;
+	border-left-style: none;
+	text-align: center;
+}
+.c
+{
+	font-family: "微软雅黑";
+	font-size: 26px;
+	line-height: 40px;
+	height: 40px;
+	width: 150px;
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-color: #333333;
+	border-top-style: none;
+	border-right-style: none;
+	border-left-style: none;
+	text-align: center;
+}
+</style>
+		<table width="1000" border="0" align="center" cellpadding="0" cellspacing="0" style="border: 2px solid #333333;">
+          <tr>
+            <td height="80" align="right" valign="bottom"><strong style="font-size:28px;">编号:<font color="#FF0000">CQY{$Moveinfo.id}</font>&nbsp;&nbsp;&nbsp;&nbsp;</strong></td>
+          </tr>
+          <tr>
+            <td height="120" align="center"><strong style="font-size:38px;">宜昌市长青树葬陵园墓穴迁出书</strong></td>
+          </tr>
+          <tr>
+            <td height="50" valign="bottom" style="font-size:26px;text-indent: 60px;"><input type="text" name="textfield23"  class="b" style="width:120px;" value="{$Buryinfoname}"/>
+              在长青园公墓
+                <input type="text" name="textfield2"  class="b" style="width:50px;" value="{$cinfo.gardename}"/>
+              区
+              <input type="text" name="textfield2"  class="b" style="width:60px;" value="{$cinfo.areaname}"/>
+              排
+              <input type="text" name="textfield2"  class="b"style="width:60px;"  value="{$cinfo.name}"/>
+              号公墓 ,经双方协商，认购人在
+            </td>
+          </tr>
+           <tr>
+            <td height="50" align="left" valign="bottom" style="font-size:26px;text-indent: 60px;"><span style="font-size:26px;">
+                <input type="text" name="textfield5"  class="c"  value="{$Moveinfo.movedate}"/>
+               </span>迁走,本迁走书一试两份，双方各执一份签字后生效。</td>
+          </tr>  
+          
+          <tr>
+            <td height="50" align="center"  style="font-size:26px;">长青园管理处经办人：<input type="text" name="textfield2"  class="b" style="width:150px;" value="{$Moveinfo.operatername}"/>联系电话：
+              <input name="textfield22" type="text"  class="b" style="width:220px;" value="{$comapnyinfo[3]}"/></td>
+          </tr>
+          <tr>
+            <td height="50" align="center"  style="font-size:26px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;迁出人签字<input type="text" name="textfield2"  class="b" style="width:150px;"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系电话：<input type="text" name="textfield22"  class="b" style="width:220px;" value="{$Moveinfo.phone}"/>
+              </td>
+          </tr>
+          <tr>
+            <td height="100" align="right" valign="middle"  style="font-size:26px;"><input type="text" name="textfield2"  class="b"value="{$rq.Y}"  />
+              年
+                <input type="text" name="textfield2"  class="b" value="{$rq.M}" />
+              月
+              <input type="text" name="textfield2"  class="b" value="{$rq.D}" />
+              日&nbsp;&nbsp;&nbsp;&nbsp;</td>
+          </tr>
+        </table>
+		</div>
+		<script>
+$("#btnPrint3").click(function(){    
+        $("#printArea3").printArea();  
+    }); 
+	 </script>
+</body>
+</html>

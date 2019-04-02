@@ -1,0 +1,46 @@
+ 
+            <table class="table table-striped table-bordered" >
+  <thead>
+    <tr>
+            <th>编号</th>
+            <th>购买人</th>
+           
+		  <th> 电话</th>
+                  <th>墓主</th>
+		  <th>办理时间</th>
+		  <th>费用</th>
+                   <th>缴费状态</th>
+                   <th>操作</th>
+    </tr>
+  </thead>
+   <tbody>
+    {notempty name='list'}
+     {volist name='list' id='vo'}
+                <tr {$vo.orderstatus|gettable_color}> 
+				   <td>{$vo.orderNO}</td>
+				   <td>{$vo.buyer}</td>
+                            
+				   <td>{$vo.phone}</td>
+                                    <td>{$vo.buryname}</td>
+				   <td>{$vo.orderbegin}</td>
+				    <td>{$vo.zj|default=0.00}</td>
+                                   <td>{$vo.orderstatus|get_paystatus}</td>
+				 
+                  <td class=" text-center">
+                   
+                 <a href="#"  onclick="buryservice_pay_ajax({$vo['id']})"> <i class="fa fa-print"></i>结算/打印</a> 
+                   &nbsp;
+                     {if condition="$vo.orderstatus eq 1"}  
+                  <a href="#"  onclick="buryservice_ajax_show({$vo['cid']},{$vo['id']})"><i class="fa fa-edit"></i> 编辑</a> 
+                    &nbsp;
+                    <a href="#"  onclick="buryservice_delete_ajax({$vo['id']})" ><i class="fa fa-remove"></i>删除</a> 
+                    {else /}
+                     <a href="#"  onclick=" Sell_bill_show_ajax({$vo['id']})" ><i class="fa fa-search"></i>查看明细</a> 
+                   {/if}   </td>
+                </tr>
+            {/volist}
+             {/notempty}
+        <tr class="odd"><td colspan="9" class="text-center" valign="top">  <a href="#" onclick="buryservice_ajax_show({$cid},0)"    class="btn"><i class="fa  fa-edit"></i>购买服务</a> </td></tr></tbody>
+  </table>
+    
+ 

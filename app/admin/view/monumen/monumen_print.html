@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE">
+<title>{$comapnyinfo[1]}-打印</title>
+<link rel="stylesheet" href="__STATIC__/module/admin/css/main.css">
+ <script type="text/javascript" src="__STATIC__/module/common/jquery/jquery-2.2.3.min.js"></script>
+ <script src="__STATIC__/module/admin/js/jquery.PrintArea.min.js"></script>
+ 
+
+</head>
+
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="right"><img src="__STATIC__/module/admin/img/print.png"  border="0"  id="btnPrint"/>&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+</table>
+<div id="printArea">
+<style type="text/css">
+body{ font-family:"微软雅黑";}
+.b
+{
+	font-family: "微软雅黑";
+	font-size: 26px;
+	line-height: 40px;
+	height: 40px;
+	width: 80px;
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-color: #333333;
+	border-top-style: none;
+	border-right-style: none;
+	border-left-style: none;
+	text-align: center;
+}
+.c
+{
+	font-family: "微软雅黑";
+	font-size: 26px;
+	line-height: 40px;
+	height: 40px;
+	width:65px;
+	border-bottom-style: none;
+	border-top-style: none;
+	border-right-style: none;
+	border-left-style: none;
+}
+</style>
+		<table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="60" colspan="2" align="right" valign="top"><strong style="font-size:28px;">No:<font color="#FF0000">{$monumeninfo.orderNO}</font></strong></td>
+  </tr>
+  <tr>
+    <td height="120" colspan="2" align="center"><strong style="font-size:48px;">{$comapnyinfo[1]}刻碑通知单</strong></td>
+  </tr>
+  <tr>
+    <td width="61" height="70" valign="bottom" style="font-size:26px;">&nbsp;</td>
+    <td width="935" valign="bottom" style="font-size:26px;">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="textfield62"  class="b"  style="width:200px;" value="{$monumeninfo.buryname}"/>
+    在长青园公墓
+        <input type="text" name="textfield6"  class="b"  style="width:60px;" value="{$cinfo.areaname}"/>
+        区
+        <input type="text" name="textfield6"  class="b" style="width:60px;" value="{$cinfo.iy}"/>
+        排
+        <input type="text" name="textfield6"  class="b" style="width:60px;" value="{$cinfo.ix}"/>
+        号认购墓穴壹处，</td>
+  </tr>
+  <tr>
+    <td height="70" valign="bottom"  style="font-size:26px;">&nbsp;</td>
+    <td height="70" valign="bottom"  style="font-size:26px;">家属已确定刻
+      <input type="text" name="textfield7"  class="b" value="{$monumeninfo.monumenstyle|getmonumenstyle}"/>
+      壹块</td>
+  </tr>
+  <tr>
+    <td height="70" valign="bottom" style="font-size:26px;">&nbsp;</td>
+    <td height="70" valign="bottom" style="font-size:26px;">家属确认无误签字:
+      <input type="text" name="textfield8"  class="b"  style="width:200px;"/></td>
+  </tr>
+  <tr>
+    <td height="50" colspan="2" align="right"  style="font-size:26px;">
+	长青园管理处经办人：
+	  <input type="text" name="textfield2"  class="c" style="width:100px;" value="{$useranme}"/></td>
+  </tr>
+  <tr>
+    <td height="50" colspan="2" align="right"  style="font-size:26px;">
+宜昌市长青树葬陵园管理处&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="150" colspan="2" align="right" valign="top"  style="font-size:26px;"><input type="text" name="textfield"  class="b" value="{$rq.Y}"/>年<input type="text" name="textfield"  class="b" value="{$rq.M}"/>月<input type="text" name="textfield"  class="b" value="{$rq.D}"/>日&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+</table>
+</div>
+
+		<script>
+
+$("#btnPrint").click(function(){    
+        $("#printArea").printArea();  
+    });  </script>
+</body>
+</html>

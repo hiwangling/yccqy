@@ -1,0 +1,190 @@
+ 
+<div class="box">
+     <div class="box-header ">
+  <div class=" form-inline search-form  ">
+        <div class="form-group">
+            <label class="zhj-form-label">关键字：</label>
+            <input name="search_data" class="form-control" value="{$formcs.search_data|default=''}" placeholder="购买人|墓穴名称|墓主名称" type="text">
+        </div>
+        <div class="form-group">
+            <label class="zhj-form-label">点灯日期:</label>
+            <input type='text' class="form-control rqinput" value="{$formcs.sbbegin|default=''}"  name="sbbegin" id="sbbegin"/>
+            到
+            <input type='text' class="form-control rqinput" value="{$formcs.sbend|default=''}"  name="sbend" id="sbend"/>
+        </div>
+
+        <div class="form-group">
+            <button type="button" id="search" url="{:url('Light/Lightlist')}" class="btn btn-default" style=" margin-bottom: 6px;"><i class="fa fa-search"></i> 查询</button>
+        </div>
+
+ </div>
+    </div>
+
+
+    
+  <div class="box-body table-responsive">
+    <table  class="table table-bordered table-hover">
+      <thead>
+      <tr>
+          <th>发票号</th>
+          <th>墓区地址</th>
+          <th>墓号</th>
+          <th>墓主名称</th>
+		  <th>购买人</th>
+		  <th>关系</th>
+		  <th>联系电话</th>
+          <th>点灯时间</th>
+
+		  <th>点灯数量</th>
+		  <th>点灯单价</th>
+          <th>状态</th>
+          <th>备注</th>
+          <th>操作</th>
+      </tr>
+      </thead>
+      
+      {notempty name='list'}
+        <tbody>
+            {volist name='list' id='vo'}
+                <tr>
+                  <td>{$vo.voiceno}</td>
+				  <td>{$vo.garden_name}/{$vo.area_name}/{$vo.c_canme}</td>
+				  <td>{$vo.cid}</td>
+                    <td>{$vo.buryname}</td>
+          <td>{$vo.buyer}</td>
+                                   <td>{$vo.relation}</td>
+				   <td>{$vo.phone}</td>
+                    <td>{$vo.lightdate}</td>
+
+
+				  <td>{$vo.amount}</td>
+
+                    <td>{$vo.price}</td>
+                    <td>{$vo.status}</td>
+                    <td>{$vo.vcnote}</td>
+
+                 
+                  <td class="col-md-3 text-center">
+                   <!--<a class="btn confirm ajax-get"  href="{:url('SaveDel', array('id' => $vo['id']))}"><i class="fa fa-book"></i> 查看</a>-->
+
+                      <a  href="#" onclick="Light({$vo.cid})" class="btn"><i class="fa fa-edit"></i> 查看</a>
+                  </td>
+                </tr>
+            {/volist}
+        </tbody>
+        {else/}
+        <tbody><tr class="odd"><td colspan="8" class="text-center" valign="top">{:config('empty_list_describe')}</td></tr></tbody>
+      {/notempty}
+    </table>
+  </div>
+
+  <div class="box-footer clearfix text-center">
+      {$list->render()}
+  </div>
+    <div class="modal fade" id="myModal"   role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  >
+        <div class="modal-dialog modal-dialog1000">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel"> </h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<script>
+     $('#sbbegin').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+
+    $('#sbend').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+ 
+ function schedule(cid,sid) {
+          url = "{:url('Schedule/ScheduleAdd_ajax_show')}";
+        sj = Math.random(1000);
+        $.post(url, {cid:cid,sid:sid,sj: sj}, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModal .modal-title').html("墓穴预定");
+                $('#myModal .modal-body').html(infodate.data);
+                $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+            } else {
+                toast.error(infodate.msg);
+            }
+        });
+}
+
+     function schedule_delete2(id)
+    {
+         var info=confirm("您确定要撤销该预订吗？");
+        if (info==true){
+             url = "{:url('Schedule/Schedule_delete_ajax')}";
+            sj = Math.random(1000);
+             data ="id=" +id+ "&sj=" + sj
+           $.post(url, data, function (result) {
+                infodate = JSON.parse(result);
+                if (infodate.code == 0) {
+                      toast.success("预订撤销操作成功！");
+                      $('#myModal').modal('hide');
+                     location.reload();
+                } else
+                {
+                      toast.error(infodate.msg);
+                }
+
+            });
+        }
+    }
+     function save_take_ajax(id,cid) {
+            // alert("点击切换当前页面!!");
+         // alert("点击成功！！");
+         // var info=confirm("您确定要取走吗？");
+         // if (info==true){
+         //     url = "{:url('Save/Save_take_ajax')}";
+         //     sj = Math.random(1000);
+         //     data ="id=" +id+ "&cid="+cid+"&sj=" + sj
+         //     $.post(url, data, function (result) {
+         //         infodate = JSON.parse(result);
+         //         if (infodate.code == 0) {
+         //             toast.success("取走操作成功！");
+         //             location.reload();
+         //         } else
+         //         {
+         //             toast.error(infodate.msg);
+         //         }
+         //
+         //     });
+         // }
+     }
+     function Light(cid) {
+         url = "{:url('Light/show_Light_ajax')}";
+         sj = Math.random(1000);
+         $.post(url, {cid: cid, sj: sj}, function (result) {
+             infodate = JSON.parse(result);
+             if (infodate.code == 0) {
+                 $('#myModal .modal-title').html("墓穴预定");
+                 $('#myModal .modal-body').html(infodate.data);
+                 $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+             } else {
+                 toast.error(infodate.msg);
+             }
+         });
+     }
+</script>

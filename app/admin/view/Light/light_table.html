@@ -6,118 +6,56 @@
             <th>墓主</th>
             <th>购买人</th>
             <th>电话</th>
-            <th>关系</th>
+            <th>付款类型</th>
             <th>点灯时间</th>
             <th>数量</th>
             <th>总价</th>
-            <th>状态</th>
+            <th>缴费</th>
             <th>操作</th>
         </tr>
     </thead>
 
-    {notempty name='list'}
+    {notempty name='list' }
     <tbody>
-        {volist name='list' id='vo'}
-        <tr > 
+           {volist name='list' id='vo'}
+     
+        <tr {$vo.orderstatus|gettable_color}> 
             <td>{$vo.orderNO}</td>
             <td>{$vo.buryname}</td>
             <td>{$vo.buyer}</td>
             <td>{$vo.phone}</td>
-            <td>{$vo.relation}</td>
-            <td>{$vo.lightdate}</td>
+            <td>{$vo.lightpaytype|getlightpaytype}</td>
+            <td title='{$vo.planvcdesc}'>{$vo.planname}  </td>
             <td>{$vo.amount}</td>
-            <td>{$vo.price}</td>
-
-            <td>{$vo.isok|get_isok}</td>
+            <td>{$vo.price*$vo.amount}</td>
+             <td>{$vo.orderstatus|get_paystatus}</td>
 
             <td class=" text-center">
-                <a href="#"  onclick="save_pay_ajax({$vo['id']}, {$vo['cid']})" ><i class="fa fa-edit"></i>打印</a> 
-                &nbsp;
-                <a href="#"  onclick="light_edit_ajax({$vo['id']},{$vo['cid']})"><i class="fa fa-edit"></i> 明细</a> 
-                &nbsp;
-                <a href="#"  onclick="light_del_ajax({$vo['id']},{$vo['cid']})" ><i class="fa fa-edit"></i>作废</a> 
+                  {if condition="$vo.orderstatus neq 4"}  
+                 <a href="#"  onclick="light_pay_ajax({$vo['id']})"> <i class="fa fa-print"></i>结算/打印</a> 
+                 {/if}
+                   &nbsp;
+                     {if condition="$vo.orderstatus eq 1"}  
+                  <a href="#"  onclick="light_edit_ajax({$vo['id']},{$vo['cid']})"><i class="fa fa-edit"></i> 编辑</a> 
+                    &nbsp;
+                    <a href="#"  onclick="light_del_ajax({$vo['id']})" ><i class="fa fa-remove"></i>删除</a> 
+                    {else /}
+                    <a href="#"  onclick="Sell_bill_show_ajax({$vo['tid']})"><i class="fa fa-edit"></i> 明细</a> 
+                      
+                   {/if} 
+                   {if condition="$vo.orderstatus eq 2"}  
+                     <a href="#"  onclick="show_Retrunprice_sq_ajax({$vo['tid']})" ><i class="fa fa-history"></i>作废</a>
+                     {/if}
+            </td>
+            
+             
+              
             </td>
         </tr>
         {/volist}
     </tbody>
-    {else/}
-    <tbody><tr class="odd"><td colspan="8" class="text-center" valign="top">{:config('empty_list_describe')}</td></tr></tbody>
     {/notempty}
-
+ <tr class="odd"><td colspan="10" class="text-center" valign="top">  <a href="#" onclick="show_Light_ajax({$cid})"    class="btn"><i class="fa  fa-edit"></i>点灯服务</a> </td></tr></tbody>
+ 
 
 </table>
-<script>
-    function light_edit_ajax(id,cid) {
-     url = "{:url('Light/show_Light_ajax')}";
-    sj = Math.random(1000);
-    $.post(url, {lid:id, cid:cid, sj: sj }, function(result) {
-    infodate = JSON.parse(result);
-    if (infodate.code == 0) {
-    $('#myModal2 .modal-title').html("修改点灯记录");
-    $('#myModal2 .modal-body').html(infodate.data);
-    $("#myModal2").modal({ show: true, backdrop: false }); //手动开启*/
-
-    } else {
-    toast.error(infodate.msg);
-    }
-    });
-    }
-
-    function light_del_ajax(id,cid) {
-    var info = confirm("您确定要删除该点灯信息吗？");
-    if (info == true){
-    url = "{:url('Light/Light_delete_ajax')}";
-    sj = Math.random(1000);
-    data = "lid=" + id + "&cid="+cid+"&sj=" + sj
-            $.post(url, data, function (result) {
-            infodate = JSON.parse(result);
-            if (infodate.code == 0) {
-            toast.success("删除操作成功！");
-              $('#show_data_table').html(infodate.data);
-            } else
-            {
-            toast.error(infodate.msg);
-            }
-
-            });
-    }
-    }
-
-    function save_take_ajax(id, cid) {
-    var info = confirm("您确定要取走吗？");
-    if (info == true){
-    url = "{:url('Save/Save_take_ajax')}";
-    sj = Math.random(1000);
-    data = "id=" + id + "&cid=" + cid + "&sj=" + sj
-            $.post(url, data, function (result) {
-            infodate = JSON.parse(result);
-            if (infodate.code == 0) {
-            toast.success("删除操作成功！");
-            $('#show_data_table').html(infodate.data);
-            } else
-            {
-            toast.error(infodate.msg);
-            }
-
-            });
-    }
-    }
-
-    function save_pay_ajax(id, cid) {
-    url = "{:url('Save/Save_pay_ajax')}";
-    sj = Math.random(1000);
-    data = "id=" + id + "&cid=" + cid + "&sj=" + sj
-            $.post(url, data, function (result) {
-            infodate = JSON.parse(result);
-            if (infodate.code == 0) {
-            toast.success("删除操作成功！");
-            $('#show_data_table').html(infodate.data);
-            } else
-            {
-            toast.error(infodate.msg);
-            }
-
-            });
-    }
-
-</script>

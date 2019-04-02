@@ -1,0 +1,43 @@
+ <table class="table table-striped table-bordered">
+  
+  <thead>
+    <tr>
+            <th>墓号</th>
+            <th>迁墓人</th>
+            <th>电话</th>
+            <th>迁墓日期</th>
+            <th>状态</th>
+            <th>墓穴到期日期</th>
+              <th>操作</th>
+    </tr>
+  </thead>
+  
+    {notempty name='list'}
+        <tbody>
+            {volist name='list' id='vo'}
+                <tr > 
+				   <td>{$vo.c_canme}</td>
+				   <td>{$vo.buyer}</td>
+                                   <td>{$vo.phone}</td>
+                                    <td>{$vo.movedate}</td>
+				   <td>{$vo.movestatus|getMovestatus}</td>
+				    <td>{$vo.expiredate}</td>
+                                  
+                  <td class=" text-center">
+                 <a href="#"  onclick="move_pay_ajax({$vo['id']})"> <i class="fa fa-print"></i>结算/打印</a> 
+                   &nbsp;
+                   
+                  <a href="#"  onclick="show_move_ajax({$vo['cid']},{$vo['id']})"><i class="fa fa-edit"></i> 编辑</a> 
+                     <a href="#"  onclick="move_delete_ajax({$vo['id']})" ><i class="fa fa-edit"></i>删除</a> 
+                   
+                 
+                      </td>
+                </tr>
+            {/volist}
+        </tbody>
+       {else/}
+         <tbody><tr class="odd"><td colspan="13" class="text-center" valign="top"><a href="#" onclick="show_move_ajax({$cid},0)"    class="btn"><i class="fa  fa-edit"></i>申请迁墓</a>    </td></tr></tbody>
+      
+       {/notempty}
+      
+</table>

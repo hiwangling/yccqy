@@ -1,0 +1,114 @@
+<style>
+  .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 5px;
+    
+}  
+</style>
+
+<section>
+          <div class="row">
+          <div class="nav-tabs-custom">
+          
+            <div class="tab-content">
+            
+                  <div class="row">
+                      <div class="col-md-6" style=" border-right:  1px #000 dashed;">
+                                
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3 class="from_title-header">
+                                            <i class="fa fa-globe"></i>墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name}
+                                        </h3>
+                                    </div>
+  </div>        
+                         <div class="panel panel-default">
+    <div class="panel-heading">购墓优惠申请</div>
+      <ul class="list-group">
+          <li class="list-group-item">单据号:{$sellinfo.orderNO|default=''} </li>
+      
+          <li class="list-group-item">申请人:{$Offerpricelist.operatername|default=''} </li>
+             {volist name='Financeinfo' id='vo'}
+         <li class="list-group-item">{$vo.selltitle}: 应收:{$vo.sellprice} |实收：{$vo.realprice}|优惠：{$vo.offerprice}  </li>
+         {/volist}
+        <li class="list-group-item">申请日期:{$Offerpricelist.create_time}</li>
+         <li class="list-group-item">申请原因：{$Offerpricelist.offdesc}</li>
+         <li class="list-group-item">处理状态：<b style=" color: red;">{$Offerpricelist.isok|getisok}</b></li>
+    </ul>
+     
+</div>
+         
+                                   
+                             
+                                
+                            </div>
+   <form  id="formreserve">
+                        <input type="hidden" name="id" value="{$Offerpricelist.id}"/>   
+                      
+                      
+                <div class="col-md-6"  >             
+         <div class="panel panel-success">
+    <div class="panel-heading">申请处理</div>
+        <ul class="list-group">
+          <li class="list-group-item">优惠金额: <input   name="offerprice" onkeyup="clearNoNum(this)"  value="{$Offerpricelist.offerprice|default='0.00'}"     type="text"> </li>
+      
+        
+    </ul>
+    <div class="panel-body">
+        
+        <p>
+                <textarea class="form-control" name="vcnote" id="vcnote" rows="4" placeholder="处理意见 ">{$Offerpricelist.vcnote|default=''}</textarea>  
+                               
+        </p>
+    </div> 
+</div>
+                   
+              </div> </form>                 
+    </div> 
+
+  <div class="modal-footer"  >
+          {if condition="$Offerpricelist['isok'] eq 0"}
+                             <a   href="javascript:" onclick="Offerprice_cl_ajax(2);"  type="button"  class="btn btn-default"><span class="ladda-label">
+                                    <i class="fa fa-check"></i>同意
+                                </span>
+                            </a>
+                            
+                           <a   href="javascript:" onclick="Offerprice_cl_ajax(1);"  type="button"  class="btn btn-default"><span class="ladda-label">
+                                    <i class="fa fa-check"></i>不同意
+                                </span>
+                            </a>
+       {/if}
+                            <a type="button" class="btn btn-default" data-dismiss="modal"> 
+                                <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                    </form>
+                </div>
+                      
+                </div>          
+              
+            </div>
+            <!-- /.tab-content -->
+   
+          <!-- /.nav-tabs-custom -->
+       </section>
+ 
+ <script>
+ 
+
+ function Offerprice_cl_ajax(type) {
+        url = "{:url('Offerprice_cl_ajax')}";
+        sj = Math.random(1000);
+        data = $("#formreserve").serialize() + "&sj=" + sj+"&type="+type;
+        $.post(url, data, function(result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  alert(infodate.msg);
+                   location.reload();    
+            }
+            else
+            {
+              toast.error(infodate.msg);
+          }
+             $('#myModa2').modal('hide'); 
+          
+        });
+    }
+ </script>

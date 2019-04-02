@@ -1,0 +1,48 @@
+ 
+        <table  class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>墓穴信息</th>
+                    <th>预定人</th>
+                    <th>联系电话</th>
+                    <th>定金</th>
+                     
+                    <th>预定方式</th>
+                    <th>预定日期</th>
+                    <th>到期日期</th>
+                    <th>过期天数</th>
+                     <th>状态</th>
+                    <th>业务员</th>
+                     <th>操作</th>
+                </tr>
+            </thead>
+
+            {notempty name='list'}
+            <tbody>
+                {volist name='list' id='vo'}
+                <tr>
+                    
+                    <td>{$vo.garden_name}/{$vo.area_name}{$vo.name}</td>
+                    <td>{$vo.buyer}</td>
+                    <td>{$vo.phone}</td>
+                    <td>{$vo.ordainprice}</td>
+                    <td>{$vo.ordaintype|getordaintype}</td>
+                    
+                    <td>{$vo.ordainbegin|date="Y-m-d",###}</td>
+                    <td>{$vo.ordainend|date="Y-m-d",###}</td>
+                     <td>{$vo.ts}</td>
+                     <td>{$vo.orderstatus|getGstatus}</td>
+                    <td>{$vo.sellname}</td>
+                  
+                    <td>
+          <a href="#" onclick="schedule_edit({$vo.cid},{$vo.id})"    class="btn"><i class="fa  fa-edit"></i> 编辑</a> 
+          <a href="#" onclick="schedule_delete({$vo.id});"    class="btn"><i class="fa fa-trash"></i> 删除</a> 
+             </td>
+            </tr>
+            {/volist}
+            </tbody>
+            {else/}
+            <tbody><tr class="odd"><td colspan="11" class="text-center" valign="top">  <a href="#" onclick="schedule_edit({$cid},0)"    class="btn"><i class="fa  fa-edit"></i>增加预定</a> </td></tr></tbody>
+            {/notempty}
+        </table>
+ 

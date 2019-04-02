@@ -1,7 +1,6 @@
  
 <div class="box">
      <div class="box-header ">
-     <a class="btn serviceinfoadd_ajax_show"   href="#"><i class="fa fa-plus"></i> 新 增</a> 
   <div class=" form-inline search-form  ">
         <div class="form-group">
             <label class="zhj-form-label">关键字：</label>
@@ -45,19 +44,21 @@
     <table  class="table table-bordered table-hover">
       <thead>
       <tr>
-          
           <th>寄存地址</th>
-          <th>墓号</th>
+          <!--<th></th>-->
 		  <th>寄存人</th>
 		  <th>关系</th>
 		  <th>联系电话</th>
-                  <th>家庭地址</th>
+          <th>家庭地址</th>
 		  <th>逝者名称</th>
 		  <th>开始日期</th>
 		  <th>结束日期</th>
-                  <th>状态</th>
-		  <th>取走日期</th>
+          <th>费用</th>
           <th>状态</th>
+
+          <th>过期天数</th>
+		  <th>取走日期</th>
+
           <th>操作</th>
       </tr>
       </thead>
@@ -67,19 +68,26 @@
             {volist name='list' id='vo'}
                 <tr>
 				  <td>{$vo.saveareananme}</td>
-				  <td>{$vo.garden_name}/{$vo.area_name}/{$vo.c_canme}</td>
+				  <!--<td>{$vo.garden_name}/{$vo.area_name}/{$vo.c_canme}</td>-->
 				  <td>{$vo.buyer}</td>
                                    <td>{$vo.relation}</td>
 				   <td>{$vo.phone}</td>
-				  <td>{$vo.deathname}</td>
+                    <td>{$vo.address}</td>
+                    <td>{$vo.deathname}</td>
+
 				   <td>{$vo.savebegindate|date="Y-m-d",###}</td>
 				  <td>{$vo.saveenddate|date="Y-m-d",###}</td>
-				  <td>{$vo.savestatus}</td>
+                    <td>{$vo.saveprice}</td>
+                    <td>{$vo.savestatus|get_savestatus}</td>
+
+                    <td>{$vo.ts}</td>
+                    <td>{$vo.canceldate}</td>
+
                  
                   <td class="col-md-3 text-center">
-                  <a href="{:url('SaveEdit', array('id' => $vo['id']))}" class="btn"><i class="fa fa-edit"></i> 编 辑</a> 
-                      &nbsp;
-                   <a class="btn confirm ajax-get"  href="{:url('SaveDel', array('id' => $vo['id']))}"><i class="fa fa-trash-o"></i> 删 除</a> 
+                   <!--<a class="btn confirm ajax-get"  href="{:url('SaveDel', array('id' => $vo['id']))}"><i class="fa fa-book"></i> 查看</a>-->
+
+                      <a  href="#" onclick="save_take_ajax({$vo.id},{$vo.cid})" class="btn"><i class="fa fa-edit"></i>取走</a>
                   </td>
                 </tr>
             {/volist}
@@ -148,5 +156,24 @@
            
         });
     }
-}  
+}
+     function save_take_ajax(id,cid) {
+         var info=confirm("您确定要取走吗？");
+         if (info==true){
+             url = "{:url('Save/Save_take_ajax')}";
+             sj = Math.random(1000);
+             data ="id=" +id+ "&cid="+cid+"&sj=" + sj
+             $.post(url, data, function (result) {
+                 infodate = JSON.parse(result);
+                 if (infodate.code == 0) {
+                     toast.success("取走操作成功！");
+                     location.reload();
+                 } else
+                 {
+                     toast.error(infodate.msg);
+                 }
+
+             });
+         }
+     }
 </script>

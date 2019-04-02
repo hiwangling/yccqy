@@ -42,11 +42,7 @@
   <div class="tab-pane" id="bury">
                    <div class="row">
                           <div class="col-xs-12">
-                              <div class="box-header ">
-
-      
-        <a href="#" class="btn" onclick="show_deather_ajax({$info.id})" ><i class="fa fa-plus"></i> 新 增</a>
-    </div>
+                             
                        <table class="table table-striped table-bordered" >
   <thead>
     <tr>
@@ -60,7 +56,7 @@
              <th>安葬时间</th>
              <th>安葬</th>
              <th>葬式</th> 
-             <th>操作</th>
+           
     </tr>
   </thead>
   
@@ -78,15 +74,7 @@
 				   <td>{$vo.burytype|getburytype}</td>
                                    <td>{$vo.burystyle|getburystyle}</td>
 				 
-                  <td class=" text-center">
-                  {if condition="$vo.burystatus eq 0"}
-                    
-                  <a href="#"  onclick="deather_edit_ajax({$vo['id']},{$vo['cid']})"><i class="fa fa-edit"></i>编辑</a> 
-                    &nbsp;
-                    <a href="#"  onclick="deather_del_ajax({$vo['id']},{$vo['cid']})" ><i class="fa fa-remove"></i>删除</a>  
-                     {/if}
-                 
-                      </td>
+                
                 </tr>
             {/volist}
         </tbody>
@@ -217,10 +205,7 @@
             </div>
             <!-- /.tab-content -->
           </div>
-            <div class="modal-footer"  >
-         <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
-                 
-      </div>    
+            
               
           <!-- /.nav-tabs-custom -->
         </div>  
@@ -243,61 +228,6 @@ function show_sell_ajax(id) {
     });
 }
 
-////增加死者信息
-function show_deather_ajax(cid)
-{
-    url = "{:url('Bury/deather_add_show')}";
-     sj = Math.random(1000);
-     $.post(url, {cid:cid, sj: sj }, function(result) {
-        infodate = JSON.parse(result);
-        if (infodate.code == 0) {
-              $('#myModal2 .modal-title').html("墓主管理");
-              $('#myModal2 .modal-body').html(infodate.data);
-              $("#myModal2").modal({ show: true, backdrop: false }); //手动开启*/
-              
-        } else {
-             toast.error(infodate.msg);   
-        }
-    }); 
-}
-
-////增加死者信息
-function deather_edit_ajax(id,cid)
-{
-    url = "{:url('Bury/deather_add_show')}";
-     sj = Math.random(1000);
-     $.post(url, {cid:cid,id:id,sj: sj }, function(result) {
-        infodate = JSON.parse(result);
-        if (infodate.code == 0) {
-              $('#myModal2 .modal-title').html("墓主管理");
-              $('#myModal2 .modal-body').html(infodate.data);
-              $("#myModal2").modal({ show: true, backdrop: false }); //手动开启*/
-              
-        } else {
-             toast.error(infodate.msg);   
-        }
-    }); 
-}
-function deather_del_ajax(id,cid)
-{
-     var info=confirm("您确定要删除该墓主信息吗？");
-    if (info==true){
-         url = "{:url('Bury/deather_delete_ajax')}";
-        sj = Math.random(1000);
-         data ="id=" +id+ "&cid="+cid+"&sj=" + sj
-       $.post(url, data, function (result) {
-            infodate = JSON.parse(result);
-            if (infodate.code == 0) {
-                  toast.success("该墓主的信息删除成功！");
-                   $('#myModal').modal('hide');
-            } else
-            {
-                  toast.error(infodate.msg);
-            }
-           
-        });
-    }
-}
 
  function linkman_del_ajax(id)
 {

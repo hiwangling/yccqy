@@ -1,7 +1,7 @@
 <div class="box">
     <div class="box-header ">
 
-        <a class="btn add_savearea_show_ajax"><i class="fa fa-plus"></i> 新 增</a> 
+        <a class="btn" onclick="savearea_add_show_ajax()"><i class="fa fa-plus"></i> 新 增</a> 
         <div class="box-tools ">
             <div class="input-group input-group-sm search-form">
                 <input name="search_data" class="pull-right search-input" value="{:input('search_data')}" placeholder="支持名称" type="text">
@@ -73,7 +73,8 @@
 
 
 <script>
-    $(".add_savearea_show_ajax").click(function () {
+    function  savearea_add_show_ajax(){
+   
         url = "{:url('Savearea/SaveareaAdd_ajax_show')}";
         sj = Math.random(1000);
         $.post(url, {sj: sj}, function (result) {
@@ -86,7 +87,7 @@
                 toast.error(infodate.msg);
             }
         });
-    });
+    };
     
  
    function saveareaAdd_ajax_submit(){

@@ -1,0 +1,50 @@
+ 
+            <table class="table table-striped table-bordered" >
+  <thead>
+    <tr>
+            <th>编号</th>
+            <th>购买人</th>
+             <th> 电话</th>
+            <th>墓主</th>
+             <th>墓碑类型</th>
+              <th> 碑文类型</th>
+                <th>立碑时间</th>
+		  <th>费用</th>
+                   <th>缴费状态</th>
+                   <th>操作</th>
+    </tr>
+  </thead>
+   <tbody>
+    {notempty name='list'}
+     {volist name='list' id='vo'}
+              <tr {$vo.orderstatus|gettable_color}> 
+				   <td>{$vo.orderNO}</td>
+				   <td>{$vo.buyer}</td>
+                                     <td>{$vo.phone}</td>
+                                    <td>{$vo.buryname}</td>
+                                     <td>{$vo.monumenstyle|getmonumenstyle}</td>
+                                      <td>{$vo.monumenttype|getmonumentype}</td>
+				   <td>{$vo.monumendate}</td>
+				    <td>{$vo.monumenprice|default=0.00}</td>
+                                   <td>{$vo.orderstatus|get_paystatus}</td>
+				 
+                  <td class=" text-center">
+                   
+                 <a href="#"  onclick="monumenservice_pay_ajax({$vo['id']},1)"> <i class="fa fa-print"></i>通知单打印</a>
+                  &nbsp;
+                  <a href="#"  onclick="monumenservice_pay_ajax({$vo['id']},2)"> <i class="fa fa-print"></i>收费单打印</a> 
+                   &nbsp;
+                     {if condition="$vo.orderstatus eq 1"}  
+                  <a href="#"  onclick="monumenservice_ajax_show({$vo['cid']},{$vo['id']})"><i class="fa fa-edit"></i> 编辑</a> 
+                    &nbsp;
+                    <a href="#"  onclick="monumenservice_delete_ajax({$vo['id']})" ><i class="fa fa-remove"></i>删除</a> 
+                    {else /}
+                     <a href="#"  onclick=" Sell_bill_show_ajax({$vo['sid']})" ><i class="fa fa-search"></i>查看明细</a> 
+                   {/if}   </td>
+                </tr>
+            {/volist}
+             {/notempty}
+        <tr class="odd"><td colspan="9" class="text-center" valign="top">  <a href="#" onclick="monumenservice_ajax_show({$cid},0)"    class="btn"><i class="fa  fa-edit"></i>碑文服务</a> </td></tr></tbody>
+  </table>
+    
+ 

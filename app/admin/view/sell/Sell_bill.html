@@ -18,7 +18,8 @@
                             <div class="col-xs-12">
                                 <h3 class="from_title-header">
                                     <i class="fa fa-globe"></i>墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name}
-                                </h3>
+                               <span style=" float:  right">NO:<font style=" color: red">{$sellinfo.orderNO|default=''}</font></span>
+             </h3>
                             </div>
                         </div>        
                         <table class="table">
@@ -32,6 +33,9 @@
                                     </td>
                                     <td>
                                         <div  class="">购买日期：{$sellinfo.orderbegin|default=''}</div> 
+                                    </td>
+                                    <td>
+                                        <div  class="">墓主：{$sellinfo.buryname|default=''}</div> 
                                     </td>
                                     <td>
                                         <div  class="">经办人：{$sellinfo.sellname|default=''}</div> 
@@ -48,15 +52,17 @@
                                         <div  class="">身份证：{$sellinfo.sfz|default=''}</div> 
                                     </td>
                                     <td>
+                                        <div  class="">付款方式：{$sellinfo.payvarchar|default=''}</div> 
+                                    </td>
+                                    <td>
                                         <div  class="">单据状态：{$sellinfo.orderstatus|get_paystatus}</div> 
                                     </td>
                                 </tr>
 
                             </tbody>
                         </table>
-
-                        <table class="table table-striped">
-                            <caption>{$sellinfo.financetype|getfinancetype}收费明细  &nbsp;&nbsp;&nbsp;&nbsp;  单据编号：{$sellinfo.orderNO}</caption>
+                <table class="table table-striped">
+                         
                             <tbody>
                             <thead>
                                 <tr>
@@ -65,14 +71,31 @@
                                 </tr>
                             </thead>
                             {volist name='Financeinfo' id='vo' }
+                             {if condition="$vo.kmtype eq 1 and $vo.realprice >0"}
                             <tr>
                                 <td>{$vo.selltitle} </td>
                                 <td>{$vo.realprice} </td>
                             </tr>
+                            {/if}
                             {/volist}
-
+                           <tr>
+                               <th colspan="2">特殊服务</th>
+                           </tr>
+                           <tr>
+                               <td colspan="2">{volist name='Financeinfo' id='vo' }
+                             {if condition="$vo.kmtype eq 2  "}
+                                    {$vo.selltitle},
+                                    {/if} {/volist}</td>
+                                    
+                                </tr>
+                                <tr>
+                               <td >备注：</td>
+                                <td  >{$sellinfo.vcdesc}</td>
+                           </tr>
                             </tbody>
                         </table>
+                       
+                      
 
                     </div>
 

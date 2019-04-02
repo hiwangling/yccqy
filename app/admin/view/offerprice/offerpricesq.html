@@ -3,6 +3,9 @@
     padding: 5px;
     
 }  
+   .table_zhj > tbody > tr > td, .table-bordered > tfoot > tr > td {
+    border: 1px solid #0d0c0c;
+}
 </style>
 
 <section>
@@ -10,9 +13,8 @@
           <div class="nav-tabs-custom">
           
             <div class="tab-content">
-            
-                  <div class="row">
-                      <div class="col-md-6" style=" border-right:  1px #000 dashed;">
+                <div class="row">
+                      <div class="col-md-5" style=" border-right:  1px #000 dashed;">
                                 
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -21,7 +23,7 @@
                                         </h3>
                                     </div>
   </div>        
-                                 <table class="table">
+                                 <table class="table table_zhj">
                                     <tbody>            
                                         <tr>
                                             <td>
@@ -32,24 +34,32 @@
                                             
                                         </tr>
                                         <tr>
+                                             <td>
+                                                <div  class="">单据编号：{$sellinfo.orderNO|default=''}</div> 
+                                           </td>
+                                             <td>
+                                                <div  class="">单据金额：{$sellinfo.billTolamount|default='0.00'}</div> 
+                                              
+                                            </td>
+                                          
+                                        </tr>
+                                        <tr>
                                             <td>
-                                                <div  class="">墓主： {volist name='bury' id='vo' }
-                                                    {$vo.vcname}({$vo.sex|getsex})
-                                                     {/volist}
+                                                <div  class="">墓主：{$sellinfo.buryname|default=''}  
                                                 </div> 
                                              </td>
                                             <td>
                                                 <div  class="">购买日期：{$sellinfo.orderbegin|default=''}</div> 
-                                               
-                                            </td>
-                                            
-                                        </tr>
+                                             </td>
+                                          </tr>
+                                         
                                       <tr>
                                            
                                             <td>
-                                                <div  class="">单据金额：{$sellinfo.billTolamount|default='0.00'}</div> 
-                                              
-                                            </td>
+                                                <div  class="">付款方式：{$sellinfo.payvarchar }</div> 
+                                               </td>
+                                            
+                                          
                                              <td>
                                                 <div  class="">经办人：{$sellinfo.sellname|default=''}</div> 
                                            </td>
@@ -58,18 +68,22 @@
                                 </table>
                                    
                              <table class="table table-striped">
-                                   <caption>购墓收费明细</caption>
+                                   <caption>收费明细</caption>
                                     <tbody>
                                          <thead>
                                         <tr>
                                           <th>收费项目</th>
-                                            <th>金额</th>
+                                           <th>应收金额</th>
+                                            <th>实收金额</th>
+                                             <th>优惠金额</th>
                                          </tr>
                                     </thead>
                                     {volist name='Financeinfo' id='vo' }
                                     <tr>
                                   <td>{$vo.selltitle} </td>
+                                    <td>{$vo.sellprice} </td>
                                   <td>{$vo.realprice} </td>
+                                    <td>{$vo.offerprice} </td>
                                 </tr>
                                     {/volist}
                                     
@@ -78,51 +92,52 @@
                                 
                             </div>
    <form  id="formreserve">
-                        <input type="hidden" name="id" value="{$cancellist.id}"/>   
-                      
-                      
+                        <input type="hidden" name="cid" value="{$info.id}"/>   
+                        <input type="hidden" name="sid" value="{$sellinfo.id}"/> 
+                         
                 <div class="col-md-6"  >             
-         <div class="panel panel-default">
-    <div class="panel-heading">退费申请</div>
-      <ul class="list-group">
-          <li class="list-group-item">申请人:{$cancellist.buyer|default=''} </li>
-         <li class="list-group-item">联系人：{$cancellist.phone|default=''}</li>
-        <li class="list-group-item">购墓金额：{$cancellist.billprice|default='0.00'}  </li>
-        <li class="list-group-item">退还金额：{$cancellist.billprice-$cancellist.readprice }</li>
-         <li class="list-group-item">手续费：{$cancellist.readprice}</li>
-        <li class="list-group-item">申请日期:{$cancellist.create_time}</li>
-         <li class="list-group-item">申请原因：{$cancellist.returndesc}</li>
-         <li class="list-group-item">处理状态：<b style=" color: red;">{$cancellist.isok|getisok}</b></li>
-    </ul>
-     
-</div>
-                    
-                     <div class="panel panel-success">
-    <div class="panel-heading">审批意见</div>
-       
+           <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3 class="from_title-header">
+                                            <i class="fa fa-globe"></i>购墓优惠申请  <span style=" margin-left: 50px"> 
+                                               
+                                        </h3>
+                                    </div>
+                            </div>             
+                                
+                      <div class="row">
+                                    <div class="col-xs-12">
+                                           <div class="panel panel-success">
+   
+   
+    <ul class="list-group">
+        <li class="list-group-item">审批人: <select class="myselect form-control_zhj2"  name="manager" id='manager' style="width: 150px; ">
+								   {volist name='member' id='vo'}
+		 	 <option value="{$vo['id']}">{$vo['nickname']}</option>
+			  {/volist}
+								</select></li>
+      </ul>
     <div class="panel-body">
-        <p>
-                <textarea class="form-control" name="vcnote" id="vcnote" rows="4" placeholder="审批意见 ">{$cancellist.vcnote|default=''}</textarea>  
-                               
-        </p>
-    </div> 
-</div>
-             </form>       
-              </div>                 
-    </div> 
+         <textarea class="form-control" name="offdesc" id="returndesc" rows="3" placeholder="申请优惠原因"></textarea>  
+                                  
+    </div>
+</div> 
+                                        
+                         
+                  </div>
+                            </div>             
+                                
+       
+             </div>                 
+                            </div> 
 
   <div class="modal-footer"  >
-       {if condition="$cancellist.isok eq 0"}
-                             <a   href="javascript:" onclick="canacel_cl(2);"  type="button"  class="btn btn-default"><span class="ladda-label">
-                                    <i class="fa fa-check"></i>同意
+                             <a   href="javascript:" onclick="offerprice_submit_ajax();"  type="button"  class="btn btn-default"><span class="ladda-label">
+                                    <i class="fa fa-check"></i>提交 
                                 </span>
                             </a>
                             
-                           <a   href="javascript:" onclick="canacel_cl(1);"  type="button"  class="btn btn-default"><span class="ladda-label">
-                                    <i class="fa fa-check"></i>不同意
-                                </span>
-                            </a>
-       {/if}
+                          
                             <a type="button" class="btn btn-default" data-dismiss="modal"> 
                                 <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
                     </form>
@@ -136,25 +151,3 @@
           <!-- /.nav-tabs-custom -->
        </section>
  
- <script>
- 
-
- function canacel_cl(type) {
-        url = "{:url('canacel_cl_ajax')}";
-        sj = Math.random(1000);
-        data = $("#formreserve").serialize() + "&sj=" + sj+"&type="+type;
-        $.post(url, data, function(result) {
-            infodate = JSON.parse(result);
-            if (infodate.code == 0) {
-                  alert(infodate.msg);
-                   location.reload();    
-            }
-            else
-            {
-              toast.error(infodate.msg);
-          }
-             $('#myModa2').modal('hide'); 
-          
-        });
-    }
- </script>

@@ -30,8 +30,8 @@
     </div>
 
 
-    <div class="box-body table-responsive">
-        <table  class="table table-bordered table-hover">
+    <div class="box-body table-responsive"  >
+        <table  class="table table-bordered table-hover ">
             <thead>
                 <tr>
                    
@@ -75,7 +75,10 @@
             {/volist}
             </tbody>
             {else/}
-            <tbody><tr class="odd"><td colspan="8" class="text-center" valign="top">{:config('empty_list_describe')}</td></tr></tbody>
+            <tbody>
+                <tr class="odd"><td colspan="8" class="text-center" valign="top">{:config('empty_list_describe')}</td></tr>
+                  
+            </tbody>
             {/notempty}
         </table>
     </div>

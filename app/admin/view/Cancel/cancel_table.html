@@ -1,0 +1,53 @@
+ 
+            <table class="table table-striped table-bordered" >
+  <thead>
+    <tr> 
+        <th>编号</th>
+            <th>退墓人</th>
+             <th>电话</th>
+        
+             <th>申请日期</th>
+              <th>状态</th>
+                <th>审批人</th>
+                 <th>购墓金额</th>
+		  <th>退返金额</th>
+                 <th>实收金额</th>
+                  <th>缴费状态</th>
+                   <th>操作</th>
+    </tr>
+  </thead>
+   <tbody>
+    {notempty name='list'}
+     {volist name='list' id='vo'}
+                <tr {$vo.orderstatus|gettable_color}> 
+				   <td>{$vo.orderNO}</td>
+				   <td>{$vo.buyer}</td>
+                                    <td>{$vo.phone}</td>
+                                 
+                                    <td>{$vo.create_time}</td>
+                                    <td>{$vo.isok|getisok}</td>
+                                    <td>{$vo.nickname}</td>
+                                       <td>{$vo.billprice}</td>
+                                       <td>{$vo.billprice-$vo.readprice}</td>   
+                                        <td>{$vo.readprice}</td>   
+                         <td>{$vo.orderstatus|get_paystatus}</td>
+				 
+                  <td class=" text-center">
+                      {if condition="$vo.isok eq 2"}  
+                    <a href="#"  onclick="canacel_pay_ajax({$vo['id']})"> <i class="fa fa-print"></i>收费单打印</a> 
+                     {/if}
+                   &nbsp;
+                     {if condition="$vo.isok eq 0"}  
+                     <a href="#"  onclick="canacel_delete_ajax({$vo['id']})" ><i class="fa fa-remove"></i>删除</a> 
+                    
+                   {/if}  
+                     <a href="#"  onclick="show_cancell_cl_ajax({$vo['id']})" ><i class="fa fa-search"></i>查看</a> 
+                   
+                  </td>
+                </tr>
+            {/volist}
+             {/notempty}
+        <tr class="odd"><td colspan="12" class="text-center" valign="top">  <a href="#" onclick="show_Cancel_sq({$cid})"    class="btn"><i class="fa  fa-edit"></i>申请退墓</a> </td></tr></tbody>
+  </table>
+    
+ 

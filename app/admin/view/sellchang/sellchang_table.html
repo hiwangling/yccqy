@@ -1,0 +1,52 @@
+ 
+            <table class="table table-striped table-bordered" >
+  <thead>
+    <tr> 
+        <th>编号</th>
+        <th>联系人</th>
+        <th>电话</th>
+         <th>旧墓</th>
+          <th>新墓</th>
+        <th>申请日期</th>
+        <th>费用</th>
+        <th>状态</th>
+       
+        <th>操作</th>
+    </tr>
+  </thead>
+  
+    {notempty name='list'}
+     {volist name='list' id='vo'}
+      <tbody>
+                <tr {$vo.orderstatus|gettable_color}> 
+				   <td>{$vo.orderNO}</td>
+				   <td>{$vo.buyer}</td>
+                                    <td>{$vo.phone}</td>
+                                    <td>{$vo.oldcname}</td>
+                                    <td>{$vo.newcname}</td>
+                                    <td>{$vo.create_time}</td>
+                                    <td>{$vo.moveprice}</td>
+                                    <td>{$vo.orderstatus|get_paystatus}</td>
+				  
+                  <td class=" text-center">
+                     
+                    <a href="#"  onclick="sellchang_pay_ajax({$vo['id']})"> <i class="fa fa-print"></i>打印/结算</a> 
+                     
+                   &nbsp;
+                    {if condition="$vo.orderstatus eq 1"}
+                    <a href="#"  onclick="Sellchang_delete_ajax({$vo['id']})" ><i class="fa fa-remove"></i>删除</a> 
+                    
+                   {/if}  
+                     
+                  </td>
+                </tr>
+            {/volist}
+            {/notempty}
+                {if condition="$usestatus >=3"}
+                <tr class="odd"><td colspan="12" class="text-center" valign="top">  <a href="#" onclick="sellchang_ajax_show({$cid},0)"    class="btn">
+                            <i class="fa  fa-edit"></i>申请换墓</a> </td></tr>  {/if}
+           
+     
+  </table>
+    
+ 

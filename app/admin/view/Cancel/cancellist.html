@@ -16,6 +16,7 @@
         <div class="form-group">
             <label class="zhj-form-label">状态：</label>
               <select name="resutlstatus" class="form-control">
+                    <option value ="-1" {if condition="(-1==$formcs.resutlstatus) "} selected = "selected"{/if}>所有</option>
        <option value ="0" {if condition="(0==$formcs.resutlstatus) "} selected = "selected"{/if}>未处理</option>
         <option value ="2" {if condition="(2==$formcs.resutlstatus) "} selected = "selected"{/if}>已经通过</option>
         <option value ="1" {if condition="(1==$formcs.resutlstatus) "} selected = "selected"{/if}>未通过</option>
@@ -41,17 +42,18 @@
     <table  class="table table-bordered table-hover">
       <thead>
       <tr>
-          <th>墓穴</th>
-          
-            <th>联系人</th> 
-              <th>电话</th> 
-	    <th>申请时间</th>
-	    <th>状态</th>
-            <th>原订单金额</th>
-            <th>退返金额</th>
-            <th>手续费</th>
-	
-             <th>操作</th>
+     <th>单号</th>
+          <th>墓号</th>
+            <th>退墓人</th>
+             <th>电话</th>
+        
+             <th>申请日期</th>
+              <th>状态</th>
+               
+                 <th>购墓金额</th>
+		  <th>退返金额</th>
+                 <th>实收金额</th>
+                   <th>操作</th>
       </tr>
       </thead>
       
@@ -59,24 +61,23 @@
         <tbody>
             {volist name='list' id='vo'}
                 <tr>
+                    <td>{$vo.orderNO}</td>
                   <td>{$vo.cname}</td>
-              
-                   <td>{$vo.buyer}</td>
-                    <td>{$vo.phone}</td>
-                     <td>{$vo.create_time}</td>
-				  <td>{$vo.isok|getisok}</td>
-				  <td>{$vo.billprice}</td>
-                                    <td>{$vo.returnprice}</td>
-                                   <td>{$vo.readprice}</td>
-                                   
+                     <td>{$vo.buyer}</td>
+                       <td>{$vo.phone}</td>
+                        <td>{$vo.create_time}</td>
+                          <td>{$vo.isok|getisok}</td>
+                        
+                           <td>{$vo.billprice}</td>
+                         <td>{$vo.billprice-$vo.readprice}</td>   
+                                        <td>{$vo.readprice}</td> 
                      <td class="col-md-3 text-center">
                      {if condition="$vo['isok'] eq 0"}
                       <a href="javascript:;" class="btn" onclick='openMotai("{$vo.id}")'><i class="fa fa-edit"></i>处理</a>  
                      {/if} 
-                        {if condition="$vo['isok'] eq 1"}
+                        {if condition="$vo['isok'] neq 0"}
                       <a href="javascript:;" class="btn" onclick='openMotai("{$vo.id}")'><i class="fa fa-edit"></i>查看</a>  
-                      <a href="javascript:;"  class="btn"   onclick='delete_cancel({$vo.id})'><i class="fa fa-trash-o"></i> 删 除</a>
-                     {/if} 
+                      {/if} 
                      
                   </td>
                 </tr>
@@ -125,27 +126,7 @@
         });
     } 
     
-    function delete_cancel(id) {
-   var info=confirm("您确定要删除申请吗？");
-    if (info==true){
-         url = "{:url('canacel_delete_ajax')}";
-        sj = Math.random(1000);
-         data ="id=" +id+ "&sj=" + sj
-       $.post(url, data, function (result) {
-            infodate = JSON.parse(result);
-            if (infodate.code == 0) {
-                  toast.success("删除操作成功！");
-                   
-                 location.reload();   
-            } else
-            {
-                  toast.error(infodate.msg);
-            }
-           
-        });
-    }
     
-    }
     
  function canacel_cl(type) {
         url = "{:url('canacel_cl_ajax')}";

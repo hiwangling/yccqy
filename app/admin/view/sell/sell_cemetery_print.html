@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$comapnyinfo[1]}-打印</title>
+  <link rel="stylesheet" href="__STATIC__/module/admin/css/main.css">
+ <script type="text/javascript" src="__STATIC__/module/common/jquery/jquery-2.2.3.min.js"></script>
+ <script src="__STATIC__/module/admin/js/jquery.PrintArea.min.js"></script>
+ 
+
+</head>
+
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="right"><img src="__STATIC__/module/admin/img/print.png"  border="0"  id="btnPrint3"/>&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+</table>
+<div id="printArea3">
+<style>
+body{ font-family:"微软雅黑"; font-size:16px;}
+.b{
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	text-align:left;
+	font-size:16px;
+	width:100px;
+}
+</style>
+		<table width="808" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td height="40" colspan="6" align="right" valign="top" bgcolor="#FFFFFF"><strong style="font-size:20px;">No.<font color="#FF0000">{$sellinfo.orderNO}</font></strong></td>
+          </tr>
+          <tr>
+            <td height="70" colspan="6" align="center" valign="top" bgcolor="#FFFFFF"><strong style="font-size:30px; display:none;">{$comapnyinfo[1]}收费收据</strong></td>
+          </tr>
+		  <tr>
+            <td width="10%" height="30" align="right">墓主：</td>
+            <td width="15%">{$sellinfo.buryname}</td>
+            <td width="10%" align="right">性别：</td>
+            <td width="15%">{$sellinfo.burysex}</td>
+            <td width="25%">&nbsp;</td>
+		    <td colspan="49">&nbsp;</td>
+	      </tr>
+		  <tr>
+            <td height="30" align="right">墓号：</td>
+            <td>{$cinfo.name}</td>
+            <td align="right">主办人：</td>
+            <td>{$sellinfo.buyer}</td>
+            <td align="right">联系电话：</td>
+		    <td>{$sellinfo.phone}</td>
+		  </tr>
+		  <tr>
+            <td height="30" align="right">证件号：</td>
+            <td>{$sellinfo.sfz}</td>
+            <td colspan="2" align="right">&nbsp;</td>
+            <td colspan="2">住址：{$sellinfo.address}</td>
+          </tr>
+		  <tr>
+            <td height="30" colspan="6" align="right">
+			 <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#666666">
+			  <tr>
+			     <td height="190" colspan="6" valign="top" bgcolor="#FFFFFF">
+				   <table  width="100%" border="0" cellpadding="0" cellspacing="0">
+				   <tr>
+				<td height="25" colspan="3" align="center" bgcolor="#FFFFFF">项目名称</td>
+				<td width="8%" align="center" bgcolor="#FFFFFF">数量</td>
+				<td width="14%" align="center" bgcolor="#FFFFFF">应收金额</td>
+				<td width="42%" align="center" bgcolor="#FFFFFF">实收金额</td>
+			  </tr>
+                             {volist name='Financeinfo' id='vo'}          
+			  <tr>
+				<td height="25" colspan="3" align="center" bgcolor="#FFFFFF">{$vo.selltitle}></td>
+				<td  align="center" bgcolor="#FFFFFF">{$vo.amount}</td>
+				<td  align="center" bgcolor="#FFFFFF">{$vo.sellprice}</td>
+				<td  align="center" bgcolor="#FFFFFF">{$vo.realprice}</td>
+			  </tr>
+                             {/volist}
+                          </table>
+			    </td>
+			  </tr>    
+			  <tr>
+				<td width="14%" height="25" align="right" bgcolor="#FFFFFF">合计（元）:</td>
+				<td colspan="2" align="left" bgcolor="#FFFFFF">{$billTolamount}<input type="hidden" class="b" id="aa"  value="{billTolamount}"  style="width:200px; font-family:"微软雅黑";"/>&nbsp;&nbsp;&nbsp;({$sellinfo.fklx})</td>
+				<td bgcolor="#FFFFFF">&nbsp;</td>
+				<td align="right" bgcolor="#FFFFFF">大写：</td>
+				<td align="left" bgcolor="#FFFFFF"><input type="text" class="b" id="bb" style="width:200px; font-family:'微软雅黑';"/>{$billTolamount|num_to_rmb}</td>
+			  </tr>
+			  <tr>
+				<td height="35" align="right" bgcolor="#FFFFFF">经办人：</td>
+				<td colspan="2" align="left" bgcolor="#FFFFFF">{$sellinfo.sellname}</td>
+				<td bgcolor="#FFFFFF">&nbsp;</td>
+				<td align="right" bgcolor="#FFFFFF">客户签字：</td>
+				<td bgcolor="#FFFFFF">&nbsp;</td>
+			  </tr>
+			  <tr>
+				<td height="35" align="right" bgcolor="#FFFFFF">备注：</td>
+				<td colspan="5" bgcolor="#FFFFFF" align="left">{$sellinfo.vcdesc}</td>
+			  </tr>
+			</table>			
+                             
+                             </td>
+          </tr>
+		  <tr>
+            <td height="35" colspan="4" bgcolor="#FFFFFF">
+			<font style="font-family:'微软雅黑'; font-size:16px;">办理日期:{$rq} </font></td>
+            <td colspan="2" align="right" bgcolor="#FFFFFF"><font style="font-family:'微软雅黑'; font-size:16px;">服务电话：{$comapnyinfo[3]}</font></td>
+		  </tr>
+  </table>
+  
+</div>
+		<script>
+$("#btnPrint3").click(function(){    
+        $("#printArea3").printArea();  
+    });  </script>
+</body>
+</html>

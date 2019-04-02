@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$comapnyinfo[1]}-打印</title>
+  <script type="text/javascript" src="__STATIC__/module/common/jquery/jquery-2.2.3.min.js"></script>
+ <script src="__STATIC__/module/admin/js/jquery.PrintArea.min.js"></script>
+
+</head>
+
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+      <td align="right"><img src="__STATIC__/module/admin/img/print.png"  border="0"  onclick="Print2({$Buryinfo.id})" id="btnPrint2"/>&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+</table>
+<div id="printArea2">
+<style type="text/css">
+body{ font-family:"微软雅黑";}
+.b
+{
+	font-family: "微软雅黑";
+	font-size: 26px;
+	line-height: 40px;
+	height: 40px;
+	width: 80px;
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-color: #333333;
+	border-top-style: none;
+	border-right-style: none;
+	border-left-style: none;
+	text-align: center;
+}
+.c
+{
+	font-family: "微软雅黑";
+	font-size: 26px;
+	line-height: 40px;
+	height: 40px;
+	width: 60px;
+	border-top-style: none;
+	border-right-style: none;
+	border-left-style: none;
+	border-bottom-style: none;
+	text-align: center;
+	curosr: pointer;
+}
+.c:hover{
+curosr: pointer;
+  }
+</style>
+
+<table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="60" colspan="2" align="right" valign="top"><strong style="font-size:28px;">No:<font color="#FF0000">{$Buryinfo.azdh}</font>&nbsp;&nbsp;&nbsp;&nbsp;</strong></td>
+  </tr>
+  <tr>
+    <td height="100" colspan="2" align="center" valign="top"><strong style="font-size:48px;">{$comapnyinfo[1]}安葬服务通知单</strong></td>
+  </tr>
+  <tr>
+    <td height="50" colspan="2" valign="bottom" style="font-size:26px;">安葬墓号：
+      <input type="text" name="textfield"   class="b" style="width:200px;" value="{$cinfo.name}"/>
+      <label></label>
+      安葬日期：<input type="text" name="textfield"  class="b" style="width:260px;"  value="{$Buryinfo.bury|default=''}{$Buryinfo.week}"/></td>
+  </tr>
+  <tr>
+    <td height="50" colspan="2" valign="bottom"  style="font-size:26px;">使用人姓名:
+	 
+      <input type="text" name="textfield"  class="b"  style="width:200px;" value="{$Buryinfo.vcname}"/>&nbsp;&nbsp;	  </td>
+  </tr>
+  <tr>
+    <td height="50" colspan="2" valign="bottom" style="font-size:26px;">客户确认签字:
+      <input type="text" name="textfield"  class="b"  style="width:300px;"/></td>
+  </tr>
+  <tr>
+    <td height="60" colspan="2" align="left"  style="font-size:26px;">请核实后安葬</td>
+  </tr>
+  <tr>
+    <td width="129" height="40" align="right"  style="font-size:26px;">备注：</td>
+    <td width="871" align="left"  style="font-size:26px;">1、安葬：【
+      <input type="text" name="textfield" id="a1" class="c"  onclick="seach();"/>】骨灰【<input type="text" name="textfield" id="a2"  onclick="seach2();"  class="c"/>】衣冠【<input type="text" name="textfield" id="a3"  onclick="seach3();" class="c"/>】遗骨</td>
+  </tr>
+  <tr>
+    <td height="40" align="left"  style="font-size:26px;">&nbsp;</td>
+    <td height="40" align="left"  style="font-size:26px;">2、葬式：【
+      <input type="text" name="textfield"  class="c" id="a4"  onclick="seach4();"/>】墓葬【<input type="text" name="textfield"  class="c" id="a5"  onclick="seach5();"/>】树葬【<input type="text" name="textfield"  class="c" id="a20"  onclick="seach20();"/>】壁葬【<input type="text" name="textfield"  class="c" id="a6"  onclick="seach6();"/>】撒散葬</td>
+  </tr>
+  <tr>
+    <td height="40" align="left"  style="font-size:26px;">&nbsp;</td>
+    <td height="40" align="left"  style="font-size:26px;">3、安葬数第<input type="text" name="textfield"  class="b" value="1"/>位</td>
+  </tr>
+  <tr>
+    <td height="40" align="left"  style="font-size:26px;">&nbsp;</td>
+    <td height="40" align="left"  style="font-size:26px;">4、安葬仪式：【<input type="text" name="textfield"  class="c" id="a7"  onclick="seach7();"/>】有【<input type="text" name="textfield"  class="c" id="a8"  onclick="seach8();"/>】无</td>
+  </tr>
+  <tr>
+    <td height="40" align="left"  style="font-size:26px;">&nbsp;</td>
+    <td height="40" align="left"  style="font-size:26px;">5、民间乐队：【<input type="text" name="textfield"  class="c" id="a9"  onclick="seach9();"/>】有【<input type="text" name="textfield"  class="c"  id="a10"  onclick="seach10();"/>】无</td>
+  </tr>
+  <tr>
+    <td height="80" colspan="2" align="center" valign="middle"  style="font-size:26px;">经办人
+      <input type="text" name="textfield"  class="b"  style="width:150px;" value="{$useranme}"/>联系电话：{$comapnyinfo[3]}&nbsp;<input type="text" name="textfield"  class="b" value="{$rq.Y}" />年<input type="text" name="textfield"  class="b" value="{$rq.M}"/>月<input type="text" name="textfield"  class="b" value="{$rq.D}"/>日</td></tr>
+</table>
+  </volist>
+</div>
+<script>
+		function seach()
+		{
+		if($("#a1").val()=="")
+		{$("#a1").val("√");}
+		else
+		{$("#a1").val("");}
+		}
+		function seach2()
+		{
+		if($("#a2").val()=="")
+		{$("#a2").val("√");}
+		else
+		{$("#a2").val("");}
+		}
+		function seach3()
+		{
+		if($("#a3").val()=="")
+		{$("#a3").val("√");}
+		else
+		{$("#a3").val("");}
+		}
+		function seach4()
+		{
+		if($("#a4").val()=="")
+		{$("#a4").val("√");}
+		else
+		{$("#a4").val("");}
+		}
+		function seach5()
+		{
+		if($("#a5").val()=="")
+		{$("#a5").val("√");}
+		else
+		{$("#a5").val("");}
+		}
+		function seach6()
+		{
+		if($("#a6").val()=="")
+		{$("#a6").val("√");}
+		else
+		{$("#a6").val("");}
+		}
+		function seach7()
+		{
+		if($("#a7").val()=="")
+		{$("#a7").val("√");}
+		else
+		{$("#a7").val("");}
+		}
+		function seach8()
+		{
+		if($("#a8").val()=="")
+		{$("#a8").val("√");}
+		else
+		{$("#a8").val("");}
+		}
+        function seach9()
+		{
+		if($("#a9").val()=="")
+		{$("#a9").val("√");}
+		else
+		{$("#a9").val("");}
+		}
+        function seach10()
+		{
+		if($("#a10").val()=="")
+		{$("#a10").val("√");}
+		else
+		{$("#a10").val("");}
+		}
+		function seach20()
+		{
+		if($("#a20").val()=="")
+		{$("#a20").val("√");}
+		else
+		{$("#a20").val("");}
+		}
+/*$("#btnPrint2").click(function(){  
+        var deather_add_show_url="{:url('Sell/deather_update_burystate')}";
+         sj = Math.random(1000);
+         data ="id=" +id+"&sj=" + sj
+        $("#printArea2").printArea();  
+    }); */
+function Print2(id)
+{
+     var url="{:url('Sell/deather_update_burystate')}";
+       sj = Math.random(1000);
+         data ="id=" +id+"&sj=" + sj;
+        $.post(url, data, function (result) {
+             $("#printArea2").printArea();  
+        });
+}
+</script>
+</body>
+    
+     
+</html>

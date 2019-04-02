@@ -1,0 +1,185 @@
+<style>
+  .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 5px;
+    
+}  
+.lbli{ float:left; list-style:none; width: 80px;}
+   .table_zhj > tbody > tr > td, .table-bordered > tfoot > tr > td {
+    border: 1px solid #0d0c0c;
+}
+.div_lable_zhj{ width: 100px;}
+.sfxm{ width:60px;}
+</style>
+<form  id="frommonum">
+<section>
+      <!-- title row -->
+      <div class="row">
+        <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>墓穴信息:{$info.gardename}/{$info.areaname}/{$info.name}
+            <span style=" margin-left: 50px"> 
+                                               <select class="form-control_zhj2 selectval" onchange="split()">
+                                                     <option value="">请选择购买人</option>
+                                                    {foreach name="linkmanlist" item="vo"   }
+                                                    <option value="{$vo.linkname}|{$vo.phone} ">{$vo.linkname}|{$vo.phone} </option>
+                                                    {/foreach}</select>
+                                            </span>   
+            <span style=" float:  right">NO:<font style=" color: red">{$sellinfo.orderNO|default=''}</font></span>
+           </h3>
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- info row -->
+      <div class="row invoice-info">
+        <div class="col-xs-12 table-responsive">
+          <table class="table table_zhj">
+           <tbody>
+            <tr>
+                <td>墓主</td>
+                <td >
+                    <ul>
+                        {volist name='bury' id='vo'}
+                        <li class="lbli">
+                        <input type="checkbox" value="{$vo.vcname}" name=' bury[]'  {if condition="$vo['ischeck'] eq 1"} checked {/if}>{$vo.vcname}({$vo.sex|getsex}) </li>
+                          {/volist}
+                       
+                    </ul>
+                </td>
+                <td>购买人</td>
+                 <td>   <input   name="buyer" value="{$sellinfo.buyer|default=''}"  class="form-control_zhj2 selval"   type="text">
+                </td>
+                 <td>电话</td>
+                 <td> <input name="phone"  value="{$sellinfo.phone|default=''}"  class="form-control_zhj2  selval"   type="text"></td>
+            </tr> 
+             <tr>
+                <td>墓碑类型</td>
+                <td > <select class="form-control_zhj monumenstyle"  name="monumenstyle"   >
+                                                    {foreach name="monumenstyle" item="vo" key="k" }
+                                                    <option value="{$k}"  {if condition="$monumeninfo.monumenstyle eq $k"}selected="selected"{/if}>{$vo}</option>
+                                                    {/foreach}</select>
+                </td>
+                <td>碑文类型</td>
+                 <td>  <select class="form-control_zhj monumentype"  name="monumenttype"   >
+                                                    {foreach name="monumentype" item="vo" key="k" }
+                                                    <option value="{$k}"  {if condition="$monumeninfo.monumenttype eq $k"}selected="selected"{/if}>{$vo}</option>
+                                                    {/foreach}</select>
+                </td>
+                 <td>立碑时间</td>
+                 <td> <input name="monumendate"  value="{$monumeninfo.monumendate}"  class="form-control_zhj2 date"   type="text"></td>
+            </tr> 
+            <tr>
+                <td colspan="6"> 
+            <i class="fa fa-globe"></i>配套服务
+           
+                </td>
+           
+            </tr>
+            <tr>
+                <td colspan="6">  <table class="table  ">
+           <tbody>
+                 {volist name='chargeitem' id='vo' mod="4"}
+                {eq name="mod" value="0"} <tr>{/eq}
+            <td>
+                    <div  class="div_lable_zhj">{$vo.name}:</div>
+                        {if condition="($vo.showtype ==2 )"}
+                         <select class="form-control_zhj selebox"  name="chargeitem[{$vo.id}]" onchange="allprice()"  >
+                                                    {foreach name="vo['select']" item="v3" key="k" }
+                                                    <option value="{$k}" {if condition="$vo.defaultprice eq $k"}selected="selected"{/if}> {$v3} </option> 
+                                                    {/foreach}  
+                                                </select>
+                           {else /}
+                            <input   name="chargeitem[{$vo.id}]" value="{$vo.defaultprice|default=0}"  class="form-control_zhj s_price" onblur="allprice()"  type="text">
+                            {/if}
+             </td>
+              {eq name="mod" value="3"}  </tr>{/eq}
+                {/volist}
+             </tbody>
+          </table></td> 
+            </tr>
+             <tr>
+                <td colspan="6"> 
+            <i class="fa fa-globe"></i>特殊服务
+        </td>
+            </tr>
+            <tr>
+                <td colspan="6"> <table class="table">
+           <tbody>
+                 <tr> 
+            <td>
+               {volist name='Serviceinfoitem' id='v1'}  
+                 <span style=" margin-right: 10px;"><input   type="checkbox" name="Serviceinfo[{$v1.id}]" {if condition="$v1.ischeck eq 1"} checked="true" {/if}   class="checkprice" onclick="allprice()" value="{$v1.price}" >{$v1.servicename}({$v1.price})  
+               </span>
+               {/volist}    
+             </td>
+              </tr> 
+             </tbody>
+          </table></td> 
+            </tr>
+             <tr>
+                  <td>付款方式</td>
+                 <td>   <ul>  {foreach name="paytype" item="vo"   key="k" }
+                                                         <li class="lbli">
+                                                        <input type="checkbox" value="1" name='fklx[{$k}]'  {if condition="$vo['ischeck'] eq 1"} checked {/if} class="fklx{$k}" onclick="ischeck(this)">{$vo.name}
+                                                        <input name="fklxval[{$k}]" value="{$vo.value}"    class="sfxm fklx{$k}" type="text" style="display: none;">
+                                                       </li> {/foreach}
+                                                    
+                                                     
+                                                </ul>
+                </td>
+                 <td>发票</td>
+                 <td> <select name="isvoice" class="form-control_zhj"> 
+                                                    <option value="0"  {if condition="$sellinfo.isvoice eq 0"}selected="selected"{/if}>不开票</option>
+                                                    <option value="1"   {if condition="$sellinfo.isvoice eq 1"}selected="selected"{/if}>开票</option>
+                                                </select></td>
+                <td>总金额：</td>
+                <td>
+                  <span class="all_cost">{$sellinfo.billTolamount}</span>   
+                   </td>
+                 </tr> 
+           </tbody>
+          </table>
+        </div>
+       
+      </div>
+      <!-- /.row -->
+     
+      <!-- Table row -->
+     
+        <input type="hidden" name="id" value="{$monumeninfo['id']|default='0'}"/>
+        <input type="hidden" name="cid" value="{$info.id}"/>
+        <input type="hidden" name="sid" value="{$sellinfo.id|default='0'}"/>
+       
+      <div class="modal-footer"  >
+       <a   href="javascript:" onclick="monumenservice_submit_ajax();"  type="button"  class="btn btn-default"><span class="ladda-label">
+                                    <i class="fa fa-check"></i>提交 
+                                </span>
+                            </a>
+        <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+      
+      </div>
+      </form>
+    </section>
+
+ <script>
+ $('.date').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+
+     function ischeck(param){
+      isshow= $(param).attr('class')
+      if($(param).is(':checked')){
+          $('.'+isshow).eq(1).show()
+        $('.'+isshow).eq(2).show()
+      }else{
+        $('.yhShow_').val(1)
+        yxblur()
+        $('.'+isshow).eq(1).hide()
+        $('.'+isshow).eq(2).hide()
+      }
+  }
+ 
+ </script>

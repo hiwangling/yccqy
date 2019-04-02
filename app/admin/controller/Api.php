@@ -508,10 +508,10 @@ class Api extends AdminBase
         /////////////////////////////////////////////////
         $Buryinfolist=$this->logicSell->get_buryname_array($sellinfo["buryname"],$Buryinfo);
         $payarray=$this->logicSell->get_pay_array($sellinfo["payvarchar"]);
-         $this->assign('Bury', $Buryinfolist);
-        $this->assign('paytype', $payarray);
-        $this->assign('sellinfo', $sellinfo);
-        $this->assign('linkmanlist', $linkmanlist);
+        //  $this->assign('Bury', $Buryinfolist);
+        // $this->assign('paytype', $payarray);
+        // $this->assign('sellinfo', $sellinfo);
+        // $this->assign('linkmanlist', $linkmanlist);
 
         // $update_table = $this->update_table($this->param['cid']);
         //循环处理
@@ -560,9 +560,9 @@ class Api extends AdminBase
        $this->param['fklx'] = array_filter($fklx);
        $this->param['fklxval'] = array_filter($fklxval);
 
-        echo "<pre>";
+ /*       echo "<pre>";
         echo  print_r($this->param);
-        echo "</pre>";
+        echo "</pre>";*/
 
         ///////////////服务项目////////////
         $Serviceinfo_where["servicetype"] = array('like', '%,3,%');
