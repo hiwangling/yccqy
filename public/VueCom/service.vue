@@ -201,6 +201,7 @@
        axios.post("../Api/Buryservice_ajax_show",{cid: this.cid,id:v.id})
                   .then (res=> {
                     this.service_edit = res.data
+                    console.log(this.service_edit)
                   })
 
     },
