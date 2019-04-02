@@ -480,7 +480,6 @@ class Api extends AdminBase
         foreach ($Serviceinfoitem as $key => $value) {
             $Serviceinfoitem[$key]["ischeck"] = 0;
         }
-        
 
         ////////////初始化价格
         if (isset($sellinfo["Financeinfo"])) {
@@ -587,9 +586,6 @@ class Api extends AdminBase
         $this->param['sellname'] = $member['nickname'];
        unset( $this->param['serviceinfoId']);
        unset( $this->param['chargeitemId']);
-        // echo "<pre>";
-        // print_r($this->param['Serviceinfo']);
-        // echo "</pre>";
         if (empty($this->param['id'])) {
            $result = $this->logicSell->Sell_add_submit($this->param, $chargeitemlist, $Serviceinfoitem, 3); ////增加
         } else {

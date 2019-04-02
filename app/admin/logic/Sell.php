@@ -248,6 +248,8 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
     }
     
     public function getSellInfo($where = [], $field = 'a.*') {
+
+        //  print_r($where);
         $this->modelSell->alias('a');
         $where['a.status'] = 1;
         return $this->modelSell->getInfo($where, $field);
@@ -256,6 +258,7 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
     public function getsellinfo_ajax($where = [], $search_bury = true) {
 
         $data = $this->getSellInfo($where);
+ // print_r($where);
         if (empty($data)) {
             $data["relation"] = "";
             $data["sex"] = 1;
@@ -274,6 +277,7 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
             $data['buryname'] = "";
             return $data;
         }
+
         $finacewhere["tid"] = $data["id"];
         //$finacewhere["financetype"] = $financetype;
         $data['Financeinfo'] = $this->logicFinance->sellList($finacewhere, "*", "kmtype", false);
