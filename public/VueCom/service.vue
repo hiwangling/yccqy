@@ -164,7 +164,7 @@
       ServicedialogVisible:false,
       orientation:'',
       isvoice:'2',
-      service_edit:this.service_show.chargeitem,
+      service_edit:this.service_show,
       sels:[],
       chargeitem:[],
       Serviceinfo:[],
