@@ -441,9 +441,9 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
             }
         }
         //////////服务收费
-                      echo "<pre>";
-        print_r($data['Serviceinfo']);
-        echo "</pre>";
+        //               echo "<pre>";
+        // print_r($data['Serviceinfo']);
+        // echo "</pre>";
         foreach ($Serviceinfoitem as $key => $value) {
             $titleid = $value["id"];
             if (isset($data['Serviceinfo'][$titleid])) {
