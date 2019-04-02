@@ -1,0 +1,182 @@
+<style>
+  .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 5px;
+    
+}  
+</style>
+
+<section>
+          <div class="row">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#activity" data-toggle="tab" aria-expanded="false">点灯登记</a></li>
+              <li class=""><a href="#timeline" data-toggle="tab" aria-expanded="false">点灯记录</a></li>
+             
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="activity">
+                  <form  id="formreserve">
+                   <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name}
+           </h3>
+        </div>
+         
+      </div>
+              <table class="table">
+           <tbody>
+            <tr>
+                <td>
+                    <div  class="div_lable_zhj">墓主</div> 
+            <input   name="buryname" value="{$light.buryname|default=''}"  class="form-control_zhj "   type="text">
+                </td>
+           <td><div  class="div_lable_zhj">点灯日期</div> <input   name="lightdate"    value="{$light.lightdate|default='' }"  class="form-control_zhj data isclear"   type="text"  ></td>
+           
+          
+                
+           <td><div  class="div_lable_zhj">数量</div> 
+           <select class="form-control_zhj"  name="amount"   >
+              {for start="1" end="10"}
+			  <option value="{$i}"  {if condition="$light.amount eq $i"}selected="selected"{/if}>{$i}</option>
+					{/for}</select>
+           </td>
+            
+              <td><div  class="div_lable_zhj">单价：</div> <input name="lightprice"   value="{$light.lightprice}"  class="form-control_zhj  "   type="text"></td>
+                
+            </tr>
+            
+             <tr>
+                  <td>
+                    <div  class="div_lable_zhj">联系人</div> 
+           <input   name="buyer" value="{$light.buyer|default=''}"  class="form-control_zhj  isclear"   type="text">
+                </td>
+                  <td><div  class="div_lable_zhj">联系电话</div> <input name="phone"  value="{$light.phone|default=''}"  class="form-control_zhj  isclear"   type="text"></td>
+             
+              <td><div  class="div_lable_zhj">关系</div> <input name="relation" value="{$light.relation|default=''}"  class="form-control_zhj isclear"   type="text"></td>
+               
+              
+             </tr>
+             
+                <tr>
+                     <td><div  class="div_lable_zhj">缴费方式</div>  <select class="form-control_zhj"  name="paytype"   >
+                 {foreach name="paytype" item="vo" key="k" }
+					   <option value="{$k}"  {if condition="$light.paytype eq $k"}selected="selected"{/if}>{$vo}</option>
+					{/foreach}</select>
+            </td>
+            <td><div  class="div_lable_zhj">发票号码</div>  
+                <input   name="voiceno" value="{$light.voiceno|default=''}"  class="form-control_zhj isclear"   type="text">  
+            </td><td colspan="2">
+                <div   class="div_lable_zhj">备注</div>  
+                <input   name="vcnote" value="{$light.vcnote|default=''}"  style=" width: 250px;" class="form-control_zhj isclear"   type="text">  
+             </tr>
+             </tbody>
+          </table>
+            <input type="hidden" name="lid" value="{$light.id|default='0'}"/>
+            <input type="hidden" name="cid" value="{$info.id}"/>
+            <input type="hidden" name="sid" value="{$light.sellid|default='0'}"/>
+              <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+              <i class="fa fa-globe"></i>费用总价：<span class="billTolamount">{$light.billTolamount}</span>
+           </h3>
+        </div>
+         
+      </div>
+            
+      <div class="modal-footer"  >
+        <a   href="javascript:" onclick="light_submit();"  type="button"  class="btn btn-default"><span class="ladda-label">
+          {empty name="$light.id"}    <i class="fa fa-check"></i> 增加{else /}
+           <i class="fa fa-edit"></i> 修改{/empty}
+            </span></a>
+            
+        <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                  </form>
+      </div>
+              </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" id="timeline">
+                   <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name}
+           </h3>
+        </div>
+         
+      </div>
+                <!-- The timeline -->
+                <div id="show_data_table">
+                    {$table_lsit}
+          </div>
+                
+                 <div class="modal-footer"  >
+         <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                  </form>
+      </div> 
+              </div>
+            
+               
+              
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div></section>
+</form>
+ <script>
+ $('.data').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+
+  
+    
+  
+function light_submit() {
+          url = "{:url('Light/Light_submit_ajax')}";
+        sj = Math.random(1000);
+         data = $("#formreserve").serialize() + "&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("操作成功！");
+                  $('.isclear').each(function(k,y){
+                      $('.isclear').eq(k).val('')
+                  })
+                  
+                 $('#show_data_table').html(infodate.data);
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+}
+
+function save_delete(id)
+{
+     var info=confirm("您确定要删除该寄存信息吗？");
+    if (info==true){
+         url = "{:url('Save/Save_delete_ajax')}";
+        sj = Math.random(1000);
+         data ="id=" +id+ "&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("删除操作成功！");
+                  $('#myModal').modal('hide');
+                 location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    }
+     
+     
+}
+ </script>

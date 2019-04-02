@@ -1,0 +1,54 @@
+  <table class="table table-striped table-bordered" >
+  <thead>
+    <tr>
+           
+             <th>墓主</th>
+             <th>墓主性别</th>
+             <th>家属姓名</th>
+             <th>联系方式</th>
+           
+             <th>安葬状态</th>
+             <th>安葬时间</th>
+             <th>安葬</th>
+             <th>葬式</th> 
+             <th>操作</th>
+    </tr>
+  </thead>
+  
+    {notempty name='Buryinfo'}
+        <tbody>
+            {volist name='Buryinfo' id='vo'}
+                <tr {if $vo.burystatus eq 0 }class="danger"{/if}> 
+				   <td>{$vo.vcname}</td>
+				   <td>{$vo.sex|getsex}</td>
+                                   <td>{$vo.linkname}</td>
+				   <td>{$vo.phone}</td>
+                                 
+                                    <td>{$vo.burystatus|getBurystatus}</td>
+				   <td>{$vo.bury}</td>
+				   <td>{$vo.burytype|getburytype}</td>
+                                   <td>{$vo.burystyle|getburystyle}</td>
+				 
+                  <td class=" text-center">
+                  {if condition="$vo.burystatus eq 1"}
+                    <a href="#"  onclick="save_pay_ajax({$vo['id']},{$vo['cid']})" ><i class="fa fa-edit"></i>结算/打印</a> 
+                   &nbsp;
+                  <a href="#"  onclick="bury_show_ajax({$vo['id']},{$vo['cid']})"><i class="fa fa-edit"></i>编辑</a> 
+                    &nbsp;
+                    <a href="#"  onclick="bury_del_ajax({$vo['id']},{$vo['cid']})" ><i class="fa fa-remove"></i>删除</a>  
+                  {else /}
+                   
+                    <a href="#"  onclick="bury_show_ajax({$vo['id']},{$vo['cid']})"><i class="fa fa-edit"></i>下葬</a>
+                  
+                    {/if}
+                 
+                      </td>
+                </tr>
+            {/volist}
+        </tbody>
+        {else/}
+        <tbody><tr class="odd"><td colspan="8" class="text-center" valign="top">{:config('empty_list_describe')}</td></tr></tbody>
+      {/notempty}
+    
+  
+</table>

@@ -1,0 +1,82 @@
+	<div class="cd-quick-view">
+		<div class="cd-slider-wrapper cd-item-info_sx">
+			<h2>{$info.name}</h2>
+			<ul>
+           <li><i class="icon_font icon-shuxing"></i>所属园区: {$info.gardename}{$info.areaname}</li>
+	   <li><i class="iconfont icon-icon"></i>位置:{$info.ix}排{$info.iy}列</li>
+           <li><i class="iconfont icon-cailiao"></i>所用石材:{$info.stylename}</li>
+           <li><i class="iconfont icon-mubei"></i>墓碑穴位:{$info.typename}</li>
+           <li><i class="iconfont icon-icon"></i>逝者: {volist name='Bury' id='vo'}
+               {$vo.vcname}&nbsp;&nbsp;
+               {/volist}
+           </li>
+             </ul>
+                          <div>
+                    <table class="table table-striped">
+  
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>时间</th>
+      <th>完成</th>
+    </tr>
+  </thead>
+  <tbody>
+        {volist name='$serviceinfolsit' id='vo'}
+          
+    <tr>
+      <td>{$vo.service}</td>
+      <td>{$vo.begindate}</td>
+       <td>{$vo.resutlstatus|get_resutlstatus}</td>
+    </tr>
+     
+    {/volist}
+     
+  </tbody>
+</table>
+                </div>
+                       </div> <!-- cd-slider-wrapper -->
+<form action="" id="formreserve" name="formreserve">
+      <input name="cid" type="hidden" value="{$cid}">
+		<div class="cd-item-info">
+			<ul>
+            <li><i class="iconfont icon-mubei"></i>服务项目:<select class=""   name="serviceID" >		  		 
+                          {volist name='Serviceinfodate' id='vo'}
+                             <option value="{$vo.id}">{$vo.servicename}:{$vo.sellprice}</option>
+                          {/volist}
+                      </select></li>
+                      <li><i class="iconfont icon-mubei"></i>数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量:<select name="serviceamount"   style=" width: 50%">
+                 {for start="0" end="10" name="i"}
+                 <option value="{$i}">{$i}</option>
+                        {/for}
+                       
+                </select>
+            </li>
+           
+            <li><i class="iconfont icon-mubei"></i>执行日期:  <input type="text" name="begindate" value="" class="inputlink dateber"></li>
+             <li><i class="iconfont icon-mubei"></i>结束日期: <input   name="enddate"   class="inputlink dateber"  type="text"></li>
+             <li><i class="iconfont icon-mubei"></i>购买人： <input   name="buyer"    class="inputlink"  type="text"></li>
+            <li><i class="iconfont icon-mubei"></i>购买电话： <input   name="phone"    class="inputlink"  type="text"></li>
+            <li><i class="iconfont icon-mubei"></i>服务要求：<textarea class="form-control" rows="3" style="width: 90%"  name='vcnote'></textarea>    </li>
+             <ul class="cd-item-action">
+            <li><a class="btn btn-default add-to-cart" onclick="servcie_submit();" > 购买</a></li>					
+                            
+                               <li>   <a class="btn btn-default add-to-cart" class="btn btn-default add-to-cart" data-dismiss="modal">关闭</a></li>
+                            
+			</ul> <!-- cd-item-action -->
+		</form></div> <!-- cd-item-info -->
+	</div>
+<script>
+    layui.use(['layer', 'form', 'laydate'], function() {
+    var layer = layui.layer;
+    form = layui.form,
+    laydate = layui.laydate;
+    $('.dateber').each(function(k, y) {
+           laydate.render({
+            elem: this,
+            format: 'yyyy-M-d'
+        });
+    })
+    })
+</script>
+                       

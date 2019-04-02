@@ -1,0 +1,100 @@
+<style>
+  .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 5px;
+    
+}  
+</style>
+ 
+<section>
+      <!-- title row -->
+      <div class="row">
+        <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>墓穴信息
+           </h3>
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- info row -->
+      <div class="row invoice-info">
+        <div class="col-xs-12 table-responsive">
+          <table class="table table_zhj">
+           <tbody>
+            <tr>
+              <td>墓穴：{$info.name}</td>
+              <td>墓园：{$info.gardename}</td>
+              <td>墓区：{$info.areaname}</td>
+             </tr>
+            <tr>
+              <td>穴位：{$info.typename}</td>
+              <td>风格：{$info.stylename}</td>
+              <td>朝向：{$info.orientation}</td>
+             </tr>
+             </tbody>
+          </table>
+        </div>
+       
+      </div>
+      <!-- /.row -->
+
+      <!-- Table row -->
+      <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>墓主信息
+           </h3>
+        </div>
+         
+      </div>
+      
+     <div class="row" id="show_data_table">
+        {$table_lsit}
+      </div>
+      
+            
+      <div class="modal-footer"  >
+        
+        <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+      
+      </div>
+      
+    </section> 
+ <script>
+ function bury_show_ajax(id,cid) {
+    url = "{:url('Bury/bury_show_ajax')}";
+     sj = Math.random(1000);
+     $.post(url, {id:id,cid:cid,sj: sj }, function(result) {
+        infodate = JSON.parse(result);
+        if (infodate.code == 0) {
+              $('#myModal2 .modal-title').html("下葬记录单");
+              $('#myModal2 .modal-body').html(infodate.data);
+              $("#myModal2").modal({ show: true, backdrop: false }); //手动开启*/
+              
+        } else {
+             toast.error(infodate.msg);   
+        }
+    });
+}
+function bury_del_ajax(id,cid)
+{
+     var info=confirm("您确定要删除该墓主的安葬信息吗？");
+    if (info==true){
+         url = "{:url('Bury/bury_delete_ajax')}";
+        sj = Math.random(1000);
+         data ="id=" +id+ "&cid="+cid+"&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("该墓主的安葬信息删除成功！");
+                 $('#show_data_table').html(infodate.data);
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    }
+     
+     
+}
+ </script>

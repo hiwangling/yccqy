@@ -1,0 +1,135 @@
+<link rel="stylesheet" href="__STATIC__/module/admin/css/cemetery.css">
+<div class="box">
+    <form action="" method="post" class="layui-form form_single" lay-filter="test1">
+        
+        <div class="layui-form-item" style='padding-top: 10px;'>
+             <div class="layui-inline">
+                <label class="layui-form-label">关键字：</label>
+                <div class="layui-input-inline">
+                    <input name="search_data" class="pull-right search-input" value="{:input('search_data')}" placeholder="商品编码/商品名称" type="text">
+                </div>
+            </div>
+             
+            <div class="layui-inline">
+                <label class="layui-form-label">商品类别</label>
+                <div class="layui-input-inline">
+                      <select name="category" id="category"   >
+                             <option value="0" {if condition="(0==$formcs.category)"} selected="selected" {/if}>请选择</option>
+                               {volist name='category' id='vo'}
+                    	<option value="{$vo.id}" {eq name="$formcs.category" value="$vo.id"} selected="selected" {/eq} >{$vo.name}</option>
+                    {/volist}
+                       </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">仓库:</label>
+                <div class="layui-input-inline">
+                    <select name="storage" id="storage"   >
+                             <option value="0" {if condition="(0==$formcs.storage)"} selected="selected" {/if}>请选择</option>
+                               {volist name='storagelsit' id='vo'}
+                    	<option value="{$vo.id}" {eq name="$formcs.storage" value="$vo.id"} selected="selected" {/eq} >{$vo.name}</option>
+                    {/volist}
+                       </select>
+                </div>
+            </div>
+             
+            <div class="layui-inline">
+                <label class="layui-form-label">日期查询</label>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="begindate" placeholder="开始日期" autocomplete="off" value="{$formcs.begindate|default=''}" class="layui-input date1" id="begindate">
+                </div>
+                <div class="layui-form-mid">-</div>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="enddate" placeholder="结束日期" autocomplete="off" value="{$formcs.enddate|default=''}" class="layui-input date2" id="enddate">
+                </div>
+            </div>
+            <button class="btn btn-info " lay-submit="test1">查询</button>
+            <button type="button" id="search" onclick="execl();" class="btn btn-info  "><i class="fa fa-file-excel-o"></i> 数据导出</button>
+        </div>
+    </form>
+    <div class="box-body table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th >商品编号</th>
+                    <th>商品名称</th>
+                    <th>入库数量</th>
+                    <th>出库数量</th>
+                    <th>总库存数</th>
+                  </tr>
+            </thead>
+          
+            <tbody>
+                {volist name='list' id='vo'}
+                 <tr>
+                    <td>{$vo.sn|default=""}</td>
+                    <td>{$vo.name|default=""}</td>
+                    <td>{$vo.rkzs|default="0"}</td>
+                    <td>{$vo.ckzs|default="0"}</td>
+                    <td>{$vo.kcs|default="0"}</td>
+               {/volist}    
+                    
+            </tbody>
+           
+        </table>
+    </div>
+   
+ 
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">财务明细</h4>
+            </div>
+            <div class="modal-body">
+               </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    <!-- 模态框（Modal） -->
+  
+    <!-- /.modal -->
+    <script type="text/javascript">
+    layui.use(['layer', 'form', 'laydate'], function() {
+        var layer = layui.layer,
+            form = layui.form,
+            laydate = layui.laydate
+        laydate.render({
+            elem: '.date1'
+        });
+        laydate.render({
+            elem: '.date2'
+        });
+    });
+
+        function showfan(sid){
+                 url="{:url('sell/getFinanceinfo_ajax')}"; 
+               sj=Math.random(1000) ; 
+                $.post(url,{id:sid,sj:sj},function(result){
+                        infodate=JSON.parse(result);
+                        if (infodate.code==0)
+                        {
+                             $('#myModal .modal-body').html(infodate.data);
+                            $("#myModal").modal({show:true,backdrop:false});  //手动开启*/
+                        }
+                        else
+                        {
+                            alert(infodate.msg);
+                        }
+                 }); 
+                 
+            }
+            
+            
+    function execl() {
+        url = "{:url('exportselllist_execl')}";
+        var targetForm = document.forms[0];
+        targetForm.action = url;
+        targetForm.submit();
+    }
+    </script>

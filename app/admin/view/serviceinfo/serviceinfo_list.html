@@ -1,0 +1,149 @@
+<div class="box">
+  <div class="box-header ">
+   <a class="btn serviceinfoadd_ajax_show"   href="#"><i class="fa fa-plus"></i> 新 增</a> 
+    <div class="box-tools ">
+        <div class="input-group input-group-sm search-form">
+            <input name="search_data" class="pull-right search-input" value="{:input('search_data')}" placeholder="支持名称" type="text">
+            <div class="input-group-btn">
+              <button type="button" id="search" url="{:url('ServiceinfoList')}" class="btn btn-default"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+    </div>
+    <br/>
+  </div>
+    
+  <div class="box-body table-responsive">
+    <table  class="table table-bordered table-hover">
+      <thead>
+      <tr>
+          <th>编号</th>
+          <th>服务名称</th>
+		  <th>类型</th>
+		  <th>价格</th>
+		  <th>计价单位</th>
+		  <th>负责部门</th>
+                   <th class="sort-th">排序</th>
+          <th>状态</th>
+          <th>操作</th>
+      </tr>
+      </thead>
+      
+      {notempty name='list'}
+        <tbody>
+            {volist name='list' id='vo'}
+                <tr>
+                  <td>{$vo.id}</td>
+                  <td>{$vo.servicename}</td>
+				  <td>{$vo.servicetype|getfinancetype_str}</td>
+				  <td>{$vo.price}</td>
+				  <td>{$vo.chargeunit|default=''}</td>
+				  <td>{$vo.branch_name|default=''}</td>
+                                   <td><input type="text" class="sort-th sort-text" href="{:url('setSort')}" id="{$vo.id}" value="{$vo.sort}" /></td>
+                                   
+				  <td>{$vo.status_text}</td>
+                  <td class="col-md-3 text-center">
+                         <a  href="#" onclick="ServiceinfoEdit_ajax_show({$vo.id})" class="btn">
+       <i class="fa fa-edit"></i> 编 辑</a>  &nbsp;
+				  {if condition="$vo.issystem neq 1"}
+				  <ob_link><a class="btn confirm ajax-get"  href="{:url('serviceinfoDel', array('id' => $vo['id']))}"><i class="fa fa-trash-o"></i> 删 除</a></ob_link>
+				  {/if}
+				  
+				  </td>
+                </tr>
+            {/volist}
+        </tbody>
+        {else/}
+        <tbody><tr class="odd"><td colspan="8" class="text-center" valign="top">{:config('empty_list_describe')}</td></tr></tbody>
+      {/notempty}
+    </table>
+  </div>
+
+  <div class="box-footer clearfix text-center">
+      {$list->render()}
+  </div>
+
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog800">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script>
+    $(".serviceinfoadd_ajax_show").click(function () {
+        url = "{:url('Serviceinfo/ServiceinfoAdd_ajax_show')}";
+        sj = Math.random(1000);
+        $.post(url, {sj: sj}, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModal .modal-title').html("增加服务信息");
+                $('#myModal .modal-body').html(infodate.data);
+                $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+            } else {
+                toast.error(infodate.msg);
+            }
+        });
+    });
+    
+ 
+   function ServiceinfoAdd_ajax_submit(){
+       url = "{:url('Serviceinfo/ServiceinfoAdd_ajax_submit')}";
+        sj = Math.random(1000);
+        data = $("#formreserve").serialize() + "&sj=" + sj
+        $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                 $('#myModal').modal('hide');
+                location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    };
+ 
+  function ServiceinfoEdit_ajax_show(id){
+        url = "{:url('Serviceinfo/ServiceinfoEdit_ajax_show')}";
+        sj = Math.random(1000);
+        $.post(url, {id:id,sj: sj}, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModal .modal-title').html("修改墓园信息");
+                $('#myModal .modal-body').html(infodate.data);
+                $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+            } else {
+                toast.error(infodate.msg);
+            }
+        });
+    };
+    
+     function ServiceinfoEdit_ajax_submit(){
+       url = "{:url('Serviceinfo/ServiceinfoEdit_ajax_submit')}";
+        sj = Math.random(1000);
+        data = $("#formreserve").serialize() + "&sj=" + sj
+        $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                 $('#myModal').modal('hide');
+                location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    };
+</script>
+    
+ 

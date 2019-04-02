@@ -1,0 +1,382 @@
+<link rel="stylesheet" href="__STATIC__/module/admin/css/zTreeStyle/zTreeStyle.css">
+<link rel="stylesheet" href="__STATIC__/module/admin/css/cemetery.css">
+<script src="__STATIC__/module/admin/js/ztree/jquery.ztree.all.min.js"></script> 
+<style>
+    .popover-title,.popover-content{
+        color:  #000;
+    }
+    .oper-list>li {
+        width: 33%;
+        float: left;
+        padding:5px;
+        text-align: center;
+        list-style-type:none;
+
+    }   
+    .popover-content{
+        padding: 0
+    }
+    .oper-list{
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .opter_title {
+        font-weight:400;
+        font-size: 12px;
+        color: #444!important;;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+        .popover{
+        width: 110px;
+    }
+</style>
+<SCRIPT type="text/javascript">
+    
+    var setting = {
+        view: {
+            fontCss: getFont,
+            nameIsHTML: true
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        }
+    };
+    var zNodes = [{$treestr}];
+    function getFont(treeId, node) {
+        return node.font ? node.font : {};
+    }
+    $(document).ready(function () {
+        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+    });
+
+</SCRIPT>
+<div class="box">
+    <div class="box-body">
+        <div class="row">
+            <div class=" col-md-2">
+                <div class="panel panel-default">
+
+                    <div class="panel-body">
+                        <div class="input-group input-group-sm search-form">
+                            <input type="text" class="form-control" name="search_data" value="{$formvalue.search_data|default=''}">
+                            <span class="input-group-btn">
+                                <button type="button" id="search" url="{:url('seachlist')}"  class="btn btn-info btn-flat seach"><i class="fa fa-search"></i>查询</button>
+                            </span>
+                        </div>
+                        <ul    id="treeDemo" class="ztree">
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-md-10">
+                <div class="demo">
+                    <div id="seat-map" class="seatCharts-container"  aria-activedescendant="10_10">
+                        <div class="front">
+                            <b>{$seachinfo}</b>
+                        </div>
+                        <div class="infodiv">
+                            <ul>
+                                <li><span>待售:</span>
+                                    <div class="wei"></div>
+                                </li>
+                                <li><span>预定:</span>
+                                    <div class="yd"></div>
+                                </li>
+                                <li><span>已销售:</span>
+                                    <div class="gou"></div>
+                                </li>
+                                <li><span>安葬:</span>
+                                    <div class="an"></div>
+                                </li>
+                            </ul>
+                            <p style=" float: right; margin-right: 20px; color: black">注： {volist name='tjinfo' id='vo'} {$vo.usestatus||get_Cemeterystate}({$vo.sl}), {/volist}
+                                <b>共有({$zs})</b></p>
+                        </div>
+                        {php} $state=array(1=>"selected",2=>"available",3=>"focused",4=>"unavailable");{/php}  
+                        <div class="seatCharts-row">
+
+                            {volist name="list" id="v1" key="k"}
+
+                            <div  class="seatCharts-seat seatCharts-cell  {$state[$v1['usestatus']]}">
+                                <div style=" height: 100px;"> <p>{$v1.garden_name}{$v1.area_name}</p>
+                                    <p>{$v1.name}</p>
+                                    <p>墓号：{$v1.vno}</p>
+                                    <p>墓主：{$v1.deathname}</p>
+                                </div>
+                                <div data-toggle="popover" id="{$v1.id}"  >
+                                    <span><img src="__STATIC__/module/admin/img/{$v1.hrm}.png" style=" width: 16px;" /></span>
+                                    <span style=" float:  right;"  id="{$v1.id}" class="pop"> <i class="fa fa-edit">操作</i> </span>
+                                </div>
+
+                            </div>
+
+                            {/volist}
+
+                            <div style="clear:both"></div>
+
+                        </div>
+
+                    </div>
+                    <div style=" width:100%; height:85px;">
+                        {$list->render()}
+                    </div>    
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal"   role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  >
+        <div class="modal-dialog modal-dialog1000">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel"> </h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    
+     <div class="modal fade" id="myModal2"   role="dialog" aria-labelledby="myModalLabe2" aria-hidden="true"  >
+    <div class="modal-dialog modal-dialog1000">
+        <div class="modal-content">
+            <div class="modal-header modal-header2">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModa2lLabel"><i class="fa  fa-graduation-cap"></i>添加项目进度日志</h4>
+            </div>
+            <div class="modal-body">
+          
+            </div>
+            
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+    
+       <div class="modal fade" id="myModal3" role="dialog" aria-labelledby="myModalLabe2" aria-hidden="true"  >
+    <div class="modal-dialog modal-dialog700">
+        <div class="modal-content">
+            <div class="modal-header modal-header2">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModa2lLabel"><i class="fa  fa-graduation-cap"></i>添加项目进度日志</h4>
+            </div>
+            <div class="modal-body">
+          
+            </div>
+            
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+    <script>
+        $(function () {
+
+            $('.pop').each(function () {
+                var element = $(this);
+                var id = element.attr('id');
+                var txt = element.html();
+
+                element.popover({
+                    trigger: 'manual',
+                    placement: 'top', //top, bottom, left or right
+                    html: 'true',
+                    content: ContentMethod(id),
+
+                }) 
+                
+             element.click(function(e){
+                   var _this = this;
+                    $('.popover').hide()
+                    $(_this).popover("show");
+                      e = e || event;
+                    stopFunc(e);　
+             })
+             document.onclick = function(e) {　　　　　　　　
+                  $('.popover').hide()
+              }
+            function stopFunc(e) {　　　　　　
+                e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;　　　　
+            }
+                
+            });
+        　　
+        });
+        
+        function ContentMethod(id) {
+            vhtml = "<div class='box-body no-padding'>";
+            vhtml += "<ul class='oper-list clearfix'>";
+            vhtml += "<li onclick='schedule(" + id + ",0)'><i class='fa  fa-calendar-check-o text-aqua' style='font-size:22px'></i><a class='opter_title' href='#'>预定</a></li>";
+            vhtml += "<li onclick='sell(" + id + ",0)'><i class='fa fa-cart-plus text-blue' style='font-size:22px'></i>  <a class='opter_title' href='#'>购墓</a></li>";
+            vhtml += "<li onclick='save(" + id + ",0)'><i class='fa fa-database text-maroon' style='font-size:22px'></i>  <a class='opter_title' href='#'>寄存</a></li>";
+            vhtml += "<li onclick='bury(" + id + ",0)'><i class='fa fa-download text-black' style='font-size:22px'></i>  <a class='opter_title' href='#'>安葬</a></li>";
+            vhtml += "<li onclick='monumen(" + id + ",0)'><i class='fa fa-pencil-square text-olive' style='font-size:22px'></i>  <a class='opter_title' href='#'>碑文</a></li>";
+            vhtml += "<li onclick='chang(" + id + ",0)'><i class='fa fa-mail-forward text-lime ' style='font-size:22px'></i>  <a class='opter_title' href='#'>迁墓</a></li>";
+            vhtml += "<li onclick='Cancel(" + id + ",0)'><i class='fa  fa-remove text-orange' style='font-size:22px'></i>  <a class='opter_title' href='#'>退款</a></li>";
+            vhtml += "<li onclick='Archives(" + id + ",0)'><i class='fa fa-database text-fuchsia ' style='font-size:22px'></i>  <a class='opter_title' href='#'>档案</a></li>";
+            vhtml += "<li onclick='Light(" + id + ",0)'><i class='fa  fa-lightbulb-o text-yellow' style='font-size:22px'></i>  <a class='opter_title' href='#'>点灯</a></li>";
+          //  vhtml += "<li><i class='fa fa-tree text-green' style='font-size:22px'></i>  <a class='opter_title' href='#'>鲜花</a></li>";
+            vhtml += " </ul></div>";
+            return vhtml;
+        }
+
+        function schedule(cid, sid) {
+            url = "{:url('Schedule/ScheduleAdd_ajax_show')}";
+            sj = Math.random(1000);
+            $.post(url, {cid: cid, sid: sid, sj: sj}, function (result) {
+                infodate = JSON.parse(result);
+                if (infodate.code == 0) {
+                    $('#myModal .modal-title').html("墓穴预定");
+                    $('#myModal .modal-body').html(infodate.data);
+                    $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+                } else {
+                    toast.error(infodate.msg);
+                }
+            });
+        }
+        
+         function save(cid, sid) {
+            url = "{:url('Save/Save_ajax_show')}";
+            sj = Math.random(1000);
+            $.post(url, {cid: cid, sid: sid, sj: sj}, function (result) {
+                infodate = JSON.parse(result);
+                if (infodate.code == 0) {
+                    $('#myModal .modal-title').html("寄存信息管理");
+                    $('#myModal .modal-body').html(infodate.data);
+                    $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+                } else {
+                    toast.error(infodate.msg);
+                }
+            });
+        }
+        
+        function sell(cid) {
+            url = "{:url('Sell/Sell_ajax_show')}";
+            sj = Math.random(1000);
+            $.post(url, {cid: cid, sj: sj}, function (result) {
+                infodate = JSON.parse(result);
+                if (infodate.code == 0) {
+                    $('#myModal .modal-title').html("墓穴购买管理");
+                    $('#myModal .modal-body').html(infodate.data);
+                    $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+                } else {
+                    toast.error(infodate.msg);
+                }
+            });
+        }
+        
+        function bury(cid) {
+            url = "{:url('Bury/Bury_list_ajax')}";
+            sj = Math.random(1000);
+            $.post(url, {cid: cid, sj: sj}, function (result) {
+                infodate = JSON.parse(result);
+                if (infodate.code == 0) {
+                    $('#myModal .modal-title').html("安葬管理");
+                    $('#myModal .modal-body').html(infodate.data);
+                    $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+                } else {
+                    toast.error(infodate.msg);
+                }
+            });
+        }
+        
+        function monumen(cid) {
+            url = "{:url('Monumen/Monumen_ajax_show')}";
+            sj = Math.random(1000);
+            $.post(url, {cid: cid, sj: sj}, function (result) {
+                infodate = JSON.parse(result);
+                if (infodate.code == 0) {
+                    $('#myModal .modal-title').html("碑文管理");
+                    $('#myModal .modal-body').html(infodate.data);
+                    $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+                } else {
+                    toast.error(infodate.msg);
+                }
+            });
+        }
+        
+         function Archives(cid) {
+            url = "{:url('Archives/Archives_show_ajax')}";
+            sj = Math.random(1000);
+            $.post(url, {cid: cid, sj: sj}, function (result) {
+                infodate = JSON.parse(result);
+                if (infodate.code == 0) {
+                    $('#myModal .modal-title').html("墓穴档案");
+                    $('#myModal .modal-body').html(infodate.data);
+                    $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+                } else {
+                    toast.error(infodate.msg);
+                }
+            });
+        }
+        
+        function chang(cid) {
+            url = "{:url('Sellchang/Chang_ajax_show')}";
+            sj = Math.random(1000);
+            $.post(url, {cid: cid, sj: sj}, function (result) {
+                infodate = JSON.parse(result);
+                if (infodate.code == 0) {
+                    $('#myModal .modal-title').html("墓穴变更");
+                    $('#myModal .modal-body').html(infodate.data);
+                    $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+                } else {
+                    toast.error(infodate.msg);
+                }
+            });
+        }
+        
+         function Cancel(cid) {
+           url = "{:url('Cancel/show_Cancel_ajax')}";
+        sj = Math.random(1000);
+        $.post(url, { cid: cid, sj: sj }, function(result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModal .modal-body').html(infodate.data);
+                 $('#myModal .modal-title').html("退款管理");
+                $("#myModal").modal({ show: true, backdrop: false }); //手动开启*/
+            } else {
+                alert(infodate.msg);
+            }
+        });
+        }
+        
+           function Light(cid) {
+           url = "{:url('Light/show_Light_ajax')}";
+        sj = Math.random(1000);
+        $.post(url, { cid: cid, sj: sj }, function(result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModal .modal-body').html(infodate.data);
+                 $('#myModal .modal-title').html("退款管理");
+                $("#myModal").modal({ show: true, backdrop: false }); //手动开启*/
+            } else {
+                alert(infodate.msg);
+            }
+        });
+        }
+        
+        
+        $('#myModal2').on('hidden.bs.modal', function() {
+  $('body').addClass('modal-open')
+});
+    $('#myModal3').on('hidden.bs.modal', function() {
+  $('body').addClass('modal-open')
+});
+    </script>

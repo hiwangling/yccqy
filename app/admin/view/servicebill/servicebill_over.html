@@ -1,0 +1,236 @@
+<link rel="stylesheet" href="__STATIC__/module/admin/css/zTreeStyle/zTreeStyle.css">
+<style>
+  .tablebox table td:nth-child(odd){
+    padding:9px 9px;
+    width: 75px;
+  }
+  .topbar{
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+  }
+  .layui-layer-content{
+    padding-top: 10px;
+  }
+  .layui-form-label{
+    width: 75px;
+  }
+  .Bts{
+    margin-left: 25px;
+  }
+</style>
+
+      <!------------------------------------安葬信息-------------------------------------------->
+      <!-- <div class="topbar">基本信息</div> -->
+<form action="{:url('ServicebillOver')}" method="post" class="layui-form form_single" lay-filter="test1">
+<blockquote class="layui-elem-quote">
+          基本信息
+        </blockquote> 
+  <div class="tablebox">
+    <table class="layui-table">
+    <tbody>
+				<tr>
+						<td>墓穴名称</td>
+              				<td>{$info.cemetery_name}</td>
+						<td>服务名称</td>
+                    <td class="layui-form">
+                    	{$info.service}
+                    </td>
+                        
+                        <td>服务次数</td>
+                        <td>
+                            {$info.serviceamount}
+                          </td> 
+                        <td>开始时间</td>
+                        <td>
+                        {$info.begindate}
+                        </td> 
+                </tr>        
+                <tr>
+					<td>服务要求</td>
+                        <td>{$info.vcnote}</td>
+                    <td>负责人</td>
+                        <td>{$info.nickname}</td>
+                    <td>执行人员</td>
+                    <td class="layui-form">
+                    {$info.joinhrm}
+                    </td>
+                    </tr>
+					<tr>
+						<td>完成说明</td>
+						<td class="layui-form">
+						{$info.execnote}
+						</td>
+						  <td>完成时间</td>
+						  <td colspan="5">
+						  {notempty name='info.execdate'}
+							{$info.execdate|date="y-m-d",###}
+						  {/notempty}
+						</td> 
+					</tr>
+              </tbody>
+            </table> 
+          </div>
+		  {if condition='$info.resutlstatus eq 1'}
+		   <blockquote class="layui-elem-quote">
+              完成信息
+          </blockquote>
+          <div>
+           <table class="layui-table">
+    		<tbody>
+				<tr>
+				<td>完成说明</td>
+                <td><input type="text" name="execnote" lay-verify="title" autocomplete="off" placeholder="" class="layui-input"></td>
+                </tr>  
+				<tr>
+				<td>执行人员</td>
+                <td><input type="text"  lay-verify="title" autocomplete="off" placeholder="" class="layui-input" id="bxcourse"><span onclick="select_bxkc(1)">选择</span></td>
+				<input type="hidden" name="joinhrm" id="bxcoursename" value="">
+				</tr>      
+              </tbody>
+            </table> 
+        </div>
+		{/if}
+      <div class="box-footer">
+	  {if condition='$info.resutlstatus eq 1'}
+       <button  type="submit" class="btn ladda-button ajax-post" data-style="slide-up" target-form="form_single">
+			<span class="ladda-label"><i class="fa fa-send"></i> 确 定</span>
+		</button>
+		{/if}
+		<a class="btn" onclick="javascript:history.back(-1);return false;"><i class="fa fa-history"></i> 返 回</a>
+      </div>
+    </div>
+	<input type="hidden" name="buryid"  value="{$info.buryid}">
+	<input type="hidden" name="cid"  value="{$info.cid}">
+	<input type="hidden" name="id"  value="{$info.id}">
+</form>
+<div class="modal fade" id="myModal5" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">  <!---begin!--->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 id="myModalLabel" class="blue bigger modal-title">选择人员</h4>
+                    </div>
+
+
+                    <div class="modal-body"  >
+                        <div class="row-fluid">
+                            <div id="treearea" class="treearea treeslim-scroll" style="height:400px" >
+                                <input type="hidden" id="xklx" name="xklx" value="">
+                                <ul id="folderTree" class="ztree" ></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer" >
+                        <button class="btn btn-sm" data-dismiss="modal"  style="float:right;  "><i class="ace-icon fa fa-times"></i> 取消</button>
+                        <button class="btn btn-sm btn-primary" onClick="return dosel();" style="float:right; margin-right:10px;"><i class="ace-icon fa fa-check"></i> 选择</button>
+                    </div>
+                    <!---end!---> 
+                </div>
+            </div>
+        </div>
+
+<script src="__STATIC__/module/admin/js/ztree/jquery.ztree.all.min.js"></script>  
+<script type="text/javascript">
+var zTreeObj;
+
+                            var setting = {
+                            check: {enable: true,
+                                    chkStyle: "checkbox",
+                                    radioType: "all"
+                            },
+                                    data: {
+                                    simpleData: {
+                                    enable: true
+                                    }
+                                    }
+                            };
+                                     var zNodes = {$branch}/*[{id:'t6',pId:0,name:'体能扩展训练',nocheck:true,},{id:'t5',pId:0,name:'军事训练',nocheck:true,},{id:'c12',pId:'t5',name:'打靶'},{id:'c49',pId:'t5',name:'CS李'},{id:'c52',pId:'t5',name:'CS高'},{id:'c58',pId:'t5',name:'CS王'},{id:'c61',pId:'t5',name:'CS章'},{id:'c63',pId:'t5',name:'CS陈'},{id:'t7',pId:0,name:'竞技比赛',nocheck:true,},{id:'c22',pId:'t7',name:'盲人方阵'},{id:'c46',pId:'t7',name:'冰海沉船'},{id:'c47',pId:'t7',name:'贪吃蛇'},{id:'c48',pId:'t7',name:'雷区取水'},{id:'c50',pId:'t7',name:'法柜奇兵'},{id:'c51',pId:'t7',name:'极速60秒'},{id:'c53',pId:'t7',name:'挑战150'},{id:'c54',pId:'t7',name:'共建城池'},{id:'c55',pId:'t7',name:'呼吸的力量'},{id:'c56',pId:'t7',name:'穿越电网'},{id:'c57',pId:'t7',name:'车轮滚滚'},{id:'c59',pId:'t7',name:'抢渡金沙江'},{id:'c60',pId:'t7',name:'穿越电网（李）'},{id:'c62',pId:'t7',name:'冰海乘船（鲜）'},{id:'c64',pId:'t7',name:'愚公移山'},{id:'c65',pId:'t7',name:'定向越野(高)'},{id:'t4',pId:0,name:'防灾减灾演练',nocheck:true,},{id:'c8',pId:'t4',name:'消防安全教育'},{id:'c44',pId:'t6',name:'定向越野A'}];*/
+                                 
+                                                    function select_bxkc(typeid)
+                                                    {
+                                                        height = "450px";
+                                                       
+                                                        var $modal = $('#myModal5');
+////
+
+														zTreeObj = $.fn.zTree.init($("#folderTree"), setting, zNodes);
+														bxcourse = $("#bxcourse").val();
+														title = "选择必修课程"
+                                                        
+
+                                                        if (bxcourse != "") {
+                                                            var kcidArr = bxcourse.split(",");
+                                                            if (kcidArr.length > 0)
+                                                            {
+                                                                for (var i = 0; i < kcidArr.length; i++) {
+                                                                    if (kcidArr[i] > 0)
+                                                                    {
+                                                                        var kcnodes = zTreeObj.getNodeByParam("id", "c" + kcidArr[i]);
+                                                                        zTreeObj.checkNode(kcnodes, true, true);
+
+                                                                        var node = zTreeObj.getNodeByParam("id", kcnodes["pId"]);
+                                                                        zTreeObj.expandNode(node, true, false, true);
+                                                                    }
+                                                                }
+                                                            }
+                                                        } else
+                                                        {
+                                                            var node = zTreeObj.getNodeByParam("id", "t1");
+                                                            zTreeObj.expandNode(node, true, false, false);
+                                                        }
+
+                                                        $modal.find('.modal-title').text(title);
+                                                        $("#xklx").val(typeid);
+
+                                                        $modal.modal({
+                                                            backdrop: 'static'
+                                                        });
+
+
+                                                    }
+                                            function dosel() {
+                                                var zTree = $.fn.zTree.getZTreeObj("folderTree");
+                                                var selnode = zTree.getCheckedNodes(true);
+                                                var xxkl = $("#xklx").val();
+                                                if (selnode.length >= 1) {
+                                                    kc_ids = "";
+                                                    kc_name = "";
+                                                    for (var i = 0, len = selnode.length; i < len; i++)
+                                                    {
+
+                                                        if (selnode[i].id.substr(0, 1) == "c")
+                                                        {
+                                                            kc_ids = kc_ids + selnode[i].id.substring(1) + ",";
+                                                            kc_name = kc_name + selnode[i].name + ",";
+                                                        }
+                                                    }
+                                                    if (xxkl == 1)
+                                                    {
+                                                        
+                                                        $('#bxcourse').val(kc_name);
+                                                        $('#bxcoursename').val(kc_ids);
+                                                    } 
+                                                    else if (xxkl == 2)
+                                                    {
+                                                        $('#xxcourse').val(kc_ids);
+                                                        $('#xxcoursename').val(kc_name);
+                                                    }
+                                                    else
+                                                    {
+                                                        $('#school').val(kc_ids);
+                                                        $('#schoolname').val(kc_name); 
+                                                    }
+                                                    $('#myModal5').modal('toggle');
+                                                } 
+                                                else {
+                                                    bootbox.alert("请选择最少一个信息!");
+                                                }
+                                                return false;
+                                            }
+                                            function toclose() {
+                                                $('#myModal5').modal('toggle');
+                                            }
+
+</script>	

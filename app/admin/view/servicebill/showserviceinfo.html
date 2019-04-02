@@ -1,0 +1,204 @@
+<style>
+  .tablebox table td:nth-child(odd){
+    padding:9px 9px;
+    width: 75px;
+  }
+  .topbar{
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+  }
+  .layui-layer-content{
+    padding-top: 10px;
+  }
+  .layui-form-label{
+    width: 75px;
+  }
+  .Bts{
+    margin-left: 25px;
+  }
+  .prit{
+    text-align: center;
+    font-size: 36px;
+    font-family: '楷体';
+    font-weight: 800;
+  }
+  .Nprice{
+      display: inline-block;
+    width: 75px;
+    height: 30px;
+    line-height: 30px;
+  }
+  .allprice{
+   margin-right:15px;
+  }
+  .layui-elem-quote {
+    margin-bottom: 10px;
+    padding: 10px;
+    line-height: 22px;
+    border-left: none;
+    border-radius: 0 2px 2px 0;
+    background-color: #f2f2f2;
+}
+.layui-icon{
+  margin-right: 5px;
+  font-size: 18px;
+ 
+}
+.tablebox{
+  padding: 0 10px;
+}
+.layui-table td,.layui-table th{
+    border-color:#000; 
+}
+  
+.layui-table thead tr{
+    background: #fff;
+    font-weight: bold;
+}
+.layui-table tbody tr:hover{
+    background-color: transparent;
+}
+</style>
+ <script src="__STATIC__/module/admin/js/jqprint.js"></script>
+ <script src="http://www.jq22.com/jquery/jquery-migrate-1.2.1.min.js"></script>
+      <!------------------------------------安葬信息-------------------------------------------->
+      <!-- <div class="topbar">基本信息</div> -->
+	 
+      <blockquote class="layui-elem-quote">
+        <i class="layui-icon layui-icon-username"></i>基本信息
+        </blockquote>
+      <div class="tablebox">
+      <table class="layui-table"  >
+          <tbody>
+             
+                   <tr>
+                    <td>墓穴</td>
+                      <td>{$data.cemetery_name}</td>
+                       
+                     <td>行</td>
+                            <td class="layui-form">
+                                {$data.ix}
+                            </td>
+                            <td>列</td>
+                            <td class="layui-form">
+                                {$data.iy}
+                            </td>
+                            <td>价格</td>
+                            <td>  {$data.price}  </td>  
+                   </tr>
+                        <tr>
+                            <td>墓园</td>
+                            <td class="layui-form">
+                                {$data.garden_name}
+                            </td>
+                            <td>墓区</td>
+                            <td class="layui-form">
+                               {$data.area_name}
+                            </td>
+                            <td>类型</td>
+                            <td>
+                                {$data.type_name}
+                              </td> 
+                            <td>样式</td>
+                            <td>
+                                {$data.style_name}
+                            </td> 
+                        </tr>
+                        
+              </tbody>
+            </table> 
+      </div>
+   
+         <blockquote class="layui-elem-quote">
+        <i class="layui-icon layui-icon-username"></i>联系信息
+        </blockquote>
+      <div class="tablebox">
+      <table class="layui-table"  >
+          <tbody>
+             
+                    
+                         <tr>
+                            <td>联系人</td>
+                            <td  >
+                               {$data.linkmane}
+                            </td>
+                            <td>联系电话</td>
+                            <td  >
+                               {$data.linkphone}
+                            </td>
+                            <td>服务名称</td>
+                            <td>
+                                 {$data.service} 
+                              </td> 
+                            <td> 服务次数</td>
+                            <td>
+                                {$data.serviceamount}
+                            </td> 
+                        </tr>
+                        <tr>
+                            <td>服务要求</td>
+                            <td  colspan="3" >
+                               {$data.vcnote}
+                            </td>
+                             <td> 开始时间</td>
+                            <td  >
+                               {$data.begindate}
+                            </td>
+                            <td> 结束时间</td>
+                            <td  >
+                               {$data.enddate}
+                            </td>
+                            
+                        </tr>
+                        
+              </tbody>
+            </table> 
+      </div>
+      
+       <blockquote class="layui-elem-quote">
+        <i class="layui-icon layui-icon-username"></i>执行情况
+        </blockquote>
+      <div class="tablebox">
+      <table class="layui-table"  >
+          <tbody>
+             
+                
+                         <tr>
+                            <td>执行负责人</td>
+                            <td  >
+                               {$data.nickname}
+                            </td>
+                            <td>参与人</td>
+                            <td  >
+                               {$data.joinhrm}
+                            </td>
+                            <td>服务状态 </td>
+                            <td>
+                               {if condition="$data['resutlstatus'] eq 1"}待完成{else/}<b style=" color: red">已完成</b>{/if}   
+                              </td> 
+                               <td>提交时间 </td>
+                              {if condition="$data['execdate'] neq ''"}
+				  <td>{$data.execdate|date="y-m-d",###}</td>
+				  {else/}
+                                  <td></td>
+				  {/if}
+                             
+                        </tr>
+                         <tr>
+                            <td>完成说明</td>
+                            <td  colspan="7" >
+                               {$data.execnote}
+                            </td>
+                            
+                        </tr>
+              </tbody>
+            </table> 
+      </div>
+       
+          
+            
+          
+        
+ 
+ 

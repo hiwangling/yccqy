@@ -1,0 +1,100 @@
+<a class="btn  "  onclick="cemeteryAreaAdd_ajax_show();"><i class="fa fa-plus"></i> 新 增</a> 
+
+<div class="col-md-6">
+            <div class="form-group">
+                <label>封面图片</label>
+                <span class="">（请上传单张封面图片）</span>
+                <br/>
+                {assign name="cover_id" value="$info.cover_id|default='0'" /}
+                {:widget('file/index', ['name' => 'cover_id', 'value' => $cover_id, 'type' => 'img'])}
+            </div>
+          </div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">项目流程处理</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+ <script>
+       function cemeteryAreaAdd_ajax_show(){
+        
+        url = "{:url('show_ajax')}";
+        sj = Math.random(1000);
+        $.post(url, {sj: sj}, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModal .modal-title').html("增加墓位类型信息");
+             $('#myModal .modal-body').html(infodate.data);
+                $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+            } else {
+                toast.error(infodate.msg);
+            }
+        });
+       }
+    
+ 
+   function cemeteryAreaAdd_ajax_submit(){
+       url = "{:url('CemeteryArea/cemeteryAreaAdd_ajax_submit')}";
+        sj = Math.random(1000);
+        data = $("#formreserve").serialize() + "&sj=" + sj
+        $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                 $('#myModal').modal('hide');
+                location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    };
+ 
+  function cemeteryAreaEdit_ajax_show(id){
+        url = "{:url('CemeteryArea/cemeteryAreaEdit_ajax_show')}";
+        sj = Math.random(1000);
+        $.post(url, {cid:id,sj: sj}, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModal .modal-title').html("修改墓位类型信息");
+                $('#myModal .modal-body').html(infodate.data);
+                $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+            } else {
+                toast.error(infodate.msg);
+            }
+        });
+    };
+    
+     function cemeteryAreaedit_ajax_submit(){
+       url = "{:url('CemeteryArea/cemeteryAreaedit_ajax_submit')}";
+        sj = Math.random(1000);
+        data = $("#formreserve").serialize() + "&sj=" + sj
+        $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                 $('#myModal').modal('hide');
+                location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    };
+</script>
+ 
+
+

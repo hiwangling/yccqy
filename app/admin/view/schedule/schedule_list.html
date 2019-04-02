@@ -1,0 +1,157 @@
+<link rel="stylesheet" href="__STATIC__/module/admin/css/cemetery.css">
+<div class="box">
+  <div class=" form-inline search-form  ">
+        <div class="form-group">
+            <label class="zhj-form-label">关键字：</label>
+            <input name="search_data" class="form-control" value="{$formcs.search_data|default=''}" placeholder="预定人|墓穴名称|业务员" type="text">
+        </div>
+
+        <div class="form-group">
+            <label class="zhj-form-label">预定类型</label>
+            <select name="ordaintype" id="ordaintype"  class="form-control">
+                <option value="0" {if condition="(0==$formcs.ordaintype)"} selected="selected" {/if}>请选择</option>
+                {volist name='ordaintype' id='vo'}
+                <option value="{$key}" {notempty name="$formcs['ordaintype']"}{if condition="$formcs['fund'] eq $key"} selected="selected" {/if}{/notempty} >{$vo}</option>
+                {/volist}
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="zhj-form-label">预订日期</label>
+            <input type='text' class="form-control rqinput" value="{$formcs.sbbegin|default=''}"  name="sbbegin" id="sbbegin"/>
+            到        
+            <input type='text' class="form-control rqinput" value="{$formcs.sbbegin|default=''}"  name="sbbegin" id="sbend"/>
+        </div>
+
+        <div class="form-group">
+            <button type="button" id="search" url="{:url('ScheduleList')}" class="btn btn-default" style=" margin-bottom: 6px;"><i class="fa fa-search"></i> 查询</button>
+        </div>
+
+
+    </div>
+
+
+    <div class="box-body table-responsive">
+        <table  class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                   
+                    <th>墓穴信息</th>
+                    <th>预定人</th>
+                    <th>联系电话</th>
+                    <th>定金</th>
+                     
+                    <th>预定方式</th>
+                    <th>预定日期</th>
+                    <th>到期日期</th>
+                    <th>过期天数</th>
+                     <th>状态</th>
+                    <th>业务员</th>
+                     <th>操作</th>
+                </tr>
+            </thead>
+
+            {notempty name='list'}
+            <tbody>
+                {volist name='list' id='vo'}
+                <tr>
+                    
+                    <td>{$vo.garden_name}/{$vo.area_name}{$vo.name}</td>
+                    <td>{$vo.buyer}</td>
+                    <td>{$vo.phone}</td>
+                    <td>{$vo.ordainprice}</td>
+                    <td>{$vo.ordaintype|getordaintype}</td>
+                    
+                    <td>{$vo.ordainbegin|date="Y-m-d",###}</td>
+                    <td>{$vo.ordainend|date="Y-m-d",###}</td>
+                     <td>{$vo.ts}</td>
+                     <td>{$vo.orderstatus|getGstatus}</td>
+                    <td>{$vo.sellname}</td>
+                  
+                    <td>
+          <a href="#" onclick="schedule({$vo.cid},{$vo.id})"    class="btn"><i class="fa  fa-edit"></i> 编辑</a> 
+            <a href="#" onclick="schedule_delete2({$vo.id});"    class="btn"><i class="fa fa-trash"></i> 撤销</a> 
+             </td>
+            </tr>
+            {/volist}
+            </tbody>
+            {else/}
+            <tbody><tr class="odd"><td colspan="8" class="text-center" valign="top">{:config('empty_list_describe')}</td></tr></tbody>
+            {/notempty}
+        </table>
+    </div>
+
+    <div class="box-footer clearfix text-center">
+        {$list->render()}
+    </div>
+
+</div>
+ <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  >
+    <div class="modal-dialog modal-dialog900">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel"> </h4>
+            </div>
+            <div class="modal-body">
+                
+           </div>
+            
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+ <script>
+     $('#sbbegin').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+
+    $('#sbend').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+ 
+ function schedule(cid,sid) {
+          url = "{:url('Schedule/ScheduleAdd_ajax_show')}";
+        sj = Math.random(1000);
+        $.post(url, {cid:cid,sid:sid,sj: sj}, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModal .modal-title').html("墓穴预定");
+                $('#myModal .modal-body').html(infodate.data);
+                $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+            } else {
+                toast.error(infodate.msg);
+            }
+        });
+}
+
+ function schedule_delete2(id)
+{
+     var info=confirm("您确定要撤销该预订吗？");
+    if (info==true){
+         url = "{:url('Schedule/Schedule_delete_ajax')}";
+        sj = Math.random(1000);
+         data ="id=" +id+ "&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("预订撤销操作成功！");
+                  $('#myModal').modal('hide');
+                 location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    }
+}  
+</script>

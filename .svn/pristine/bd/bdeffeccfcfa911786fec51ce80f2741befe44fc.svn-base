@@ -1,0 +1,66 @@
+	<div class="cd-quick-view">
+		<div class="cd-slider-wrapper cd-item-info_sx">
+			<h2>{$info.name}</h2>
+			<ul>
+           <li><i class="icon_font icon-shuxing"></i>所属园区: {$info.gardename}{$info.areaname}</li>
+	   <li><i class="iconfont icon-icon"></i>位置:{$info.ix}排{$info.iy}列</li>
+           <li><i class="iconfont icon-cailiao"></i>所用石材:{$info.stylename}</li>
+           <li><i class="iconfont icon-mubei"></i>墓碑穴位:{$info.typename}</li>
+           <li><i class="iconfont icon-icon"></i>逝者: {volist name='Bury' id='vo'}
+               {$vo.vcname}&nbsp;&nbsp;
+               {/volist}
+           </li>
+           <li><i class="iconfont icon-icon"></i>公墓到期日期:{$info.expiredate}
+           </li>
+             </ul>
+                       </div> <!-- cd-slider-wrapper -->
+<form action="" id="formreserve" name="formreserve">
+      <input name="cid" type="hidden" value="{$cid}">
+		<div class="cd-item-info">
+			<ul>
+                            <li><i class="iconfont icon-mubei"></i>联系人:<input   name="buyer" value="{$linkman.linkname|default=''}"  class="inputlink"  type="text"></li>
+                             <li><i class="iconfont icon-mubei"></i>联系电话:<input name="phone"  value="{$linkman.phone|default=''}"   class="inputlink"  type="text"> </li>
+		 
+                            
+            <li><i class="iconfont icon-mubei"></i>管理费:    
+                        <select lay-filter="manager0" name="manageryear" class="manager">
+                             <option value="10"  >10年</option>
+                               <option value="20"  >20年</option>
+                           </select>
+                     <select lay-filter="manager1" name="managerprice" class="manager">
+                            {volist name='managerprice' id='vo'}
+                            <option value="{$vo}"   >{$key}</option>
+                            {/volist}
+                          </select>
+                     </li>
+                     
+               <li><i class="iconfont icon-mubei"></i>故者关系: <select class="" onchange=""   name="relation" >
+					  		 
+                          {volist name='relation' id='vo'}
+                             <option value="{$key}"  >{$vo}</option>
+                          {/volist}
+                      </select>
+             </li>  
+              <li><i class="iconfont icon-mubei"></i>是否开票：<select class=""   name="invoice">
+                            
+                            <option value="1"  >是</option>
+                              <option value="0"  >否</option>
+                        </select>
+             </li>  
+             <li><i class="iconfont icon-mubei"></i>业务员: <select class=""  name="member" id='member' style="width: 150px;">
+								   {volist name='member' id='vo'}
+									 <option value="{$vo['id']}-{$vo['nickname']}">{$vo['nickname']}</option>
+								  {/volist}
+								</select>
+         </li>
+            </ul>
+           
+             <ul class="cd-item-action">
+            <li><a class="btn btn-default add-to-cart" onclick="managerprice_submit();" > 提交</a></li>					
+             <li>   <a   class="btn btn-default add-to-cart" data-dismiss="modal">关闭</a></li>
+                            
+			</ul> <!-- cd-item-action -->
+		</form></div> <!-- cd-item-info -->
+	</div>
+
+                       

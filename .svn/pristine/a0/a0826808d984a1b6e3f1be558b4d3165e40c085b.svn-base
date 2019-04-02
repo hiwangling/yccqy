@@ -1,0 +1,285 @@
+<div class="box">
+  <div class="box-header ">
+    
+    <a class="btn add_cemetery_show_ajax"><i class="fa fa-plus"></i> 新 增</a>
+    <a class="btn batchadd_cemetery_show_ajax"><i class="fa fa-book"></i> 批量增加</a>
+    <!--<a class="btn lead" href="javascript:;"><i class="fa fa-book"></i> 导 入</a>-->
+        <br/>
+    <div class="box">
+         <form action="" method="post" class="layui-form form_single" lay-filter="test1">
+          
+          <div class="col-md-2">
+            <div class="form-group">
+              <label>墓穴名称：</label>
+              <span></span>
+              <input name="search_data" class="form-control" value="{:input('search_data')}" placeholder="请输入墓穴名称" type="text">
+            </div>
+          </div>
+                  
+          <div class="col-md-2">
+            <div class="form-group">
+              <label>墓园选择</label>
+              <span> </span>
+              <select name="gardenID" id="gardenID" class="form-control garden">
+                <option value="0" {if condition="(0==$formcs.gardenID) " } selected="selected" {/if}>请选择</option>
+                {volist name='gardenlist' id='vo'}
+                <option value="{$vo['id']}" {if condition="($vo.id==$formcs.gardenID)" } selected="selected" {/if}>{$vo['name']}</option>
+               {/volist}
+              </select>
+            </div>
+          </div>
+           
+          <div class="col-md-2">
+            <div class="form-group">
+              <label>墓区选择</label>
+              <span> </span>
+              <select name="areaID" class="form-control area">
+                <option value="0" {if condition="(0==$formcs.areaID) " } selected="selected" {/if}>请选择</option>
+                {volist name='arealist' id='vo'}
+                <option value="{$vo['id']}" {if condition="($vo.id==$formcs.areaID)" } selected="selected" {/if}>{$vo['name']}</option>
+                {/volist}
+              </select>
+            </div>
+          </div> 
+             
+          <div class="col-md-2">
+            <div class="form-group">
+              <label>类型:</label>
+              <span> </span>
+              <select class="form-control type" name="typeID" id='typeID'  >
+                <option value="0" {if condition="(0==$formcs.typeID)"} selected="selected" {/if}>请选择</option>
+                {volist name='typelist' id='vo'}
+                <option value="{$vo['id']}" {if condition="($vo.id==$formcs.typeID)"} selected="selected" {/if}>{$vo['name']}</option>
+                {/volist}
+              </select>
+            </div>
+          </div>   
+           
+          <div class="col-md-2">
+            <div class="form-group">
+              <label>风格:</label>
+              <span> </span>
+                <select class="form-control style" name="styleID" id='styleID'  >
+                    <option value="0" {if condition="(0==$formcs.styleID)"} selected="selected" {/if}>请选择</option>
+                     {volist name='stypelist' id='vo'}
+                     <option value="{$vo['id']}" {if condition="$formcs.styleID eq $vo.id" }selected="selected" {/if}>{$vo['name']}</option>
+                     {/volist}
+                </select>
+            </div>
+          </div> 
+           
+          <div class="col-md-2">
+            <div class="form-group">
+              <label>状态:</label>
+              <span> </span>
+                <select class="form-control usestatus" name="usestatus" id='usestatus'  >
+                   <option value="0" {if condition="(0==$formcs.usestatus)"} selected="selected" {/if}>请选择</option>
+                    {volist name='usestatus' id='vo'}
+                    <option value="{$key}" {if condition="$formcs.usestatus eq $key" }selected="selected" {/if}>{$vo}</option>
+                    {/volist}
+                </select>
+            </div>
+          </div>
+            <div class="input-group-btn">
+                <button class="btn btn-info " url="{:url('CemeteryList')}">查询</button>
+            </div>
+     </div>
+    </form>
+        
+    </div>
+  <div class="box-body table-responsive">
+    <table  class="table table-bordered table-hover">
+      <thead>
+        <tr>
+            <th>墓号</th>
+            <th>名称</th>
+            <th>墓园</th>
+            <th>墓区</th>
+            <th>墓位类型</th>
+            <th>墓穴样式</th>
+            <th>使用状态</th>
+            <th>销售价格</th>
+            <th>操作</th>
+        </tr>
+      </thead>
+      
+      {notempty name='list'}
+        <tbody>
+            {volist name='list' id='vo'}
+                <tr>
+                  <td>{$vo.id}</td>
+                  <td>{$vo.name}</td>
+                  <td>{$vo.garden_name}</td>
+                  <td>{$vo.area_name}</td>
+                  <td>{$vo.type_name}</td>
+                  <td>{$vo.style_name}</td>
+                  <td>{$usestatus[$vo.usestatus]}</td>
+                  <td>{$vo.price}</td>
+                  <td class="col-md-3 text-center">
+                    {if condition="$vo.usestatus eq 1"}
+                     <a href="#" onclick="cemeteryEdit_ajax_show({$vo.id})" class="btn"><i class="fa fa-edit"></i> 编 辑</a> 
+                      &nbsp;
+                     <a class="btn confirm ajax-get"  href="{:url('cemeteryDel', array('id' => $vo['id']))}"><i class="fa fa-trash-o"></i> 删 除</a>
+                    {/if}
+                  </td>
+                </tr>
+            {/volist}
+        </tbody>
+        {else/}
+        <tbody><tr class="odd"><td colspan="8" class="text-center" valign="top">{:config('empty_list_describe')}</td></tr></tbody>
+      {/notempty}
+    </table>
+  </div>
+  <form action="{:url('CemeteryFile')}" method="post" class="form_single">
+  	<input name="path" value="" type="hidden">
+  </form>
+
+  <div class="box-footer clearfix text-center">
+      {$list->render()}
+  </div>
+
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  >
+    <div class="modal-dialog800">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+<script>
+    
+    
+    $('.garden').change(function(){
+	var id = $(this).val();
+	$('.area').html('<option value="0">墓区选择</option>');
+	$.ajax({
+	  type:'post',
+	  url:"{:url('Cemetery/getArea')}",
+	  data:{gardenID:id},
+	  dataType:'json',
+	  async:false,
+	  success:function(json){
+      		html = ''
+			$.each(json,function(n,v) {
+				html += "<option value="+v.id+">"+v.name+"</option>"
+			});
+			$('.area').append(html);
+			//form.render('select');
+	  },
+	  error:function(){
+		alert("服务器连接失败"); 
+	  },
+	})
+    })
+       
+    
+    $(".add_cemetery_show_ajax").click(function () {
+        url = "{:url('Cemetery/cemeteryAdd_ajax_show')}";
+        sj = Math.random(1000);
+        $.post(url, {sj: sj}, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModal .modal-title').html("增加墓穴信息");
+                $('#myModal .modal-body').html(infodate.data);
+                $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+            } else {
+                toast.error(infodate.msg);
+            }
+        });
+    });
+    
+ 
+   function cemeteryAdd_ajax_submit(){
+       url = "{:url('Cemetery/cemeteryAdd_ajax_submit')}";
+        sj = Math.random(1000);
+        data = $("#formreserve").serialize() + "&sj=" + sj
+        $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                 $('#myModal').modal('hide');
+                location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    };
+    
+    $(".batchadd_cemetery_show_ajax").click(function () {
+        url = "{:url('Cemetery/cemeteryBatchAdd_ajax_show')}";
+        sj = Math.random(1000);
+        $.post(url, {sj: sj}, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModal .modal-title').html("批量增加墓穴信息");
+                $('#myModal .modal-body').html(infodate.data);
+                $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+            } else {
+                toast.error(infodate.msg);
+            }
+        });
+    });
+    
+ 
+   function cemeteryBatchAdd_ajax_submit(){
+       url = "{:url('Cemetery/cemeteryBatchAdd_ajax_submit')}";
+        sj = Math.random(1000);
+        data = $("#formreserve").serialize() + "&sj=" + sj
+        $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                 $('#myModal').modal('hide');
+                location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    };
+ 
+  function cemeteryEdit_ajax_show(id){
+        url = "{:url('Cemetery/cemeteryEdit_ajax_show')}";
+        sj = Math.random(1000);
+        $.post(url, {cid:id,sj: sj}, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModal .modal-title').html("修改墓穴信息");
+                $('#myModal .modal-body').html(infodate.data);
+                $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+            } else {
+                toast.error(infodate.msg);
+            }
+        });
+    };
+    
+     function cemeteryEdit_ajax_submit(){
+       url = "{:url('Cemetery/cemeteryEdit_ajax_submit')}";
+        sj = Math.random(1000);
+        data = $("#formreserve").serialize() + "&sj=" + sj
+        $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                 $('#myModal').modal('hide');
+                location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    };
+</script>

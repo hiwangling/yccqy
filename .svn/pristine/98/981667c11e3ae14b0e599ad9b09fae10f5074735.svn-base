@@ -1,0 +1,72 @@
+<form action="{:url()}" method="post" class="form_single">
+    <div class="box">
+      <div class="box-body">
+        <div class="row">
+            
+ 
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>供应商编号</label>
+              <input class="form-control" name="sn" placeholder="供应商编号" type="text">
+            </div>
+          </div>
+               <div class="col-md-6">
+            <div class="form-group">
+              <label>供应商名称</label>
+              <input class="form-control" name="name" placeholder="供应商名称" type="text">
+            </div>
+          </div>
+              <div class="col-md-6">
+            <div class="form-group">
+              <label>所属仓库</label>
+            <select class="form-control" name="storageid">
+                    {volist name='storag' id='vo'}
+                    	<option value="{$vo.id}">{$vo.name}</option>
+                    {/volist}
+
+                </select>  
+            </div>
+          </div>
+             <div class="col-md-6">
+            <div class="form-group">
+              <label>联系人</label>
+              <input class="form-control" name="contact" placeholder="联系人" type="text">
+            </div>
+          </div>
+              <div class="col-md-6">
+            <div class="form-group">
+              <label>手机号</label>
+              <input class="form-control" name="phone" placeholder="手机号" type="text">
+            </div>
+          </div>
+              <div class="col-md-6">
+            <div class="form-group">
+              <label>邮箱</label>
+              <input class="form-control" name="email" placeholder="邮箱" type="text">
+            </div>
+          </div>
+             <div class="col-md-6">
+            <div class="form-group">
+              <label>传真</label>
+              <input class="form-control" name="fax" placeholder="传真" type="text">
+            </div>
+          </div>
+             <div class="col-md-6">
+            <div class="form-group">
+              <label>供应商地址</label>
+              <input class="form-control" name="address" placeholder="供应商地址" type="text">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label> 描述</label>
+			  <textarea class="form-control" name="vcdesc" rows="3" placeholder="请输入描述"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="box-footer">
+        {include file="layout/edit_btn_group"/}
+      </div>
+    </div>
+</form>

@@ -1,0 +1,133 @@
+<style>
+  .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 5px;
+    
+}  
+</style>
+
+<section>
+          <div class="row">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#activity" data-toggle="tab" aria-expanded="false">碑文管理</a></li>
+              <li class=""><a href="#timeline" data-toggle="tab" aria-expanded="false">碑文缴费</a></li>
+              <li class=""><a href="#sfjl" data-toggle="tab" aria-expanded="false">缴费记录</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="activity">
+                  <form  id="formreserve">
+                   <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>
+            墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name} <span style=" margin-left: 20px;">碑型： <select class="form-control_zhj monumenstyle"  name="monumenstyle"   >
+                                                    {foreach name="monumenstyle" item="vo" key="k" }
+                                                    <option value="{$k}"  {if condition="$info.monumenstyle eq $k"}selected="selected"{/if}>{$vo}</option>
+                                                    {/foreach}</select></span> 
+            <span  style=" margin-left: 20px;">碑文类型:<select class="form-control_zhj monumentype"  name="monumentype"   >
+                                                    {foreach name="monumenstyle" item="vo" key="k" }
+                                                    <option value="{$k}"  {if condition="$info.monumentype eq $k"}selected="selected"{/if}>{$vo}</option>
+                                                    {/foreach}</select></span>
+           </h3>
+        </div>
+         <input type="hidden" class="iseditmb" name="iseditmb" value="{$iseditmb|default='0'}"/> 
+           {volist name='bury' id='vo' }
+           <input type="hidden" class="hiddenclass" name="bury[{$key}][name]" value="{$vo.vcname|default=''}"/> 
+           <input type="hidden" class="hiddenclass" name="bury[{$key}][sex]" value="{$vo.sex|default=0}"/> 
+           <input type="hidden" class="hiddenclass" name="bury[{$key}][birth]" value="{$vo.death}"/> 
+           <input type="hidden" class="hiddenclass" name="bury[{$key}][death]" value="{$vo.death}"/> 
+                               {/volist}
+      </div>
+                      
+        <div class="row">
+            <div class="col-xs-12 htmls">
+                {$mbhtml}
+            </div>
+      </div>
+           <input type="hidden" name="cid" value="{$info.id}"/>
+      <div class="modal-footer"  >
+        <a  href="#" onclick="monumen_save_submit(1);"  type="button"  class="btn btn-default"><span class="ladda-label">
+            <i class="fa fa-edit"></i> 提交
+         </span></a>
+            
+                 
+      </div>
+              </div>
+              <!-- /.tab-pane -->
+  <div class="tab-pane" id="timeline">
+                   <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name}
+           </h3>
+        </div>
+         
+      </div>
+                <!-- The timeline -->
+                <div id="show_data_table">
+                   碑文缴费 
+          </div>
+                
+                 <div class="modal-footer"  >
+         <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                 
+      </div> 
+              </div>
+            
+        <div class="tab-pane" id="sfjl">
+                   <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name}
+           </h3>
+        </div>
+         
+      </div>
+                <!-- The timeline -->
+                <div  >
+                   收费记录 
+          </div>
+                
+                 <div class="modal-footer"  >
+         <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                 
+      </div> 
+              </div>       
+              
+            </div>
+            <!-- /.tab-content -->
+          </div>
+            <div class="modal-footer"  >
+         <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                 
+      </div>    
+              
+          <!-- /.nav-tabs-custom -->
+        </div>  
+</section>
+ 
+ <script>
+
+ function monumen_save_submit(type){
+    monumenstyle = $('.monumenstyle').val()
+    monumentype = $('.monumentype').val()
+    htmls = $('.htmls').html()
+     cid = $('input[name="cid"').val()
+                              $.ajax({
+                                        type:"POST",
+                                        url:"{:url('Monumen/monumen_update_ajax')}",
+                                        data:{monumentype:monumentype,monumenstyle:monumenstyle,cid:cid,htmls:htmls,type:type},
+                                        dataType:"json",
+                                        success:function(infodate){
+                                           if (infodate.code == 0) {
+                  toast.success(infodate.msg);
+                  
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+                                        }
+                                    });
+  }
+      
+ </script>

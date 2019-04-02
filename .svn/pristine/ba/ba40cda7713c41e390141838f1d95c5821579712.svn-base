@@ -1,0 +1,153 @@
+<?php
+// +---------------------------------------------------------------------+
+// | OneBase    | [ WE CAN DO IT JUST THINK ]                            |
+// +---------------------------------------------------------------------+
+// | Licensed   | http://www.apache.org/licenses/LICENSE-2.0 )           |
+// +---------------------------------------------------------------------+
+// | Author     | Bigotry <3162875@qq.com>                               |
+// +---------------------------------------------------------------------+
+// | Repository | https://gitee.com/Bigotry/OneBase                      |
+// +---------------------------------------------------------------------+
+
+namespace app\admin\logic;
+
+/**
+ * 墓园类型逻辑
+ */
+class Serviceinfo extends AdminBase
+{
+    /**
+     * 获取墓园类型列表
+     */
+    public function getServiceinfoList($where = [], $field = 'a.*', $order = '', $paginate = DB_LIST_ROWS)
+    {
+        $this->modelServiceinfo->alias('a');
+	 $join = [
+                    [SYS_DB_PREFIX . 'branch b', 'a.deptid = b.id','left'],
+                ];
+        
+        $where['a.' . DATA_STATUS_NAME] = ['neq', DATA_DELETE];
+	$this->modelServiceinfo->join=$join;
+        return $this->modelServiceinfo->getList($where, $field, $order, $paginate);
+    }
+    
+    public function  getServiceinfo_edit_List($sellid,$where = [], $field = 'a.*', $order = '', $paginate = DB_LIST_ROWS)
+    {
+       $this->modelServiceinfo->alias('a');
+		
+		$join = [
+                    [SYS_DB_PREFIX . 'branch b', 'a.deptid = b.id','left'],
+                    [SYS_DB_PREFIX . 'servicebill s', 'a.id = s.serviceID and s.sellID='.$sellid,'left'],
+                    [SYS_DB_PREFIX . 'finance f', 'f.id = s.financeID and s.sellID='.$sellid,'left']
+                ];
+        
+        $where['a.' . DATA_STATUS_NAME] = ['neq', DATA_DELETE];
+		
+        return $this->modelServiceinfo->getList($where, $field, $order, $paginate, $join); 
+    }
+	/**
+     * 墓园类型信息添加
+     */
+    public function ServiceinfoAdd($data = [])
+    {
+        
+        $validate_result = $this->validateServiceinfo->scene('add')->check($data);
+        
+        if (!$validate_result) {
+            
+            return [RESULT_ERROR, $this->validateServiceinfo->getError()];
+        }
+        
+        $url = url('serviceinfolist');
+        
+        $result = $this->modelServiceinfo->setInfo($data);
+		
+		$result && action_log('新增', '新增服务信息，name：' . $data['servicename']);
+        
+        return $result ? [RESULT_SUCCESS, '操作成功', $url] : [RESULT_ERROR, $this->modelServiceinfo->getError()];
+    }
+	/**
+     * 墓园类型信息编辑
+     */
+    public function ServiceinfoEdit($data = [])
+    {
+        
+        $validate_result = $this->validateServiceinfo->scene('edit')->check($data);
+        
+        if (!$validate_result) {
+            
+            return [RESULT_ERROR, $this->validateServiceinfo->getError()];
+        }
+        
+        $url = url('serviceinfolist');
+        
+        $result = $this->modelServiceinfo->setInfo($data);
+        
+        $result && action_log('编辑', '编辑服务信息，name：' . $data['servicename']);
+        
+        return $result ? [RESULT_SUCCESS, '操作成功', $url] : [RESULT_ERROR, $this->modelServiceinfo->getError()];
+    }
+
+    /**
+     * 获取墓园类型信息
+     */
+    public function getServiceinfoInfo($where = [], $field = true)
+    {
+        
+        return $this->modelServiceinfo->getInfo($where, $field);
+    }
+    
+    /**
+     * 墓园类型删除
+     */
+    public function ServiceinfoDel($where = [])
+    {
+        
+        $result = $this->modelServiceinfo->deleteInfo($where);
+        
+        $result && action_log('删除', '服务信息删除' . '，where：' . http_build_query($where));
+        
+        return $result ? [RESULT_SUCCESS, '删除成功'] : [RESULT_ERROR, $this->modelBlogroll->getError()];
+    }
+		/**
+     * 获取列表搜索条件
+     */
+    public function getWhere($data = [])
+    {
+        
+        $where = [];
+        
+        !empty($data['search_data']) && $where['servicename'] = ['like', '%'.$data['search_data'].'%'];
+        
+        return $where;
+    }
+	
+	public function getServiceinfoStat($where = [], $stat_type = 'count', $field = 'id'){
+	
+		return $this->modelServiceinfo->stat($where,$stat_type,$field);	
+	
+	}
+	
+	/**
+     * 获取部门列表
+     */
+	public function get_parent_dept() {
+        $where["status"] = 1;
+		$where["module"]=  MODULE_NAME;	
+		//$where['parentid'] = 0;
+        return $this->modelBranch->getList($where, 'id ,name', "iorder", false);
+    }
+  /**
+     * 获取收费项目
+     */
+    public function  get_service_info_type($type,$issystem=true)
+    {
+        $where["status"] = 1;
+	$where["servicetype"]=  $type;	
+        if (!$issystem)
+        {
+            $where["issystem"]=0;
+        }
+	   return $this->modelServiceinfo->getList($where, '*', "iorder", false);  
+    }
+}

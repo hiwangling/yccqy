@@ -1,0 +1,132 @@
+ <form  id="formreserve2">
+                   <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>墓穴信息：{$sellinfo.garden_name}/{$sellinfo.area_name}/{$sellinfo.c_canme}
+           </h3>
+        </div>
+         
+      </div>
+              <table class="table">
+           <tbody>
+            <tr>
+                <td>
+       <div  class="div_lable_zhj">寄存人</div> 
+           <input   name="buyer" value="{$sellinfo.buyer|default=''}"  class="form-control_zhj "   type="text">
+                </td>
+           <td><div  class="div_lable_zhj">开始日期</div> <input   name="savebegindate"  id="savebegindate" value="{$sellinfo.savebegindate||date="Y-m-d",###}"  class="form-control_zhj "   type="text"  ></td>
+              <td><div  class="div_lable_zhj">结束日期</div> <input name="saveenddate"   id="saveenddate" value="{$sellinfo.saveenddate||date="Y-m-d",###}"  class="form-control_zhj  "   type="text"></td>
+                 </tr>
+             <tr>
+                  <td><div  class="div_lable_zhj">联系电话</div> <input name="phone"  value="{$sellinfo.phone|default=''}"  class="form-control_zhj  "   type="text"></td>
+             
+              <td><div  class="div_lable_zhj">联系地址</div> <input name="address" value="{$sellinfo.address|default=''}"  class="form-control_zhj "   type="text"></td>
+              	 <td><div  class="div_lable_zhj">费用：</div> <input name="saveprice"  value="{$sellinfo.saveprice|default='0.00'}"  class="form-control_zhj  " type="text"></td>
+            	  
+             </tr>
+           <tr>
+            <td><div  class="div_lable_zhj">逝者姓名</div> <input name="deathname"  value="{$sellinfo.deathname|default=''}"  class="form-control_zhj  "   type="text"></td>
+             <td><div  class="div_lable_zhj">关系</div> <input name="relation"  value="{$sellinfo.relation|default=''}"  class="form-control_zhj  "   type="text"></td>
+              
+              <td><div  class="div_lable_zhj">寄存地址</div> <select class="form-control_zhj"  name="saveareaid"   >
+								  {volist name='savearealist' id='vo'}
+									 <option value="{$vo['id']}">{$vo['name']}</option>
+								  {/volist}
+								</select></td>
+              
+             </tr>
+             <tr>
+            <tr>
+            <td><div  class="div_lable_zhj">缴费方式</div>  <select class="form-control_zhj"  name="paytype"   >
+                 {foreach name="paytype" item="vo" key="k" }
+					   <option value="{$k}"  {if condition="$sellinfo2.paytype eq $k"}selected="selected"{/if}>{$vo}</option>
+					{/foreach}</select>
+            </td>
+             <td><div  class="div_lable_zhj">是否开票</div> 
+             <select name="isvoice" class="form-control_zhj"> <option value="0"  {if condition="$sellinfo2.isvoice eq 0"}selected="selected"{/if}>不开票</option>
+                                           <option value="1"  {if condition="$sellinfo2.isvoice eq 1"}selected="selected"{/if}>开票</option>
+		   </select>
+             </td>
+              
+              <td> </td>
+              
+             </tr>
+             <tr>
+             <tr>
+                 <td colspan="3">
+                     <textarea class=" form-control textarea_editor" style=" width: 850px;" name="vcnote" placeholder="请输入备注信息">{$sellinfo.vcnote|default=''}</textarea>
+                 </td>
+             </tr>
+             </tbody>
+          </table>
+            <input type="hidden" name="id" value="{$sellinfo.id|default='0'}"/>
+            <input type="hidden" name="cid" value="{$sellinfo.cid}"/>
+      <div class="modal-footer"  >
+        <a   href="javascript:" onclick="save_ecit_submit_ajax();"  type="button"  class="btn btn-default"><span class="ladda-label">
+          
+           <i class="fa fa-edit"></i> 修改 
+            </span></a>
+            
+        <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                  </form>
+
+<script>
+ $('#savebegindate').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+
+    $('#saveenddate').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+    
+  
+function save_ecit_submit_ajax() {
+          url = "{:url('Save/Save_submit_ajax')}";
+        sj = Math.random(1000);
+         data = $("#formreserve2").serialize() + "&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("操作成功！");
+           $('#myModal2').modal('hide');
+                 $('#show_data_table').html(infodate.data);
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+}
+
+function save_delete(id)
+{
+     var info=confirm("您确定要删除该寄存信息吗？");
+    if (info==true){
+         url = "{:url('Save/Save_delete_ajax')}";
+        sj = Math.random(1000);
+         data ="id=" +id+ "&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("删除操作成功！");
+                  $('#myModal').modal('hide');
+                 location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    }
+     
+     
+}
+ </script>

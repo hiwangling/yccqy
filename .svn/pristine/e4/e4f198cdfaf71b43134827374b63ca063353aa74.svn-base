@@ -1,0 +1,704 @@
+<style>
+.box-body ul {
+    margin: 0px;
+    padding: 0px;
+}
+
+.box-body ul li {
+    width: 135px;
+    height: 135px;
+    float: left;
+    border-radius: 5px;
+    list-style-type: none;
+    margin-left: 5px;
+    margin-right: 5px;
+    color: #FFFFFF;
+}
+
+.layui-form-item {
+    margin-bottom: 5px;
+    clear: both;
+}
+
+.layui-form-label {
+    width: 100px;
+}
+
+.layui-form-item .layui-input-inline {
+    width: 80%;
+}
+
+.mu div>div {
+    text-align: center;
+    padding: 10px 0;
+    border: 1px dashed #ccc;
+    border-right: none
+}
+
+.mu>div>div>p {
+    text-align: center
+}
+
+.mu>div>div>img {
+    margin-bottom: 5px;
+}
+
+.mu div>div:last-child {
+    border-right: 1px dashed #ccc;
+}
+
+.layui-container {
+    width: 100%!important;
+    margin: 0 0 0 0;
+}
+
+.cor {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-bottom: -3px;
+    border-width: 5px;
+    margin-left: 5px;
+    border-style: solid dashed dashed;
+    overflow: hidden;
+}
+
+.corg6 {
+    border-color: #666 transparent transparent;
+}
+
+.menu {
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    color: #666;
+    cursor: pointer
+}
+
+.flipy {
+    transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    /* IE 9 */
+    -moz-transform: rotate(180deg);
+    /* Firefox */
+    -webkit-transform: rotate(180deg);
+    /* Safari 和 Chrome */
+    -o-transform: rotate(180deg);
+    /* Opera */
+    margin-bottom: 2px;
+}
+.demo-class-list{
+    top: auto
+}
+.busy{
+    display: inline-block;
+        margin: 0 5px;
+}
+.showbox{
+        display: block;
+    background: #fff;
+    position: relative;
+    top: -142px;
+    z-index: 100;
+    left: 0px;
+    text-align: left!important;
+    right: 0px;
+ 
+    width: 82%;
+        transition: all 0.52s ease-out;
+    margin: 0px auto;
+    height: 120px;
+    border-radius: 5px;
+        box-shadow: 0 0 12px #d8dde5;
+    border: none!important;
+}
+.operli{
+    line-height: 25px;
+    width: 100%;
+    border-bottom:  1px #666 dashed;
+    font-size: 14px;
+    color:#003399; 
+}
+.operli a{
+ 
+    color: #003333; 
+}
+.operli i{
+    margin-right: 5px;
+    font-size: 20px;
+}
+</style>
+<link rel="stylesheet" href="__STATIC__/module/admin/css/cemetery.css">
+<link rel="stylesheet" href="__STATIC__/module/admin/css/update.css">
+<form action="{:url()}" method="post" class="form_single layui-form">
+    <input type="hidden" name="list_rows" value="36" />
+    <div class="box">
+        <div class="boxLeft">
+            <div class="layui-form-item" pane="" style="margin-top: 15px">
+                <label class="layui-form-label">关键字：</label>
+                <div class="layui-input-inline" style="width: 200px;">
+                    <input class="form-control" name="currency" {notempty name="echo_currency" }{if condition="$echo_currency neq ''" } value="{$echo_currency}" {/if} placeholder="请输入逝者姓名/墓穴名称" type="text">
+                </div>
+                <input type="submit" class="layui-btn getCheckData" value="查询" />
+            </div>
+        </div>
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">状态：</label>
+            <div class="layui-input-inline">
+                {foreach name="usestatus" item="vo" key="k" }
+                <input type="radio" name="usestatus[]" {foreach name="echo_usestatus" item="vou" }{notempty name="vo" }{if condition="$k eq $vou" } checked="checked" {/if}{/notempty}{/foreach} lay-skin="primary" title="{$vo}" value="{$k}"> {/foreach}
+            </div>
+        </div>
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">墓园：</label>
+            <div class="layui-input-inline">
+                {volist name='gardenlist' id='vo'}
+                <input data-id={$vo.id} lay-filter={$vo.id} class='gardens' type="radio" name="garden[]" {foreach name="echo_garden" item="vog" }{notempty name="vo['id']" }{if condition="$vo['id'] eq $vog" } checked="checked" {/if}{/notempty}{/foreach} value="{$vo.id}" lay-skin="primary" title="{$vo.name}"> {/volist}
+            </div>
+            <span class="menu">更多<span id="flipCor" class="cor corg6"></span></span>
+        </div>
+        <div class="m_hide" style="display: none;">
+            <div class="layui-form-item " pane="">
+                <label class="layui-form-label">墓区：</label>
+                <div class="layui-input-inline garden_area">
+                    {volist name='arealist' id='vo'}
+                    <input data-gid="{$vo.gardenID}" class="gardens{$vo.gardenID} garden_are" type="checkbox" name="area[]" lay-skin="primary" {foreach name="echo_area" item="voa" }{notempty name="vo['id']" }{if condition="$vo['id'] eq $voa" } checked="checked" {/if}{/notempty}{/foreach} title="{$vo.name}" value="{$vo.id}"> {/volist}
+                </div>
+            </div>
+            <div class="layui-form-item" pane="">
+                <label class="layui-form-label">墓位价格：</label>
+                <div class="layui-input-inline">
+                    {foreach name="price_range" item="vo" key="k" }
+                    <input type="checkbox" name="price[]" value="{$vo}" {foreach name="echo_price" item="vop" }{notempty name="vo" }{if condition="$vo eq $vop" } checked="checked" {/if}{/notempty}{/foreach} lay-skin="primary" title="{$vo}"> {/foreach}
+                </div>
+            </div>
+            <div class="layui-form-item" pane="">
+                <label class="layui-form-label">墓位类型：</label>
+                <div class="layui-input-inline">
+                    {volist name='typelist' id='vo'}
+                    <input type="checkbox" name="type[]" lay-skin="primary" {foreach name="echo_type" item="vot" }{notempty name="vo['id']" }{if condition="$vo['id'] eq $vot" } checked="checked" {/if}{/notempty}{/foreach} value="{$vo.id}" title="{$vo.name}"> {/volist}
+                </div>
+            </div>
+            <div class="layui-form-item" pane="">
+                <label class="layui-form-label">墓位材质类型：</label>
+                <div class="layui-input-inline">
+                    {volist name='stypelist' id='vo'}
+                    <input type="checkbox" name="style[]" lay-skin="primary" value="{$vo.id}" {foreach name="echo_style" item="vos" }{notempty name="vo['id']" }{if condition="$vo['id'] eq $vos" } checked="checked" {/if}{/notempty}{/foreach} title="{$vo.name}"> {/volist}
+                </div>
+            </div>
+        </div>
+        <div class="layui-container">
+            <div class="layui-row mu">
+                {notempty name='list'}
+						 {volist name='list' id='vo'}
+                                                 <div class="layui-col-md2 layui-col-sm4 layui-col-xs6" style=" height: 200px;">
+						   <div style=" height: 210px;">
+							   {if condition="$vo.usestatus eq 1"}
+							   <!-- href="{:url('sell/index', array('id' => $vo['id']))}"  -->
+								 	 <a href="javascript:;" onclick='showCemeteryinfo({$vo['id']})'" data-type="{$vo.usestatus}"><img src="__STATIC__/module/admin/img/be.png" alt=""></a> 
+                                                           {/if}            
+							  {if condition="$vo.usestatus eq 2"/} 
+								  <a href="javascript:;" onclick='showyuding({$vo['id']})'"  data-type="{$vo.usestatus}"><img src="__STATIC__/module/admin/img/sell.png" alt=""></a>
+							  {/if}
+                                                           {if condition="$vo.usestatus eq 3  "/} 
+								  <a href="javascript:;" onclick='clickalert("{:url('sell/sellshwoall', array('id' => $vo['id'],'tc'=>1))}")'  data-type="{$vo.usestatus}"><img src="__STATIC__/module/admin/img/out.png" alt=""></a>
+							   {/if}
+                                                         {if condition="$vo.usestatus eq 4  "/} 
+								  <a href="javascript:;" onclick='clickalert("{:url('sell/sellshwoall', array('id' => $vo['id'],'tc'=>1))}")' data-type="{$vo.usestatus}"><img src="__STATIC__/module/admin/img/go.png" alt=""></a>
+                                                                  {/if}
+							   <p>{$vo.garden_name}{$vo.area_name}</p>
+							   
+							   <p> {$vo.ix}排{$vo.iy}号 | {$vo.type_name}</p>
+                                                            {if condition="$vo.usestatus eq 3 or $vo.usestatus eq 4"}
+                                                            {empty name="$vo.deathname"}
+                                                             <p> &nbsp;&nbsp;</p>
+                                                             {else /}
+                                                              <p><b>逝者：{$vo.deathname}</b></p>
+                                                             {/empty}
+							    <p>
+                                                                {/if}
+                                                                 {if condition="$vo.usestatus eq 1"}
+							   <!-- href="{:url('sell/index', array('id' => $vo['id']))}"  -->
+								 	 <a href="javascript:;" onclick='showCemeteryinfo({$vo['id']})'" data-type="{$vo.usestatus}"><i class="fa fa-id-card-o "></i>公墓信息</a> 
+							    {/if}
+                                                              {if condition="$vo.usestatus eq 2  "}
+                                                                       <!-- <a   href="{:url('sell/servicesell', array('id' => $vo['id']))}" > <i class="fa fa-user-plus"></i>购买服务</a> !-->
+                                                            <p style=" margin-top:3px;   margin-left: 10px; padding-top: 3px; ">  
+                                                                <a  class='busy' href="javascript:;" onclick='showyuding({$vo['id']})' data-type="{$vo.usestatus}"><i class="fa fa-info-circle " style=" font-size: 20px; color: #0066cc"></i>查看预定信息</a>
+                                                                
+                                                            </p>
+                                                             {/if}
+                                                                   {if condition="$vo.usestatus eq 3 or $vo.usestatus eq 4"}
+                                                                       <!-- <a   href="{:url('sell/servicesell', array('id' => $vo['id']))}" > <i class="fa fa-user-plus"></i>购买服务</a> !-->
+                                                            <p style=" margin-top:3px;   margin-left: 10px; padding-top: 3px; ">  
+                                                                <a  class='busy' href="javascript:;" onclick='openMotai("{$vo['id']}")' data-type="{$vo.usestatus}"><i class="fa fa-lightbulb-o" style=" font-size: 20px; color: #ff0000"></i>点灯</a>
+                                                                <a  class='busy' href="javascript:;" onclick='openMotai("{$vo['id']}")' data-type="{$vo.usestatus}"><i class="fa  fa-tree" style=" font-size: 20px; color: #00cc66"></i>鲜花</a>
+                                                            </p>
+                                                          
+                                                          
+                                                      
+                                                           
+                                                             
+                                                            <p style=" margin-top: 10px; margin-left: 10px;">
+                                                          
+                                                                <a class="more" href="javascript:;"><i class="fa fa-edit " style=" font-size: 20px; color: #0066cc"></i>更多管理操作....</a>
+                                                           <div style="display: none;" class="showbox">    
+                                                               <ul style=" float: left; margin-left: 5px; width: 90%">   
+                                                                   <li class="operli"><a class='busy' href="javascript:;" onclick='opensupplement("{$vo['id']}")' data-type="{$vo.usestatus}"><i class="fa fa-pencil" style=" color:  #ff0000"></i>墓碑补录</a></li>
+                                                                   <li class="operli"> <a class='busy' href="javascript:;" onclick='openmanagerprice("{$vo['id']}")' data-type="{$vo.usestatus}"><i class="fa fa-jpy" style=" color: #ff9900"></i>墓穴续费</a>  </li>                                                         
+   <li class="operli"><a href="javascript:;" class="show_Cemeterycell busy"  data-id="{$vo['id']}"><i class="fa fa-edit"></i>墓穴变更</a> </li>
+   <li class="operli"><a class='busy' href="javascript:;" onclick='show_return("{$vo['id']}")' data-type="{$vo.usestatus}"><i class="fa fa-undo  " style=" color: #0099ff"></i>墓穴撤销</a></li>
+                                                               </ul>
+                                                            </div>  </p>
+                                                  
+                                                                  {/if}
+							
+                                                                 
+						  </div>
+						  </div>
+						  {/volist}
+						 {else/}
+						 {:config('empty_list_describe')}
+						  {/notempty}
+					  </div>
+            <div style=" width:100%; height:85px;">
+                {$list->render()}
+            </div>
+        </div>
+    </div>
+</form>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">购买服务</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<div class="shows" style="display: none"></div>
+<div class="monument" style="display: none"></div>
+ <div class="opentable" style="display: none;">
+    <div class="layui-inline">
+            <label class="layui-form-label">墓号:</label>
+            <div class="layui-input-inline">
+              <input type="tel" name="vno" autocomplete="off" class="layui-input vno"  style="    width: 150px;">
+            </div>
+          </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">墓园:</label>
+            <div class="layui-input-inline layui-form" style="width: 150px">
+              <select lay-filter="gard" class="garden">
+                  <option value="0">请选择</option>
+                  {volist name='gardenlist' id='vo'}
+                  <option value="{$vo['id']}">{$vo['name']}</option>
+               {/volist}
+              </select>
+            
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">墓区:</label>
+            <div class="layui-input-inline layui-form" style="width: 150px">
+                <select class="delArea" lay-filter="delgarden">
+                    <option value="0">请选择</option>
+                  </select>
+          
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">类型:</label>
+            <div class="layui-input-inline layui-form" style="width: 150px">
+              <select name="interest" lay-filter="leixing">
+                  <option value="0">请选择</option>
+                  {volist name='typelist' id='vo'}
+                  <option value="{$vo['id']}">{$vo['name']}</option>
+               {/volist}
+              </select>
+              
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">样式:</label>
+            <div class="layui-input-inline layui-form" style="width: 150px">
+              <select name="interest" lay-filter="yangshi">
+                  <option value="0">请选择</option>
+                  {volist name='stypelist' id='vo'}
+                  <option value="{$vo['id']}">{$vo['name']}</option>
+               {/volist}
+              </select>
+            </div>
+        </div>
+        <button class="layui-btn scrBtn" style="margin-left: 60px;">请选择</button> 
+    <table class="layui-table" id="test" lay-filter="testTable"></table>
+</div>
+ <div class="shows" style="display: none"></div>
+    <div class="monument" style="display: none"></div>
+<script>
+ 
+   $('.more').click(function(e){
+   $(this).parent().next().toggle()
+   e.stopPropagation();
+    })
+   $('.showbox').click(function(e){e.stopPropagation();})
+   $(document).click(function(){$(".showbox").hide();});
+function openMotai(cid) {
+    url = "{:url('service_buy_info_ajax')}";
+    sj = Math.random(1000);
+    $.post(url, { id: cid, sj: sj }, function(result) {
+        infodate = JSON.parse(result);
+        if (infodate.code == 0) {
+            $('#myModal .modal-title').html("服务购买");
+            $('#myModal .modal-body').html(infodate.data);
+            $("#myModal").modal({ show: true, backdrop: false }); //手动开启*/
+        } else {
+            alert(infodate.msg);
+        }
+    });
+
+}
+function showCemeteryinfo(cid) {
+    url = "{:url('Cemetery/getCemeteryinfo_ajax')}";
+    sj = Math.random(1000);
+    $.post(url, { id: cid,type:2,sj: sj }, function(result) {
+        infodate = JSON.parse(result);
+        if (infodate.code == 0) {
+               $('#myModal .modal-title').html("墓穴信息");
+            $('#myModal .modal-body').html(infodate.data);
+            $("#myModal").modal({ show: true, backdrop: false }); //手动开启*/
+        } else {
+            alert(infodate.msg);
+        }
+    });
+
+}
+ function showyuding(cid) {
+
+        url = "{:url('Cemetery/getCemeterylist_info_ajax')}";
+        sj = Math.random(1000);
+        $.post(url, { id: cid, type:2,sj: sj }, function(result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  $('#myModal .modal-title').html("预定信息");
+                $('#myModal .modal-body').html(infodate.data);
+                $("#myModal").modal({ show: true, backdrop: false }); //手动开启*/
+            } else {
+                alert(infodate.msg);
+            }
+        });
+
+    }
+    
+    function opensupplement(cid) {
+        layer.alert('内容')
+    }
+//function opensupplement(cid) {
+  //  url = "{:url('show_supplement_info_ajax')}";
+   // sj = Math.random(1000);
+   // $.post(url, { id: cid, sj: sj }, function(result) {
+    //    infodate = JSON.parse(result);
+      //  if (infodate.code == 0) {
+      //      $('#myModal .modal-title').html("补录信息");
+      //      $('#myModal .modal-body').html(infodate.data);
+      //      $("#myModal").modal({ show: true, backdrop: false }); //手动开启*/
+      //  } else {
+      //      alert(infodate.msg);
+     //   }
+   // });
+
+//}
+
+function openmanagerprice(cid) {
+    url = "{:url('show_managerprice_info_ajax')}";
+    sj = Math.random(1000);
+    $.post(url, { id: cid, sj: sj }, function(result) {
+        infodate = JSON.parse(result);
+        if (infodate.code == 0) {
+            $('#myModal .modal-title').html("管理费续费");
+            $('#myModal .modal-body').html(infodate.data);
+            $("#myModal").modal({ show: true, backdrop: false }); //手动开启*/
+        } else {
+            alert(infodate.msg);
+        }
+    });
+}
+
+function managerprice_submit() {
+    url = "{:url('managerprice_add_ajax')}";
+    sj = Math.random(1000);
+    data = $("#formreserve").serialize() + "&sj=" + sj;
+    $.post(url, data, function(result) {
+        infodate = JSON.parse(result);
+        alert(infodate.msg);
+        $('#myModal').modal('hide');
+    });
+}
+
+/*function supplement_submit() {
+    url = "{:url('supplement_add_ajax')}";
+    sj = Math.random(1000);
+    data = $("#formreserve").serialize() + "&sj=" + sj;
+    $.post(url, data, function(result) {
+        infodate = JSON.parse(result);
+        alert(infodate.msg);
+        $('#myModal').modal('hide');
+    });
+}*/
+
+ function show_return(cid) {
+
+        url = "{:url('Cancel/show_Cancel_ajax')}";
+        sj = Math.random(1000);
+        $.post(url, { cid: cid, sj: sj }, function(result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModal .modal-body').html(infodate.data);
+                 $('#myModal .modal-title').html("公墓购买撤销");
+                $("#myModal").modal({ show: true, backdrop: false }); //手动开启*/
+            } else {
+                alert(infodate.msg);
+            }
+        });
+
+    }
+  
+    function Cancel_update() {
+        url = "{:url('Cancel/cancel_update_ajax')}";
+        sj = Math.random(1000);
+       
+        data = $("#formreserve").serialize() + "&sj=" + sj;
+        $.post(url, data, function(result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  alert(infodate.msg);
+               
+            }
+            else
+            {
+              alert(infodate.msg);  
+          }
+            
+            $('#myModal').modal('hide');
+        });
+    }
+
+
+function servcie_submit(cid) {
+    url = "{:url('Sell/sellservice_add_ajax')}";
+    sj = Math.random(1000);
+    data = $("#formreserve").serialize() + "&sj=" + sj;
+    $.post(url, data, function(result) {
+        infodate = JSON.parse(result);
+        alert(infodate.msg);
+        $('#myModal').modal('hide');
+    });
+}
+layui.use(['form', 'table', 'layer'], function() {
+    var form = layui.form,
+        table = layui.table,
+        layer = layui.layer
+          var gardensVal  = null;
+          var delAreaVal  = null;
+          var typeVal  = null;
+          var styleVal  = null;
+
+    $('.show_Cemeterycell').click(function() {
+      
+        url = "{:url('shwo_cemeterychange_ajax')}";
+        sj = Math.random(1000);
+
+        $.post(url, { id: $(this).attr('data-id'), sj: sj }, function(result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('.shows').html(infodate.data);
+                layer.open({
+                    type: 1,
+                    shade: 0.3,
+                    skin: 'demo-class',
+                    area: 'auto',
+                    scrollbar: false,
+                    title: false,
+                    shadeClose: true,
+                    content: $('.shows'),
+                    btn: ['提交', '关闭'],
+                    success: function(index, layero) {
+                        form.render();
+                        $('.selectBtn').click(function(){
+                        layer.open({
+                            type: 1,
+                            area: ['650px', '620px'], //宽高
+                            shadeClose:true,
+                            content: $('.opentable'),
+                           success:function(index, layero){
+                           table.render({
+                            elem: '#test'
+                            ,url:"{:url('Sell/getCemeteryList')}"
+                            ,cols: [[
+                            {type:'checkbox'},
+                              // {field:'id' ,width:50,title: 'id'}
+                               {field:'garden_name' ,title: '墓园'}
+                              ,{field:'area_name',  title: '墓区'}
+                              ,{field:'name', width:150, title: '墓穴'}
+                              ,{field:'type_name', width:80, title: '类型'}
+                              ,{field:'style_name', title: '样式' }
+                            ]]
+                            ,page: true
+                          });
+                              form.on('select(leixing)', function(data){
+                                  typeVal = data.value
+                                   });   
+
+                                     form.on('select(delgarden)', function(data){
+                                  delAreaVal = data.value
+                                   });    
+                                   form.on('select(yangshi)', function(data){
+                                  styleVal = data.value
+                                   });  
+                               $('.scrBtn').click(function(){
+                              table.render({
+                            elem: '#test'
+                            ,url:"{:url('Sell/getCemeteryList')}"
+                            ,where: {vno: $('.vno').val(),gardenID:gardensVal,areaID:delAreaVal,style:styleVal,typeID:typeVal}
+                            ,cols: [[
+                            {type:'checkbox'},
+                                  {field:'garden_name' ,title: '墓园'}
+                              ,{field:'area_name',  title: '墓区'}
+                              ,{field:'name', width:150, title: '墓穴'}
+                              ,{field:'type_name', width:80, title: '类型'}
+                              ,{field:'style_name', title: '样式' }
+                            ]]
+                            ,page: true
+                          });
+                           
+                            })
+
+                               form.on('select(gard)', function(data){
+                             var gardenID = data.value
+                                gardensVal = data.value
+                              $('.delArea').html('')
+                                $.ajax({
+                                  type:'post',
+                                  url:"{:url('Sell/getArea')}",
+                                  data:{gardenID:gardenID},
+                                  dataType:'json',
+                                  async:false,
+                                  success:function(json){
+                                  html = ''
+                                        html+='<option value="0">墓区选择</option>';
+                                        $.each(json,function(n,v) {
+                                            html += "<option value="+v.id+">"+v.name+"</option>"
+                                        });
+                                        $('.delArea').append(html);
+                                        form.render('select');
+                                  },
+                                  error:function(){
+                                    alert("服务器连接失败"); 
+                                  },
+                                })
+                            })
+                            table.on('checkbox(testTable)', function(obj){
+                              console.log(obj.data)
+                              garden_name = obj.data.garden_name;  
+                              area_name = obj.data.area_name; 
+                              type_name = obj.data.type_name; 
+                              style_name = obj.data.style_name; 
+                              name = obj.data.name;
+                              muID = obj.data.id
+                            $('.ngraden_name').val(name)
+                             $('.muID').val(muID)
+                             $('.box-yuan').text(garden_name)
+                             $('.box-qu').text(area_name)
+                             $('.box-lei').text(type_name)
+                             $('.box-yang').text(style_name)
+                     
+                           layer.close(layer.index);
+                          });
+                          },
+                        });
+
+                                 })
+             
+                    },
+    
+                    btn1: function() {
+                             
+                              url = "{:url('cemeterychange_add_ajax')}";
+                        data = $("#formbox").serialize()
+                        $.post(url, data, function(result) {
+                            infodate = JSON.parse(result);
+                            if (infodate.code == 0) {
+                                alert(infodate.msg)
+                              
+                            } else {
+                               
+                               alert(infodate.msg)
+                            }
+                             layer.close(layer.index);
+                        });
+                    }
+                });
+                //手动开启*/
+            } else {
+                alert(infodate.msg);
+            }
+        });
+    })
+
+})
+$(document).ready(function() {
+    layui.use(['form', 'layer'], function() {
+        var form = layui.form,
+            layer = layui.layer;
+        form.render();
+
+        $('.menu').click(function() {
+            $(".m_hide").toggle();
+            $(this).find('span').toggleClass("flipy");
+
+        })
+        clickalert = function(url) {
+            var vheight = $(window).height() - 50 + 'px'
+            var vwidth = $(window).width() - 100 + 'px'
+            layer.open({
+                type: 2,
+                title: '',
+                shadeClose: true,
+                shade: [0.5, '#393D49'],
+                maxmin: false, //开启最大化最小化按钮
+                area: [vwidth, vheight],
+                content: url
+            });
+        }
+
+
+        for (let i = 0; i < $('.gardens').length; i++) {
+
+            if ($('.gardens').eq(i).is(':checked')) {
+                $(".m_hide").toggle();
+                $(this).find('span').toggleClass("flipy");
+                $('.garden_area').find('.gardens' + $('.gardens').eq(i).attr('data-id')).next().siblings().hide()
+                $('.garden_area').find('.gardens' + $('.gardens').eq(i).attr('data-id')).next().show()
+            }
+            form.on('radio(' + $('.gardens').eq(i).attr('data-id') + ')', function(data) {
+                if (data.elem.checked) {
+                    $('div.garden_area').find('div.layui-form-checked').click();
+                    $('.garden_area').find('.gardens' + $('.gardens').eq(i).attr('data-id')).next().siblings().hide()
+                    $('.garden_area').find('.gardens' + $('.gardens').eq(i).attr('data-id')).next().show()
+                    //$('.garden_area').find('.gardens'+$('.gardens').eq(i).attr('data-id')).next().siblings().hide()
+                } else {
+                    $('.garden_area').find('.garden_are').next().show()
+                }
+            });
+        }
+
+
+    })
+})
+</script>

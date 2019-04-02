@@ -1,0 +1,194 @@
+<div class="box">
+  <div class="box-header ">
+    
+   <a class="btn ChargeitemAdd_show_ajax"  ><i class="fa fa-plus"></i> 新 增</a> 
+    <div class="box-tools ">
+        <div class="input-group input-group-sm search-form">
+            <input name="search_data" class="pull-right search-input" value="{:input('search_data')}" placeholder="支持名称" type="text">
+            <div class="input-group-btn">
+              <button type="button" id="search" url="{:url('ChargeitemList')}" class="btn btn-default"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+    </div>
+    <br/>
+  </div>
+    
+  <div class="box-body table-responsive">
+    <table  class="table table-bordered table-hover">
+      <thead>
+      <tr>
+          <th>收费项目</th>
+          <th>显示类型</th>
+          <th>下拉选项</th>
+          <th>默认金额</th>
+           <th>单据</th>
+          <th>描述</th>
+         
+          <th class="sort-th">排序</th>
+          <th>状态</th>
+          <th>操作</th>
+      </tr>
+      </thead>
+      
+      {notempty name='list'}
+        <tbody>
+            {volist name='list' id='vo'}
+                <tr>
+                  <td>{$vo.name|default=''}</td>
+                    <td>{$vo.showtype|getChargeitem_showtype}</td>
+				  <td>{$vo.value|default=''}</td>
+				  <td>{$vo.defaultprice|default=''}</td>
+                                       <td>{$vo.financetype|getfinancetype_str}</td>
+                                   <td>{$vo.vcnote|default=''}</td>
+                                   <td><input type="text" class="sort-th sort-text" href="{:url('setSort')}" id="{$vo.id}" value="{$vo.sort}" /></td>
+                                    <td>{$vo.status_text}</td>
+                  <td class="col-md-3 text-center">
+                        <a  href="#" onclick="ChargeitemEdit_ajax_show({$vo.id})" class="btn">
+        <i class="fa fa-edit"></i> 编 辑</a>  &nbsp;
+			  {if condition="$vo.issystem neq 1"}	  <ob_link>
+                                      <a class="btn confirm ajax-get"  href="{:url('ChargeitemDel', array('id' => $vo['id']))}"><i class="fa fa-trash-o"></i> 删 除</a></ob_link>
+				 {/if}  </td>
+                </tr>
+            {/volist}
+        </tbody>
+        {else/}
+        <tbody><tr class="odd"><td colspan="8" class="text-center" valign="top">{:config('empty_list_describe')}</td></tr></tbody>
+      {/notempty}
+    </table>
+  </div>
+
+  <div class="box-footer clearfix text-center">
+      {$list->render()}
+  </div>
+
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  >
+    <div class="modal-dialog modal-dialog800">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabe2" aria-hidden="true"  >
+    <div class="modal-dialog modal-dialog2">
+        <div class="modal-content">
+            <div class="modal-header modal-header2">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModa2lLabel"><i class="fa  fa-graduation-cap"></i>选择服务项目</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+<script>
+    $(".ChargeitemAdd_show_ajax").click(function () {
+        url = "{:url('Chargeitem/ChargeitemAdd_show_ajax')}";
+        sj = Math.random(1000);
+        $.post(url, {sj: sj}, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModal .modal-title').html("增加收费项目信息");
+                $('#myModal .modal-body').html(infodate.data);
+                $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+            } else {
+                toast.error(infodate.msg);
+            }
+        });
+    });
+    
+ 
+   function ChargeitemAdd_ajax_submit(){
+       url = "{:url('Chargeitem/ChargeitemAdd_ajax_submit')}";
+        sj = Math.random(1000);
+        data = $("#formreserve").serialize() + "&sj=" + sj
+        $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                 $('#myModal').modal('hide');
+                location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    };
+ 
+  function ChargeitemEdit_ajax_show(id){
+        url = "{:url('Chargeitem/ChargeitemEdit_ajax_show')}";
+        sj = Math.random(1000);
+        $.post(url, {cid:id,sj: sj}, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModal .modal-title').html("修改收费项目信息");
+                $('#myModal .modal-body').html(infodate.data);
+                $("#myModal").modal({show: true, backdrop: false}); //手动开启*/
+            } else {
+                toast.error(infodate.msg);
+            }
+        });
+    };
+    
+     function ChargeitemEdit_ajax_submit(){
+       url = "{:url('Chargeitem/Chargeitemedit_ajax_submit')}";
+        sj = Math.random(1000);
+        data = $("#formreserve").serialize() + "&sj=" + sj
+        $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                 $('#myModal').modal('hide');
+                location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    };
+    
+     function select_cemareainfo()
+            {  url = "{:url('CemeteryArea/select_CemeteryArea_ajax')}";
+                sj = Math.random(1000);
+                $.post(url, {sj: sj }, function(result) {
+                infodate = JSON.parse(result);
+                if (infodate.code == 0) {
+                $('#myModal2 .modal-body').html(infodate.data);
+                $("#myModal2").modal({ show: true, backdrop: false });  
+                } else {
+                toast.error(infodate.msg);
+                }
+                });
+            }
+          function select_CemeteryStyle()
+            {  url = "{:url('CemeteryStyle/select_style_ajax')}";
+                sj = Math.random(1000);
+                $.post(url, {sj: sj }, function(result) {
+                infodate = JSON.parse(result);
+                if (infodate.code == 0) {
+                $('#myModal2 .modal-body').html(infodate.data);
+                $("#myModal2").modal({ show: true, backdrop: false });  
+                } else {
+                toast.error(infodate.msg);
+                }
+                });
+            }
+            
+        $('#myModal2').on('hidden.bs.modal', function() {
+    $('body').addClass('modal-open')
+            });
+</script>

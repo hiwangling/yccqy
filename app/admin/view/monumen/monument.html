@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        /* 重置 */
+        *{margin:0;padding:0; box-sizing: border-box;}
+        ul{list-style:none}
+        /* 碑文:date为右侧生于卒于，xiao为左侧孝：子/女、媳/婿、孙、重孙） */
+        .bei{position:relative;max-width:510px; min-height: 600px; margin:0 auto;padding:0}
+        .bei div{text-align: center; }
+        .bei h1{display: inline-block; width:32px;font-size:28px;line-height: 32px; }
+        .bei h3{font-weight:normal;width:24px;font-size:20px; line-height: 20px;margin-right: 2px;}
+        .bei h1 span,.bei h3 span{margin-bottom:10px;display:inline-block}
+
+        .bei .move{border:1px dashed #666;border-top:5px solid #399;outline:none;}
+        .bei h3 span, .bei h1 > span{display:inline-block;width:95%;min-height:18px;text-align:center;color:#000;float:left;overflow:hidden}
+
+        .date{float: right; font-size: 16px !important; margin-top: 10px;}
+        .date div{display: flex; width: 80px; justify-content: space-around;}
+        .date p{width:20px;display: inline-block; margin: 0 2px;}
+        .date p span{min-height:30px;display:inline-block;}
+        .date p i{font-style:normal;display:inline-block;}
+        .xiao{float:left; padding-top: 275px;}
+        .xiao > div{text-align:center;display:flex;justify-content:space-around}
+
+        .xiao h2{text-align:center;font-size:28px;margin-bottom:60px;margin-right:12px}
+
+        /* 竖碑样式重写: inline-block不加 vertical-align 会底部对齐 */
+        .center{position: absolute; cursor:move; }
+        .center > div > div {display: flex; justify-content: space-around;}
+
+        /* 照片 */
+        .img{position: absolute;left: 250px; width: 140px; height: 100px;cursor:move; }
+        .img i{position: absolute; margin:10px 5px 20px;display:inline-block;width: 40px;height:75px;line-height:75px;text-align: center;
+                left: 48px;font-style:normal;color:#666;border:1px solid #666; border-radius: 100%; display: none;}
+        .img i .move{border: 0; }
+        .img i.line{ background: url(http://118.25.216.16:88/static/module/admin/img/bg-line.png) repeat;}
+        .img i:first-child{left: 6px;}
+        .img i:last-child{left: 90px;}
+        .img i img{width:100%; height: 100%; border-radius: 100%;}
+        .right{
+                position: absolute;
+    right: -25px;
+        }
+        /* 统计 */
+       /* .sum{text-align: left !important; margin-bottom: 20px; position: absolute;}
+        .sum > div{ height: 30px;line-height: 30px;font-size: 14px;text-align: left; margin-right: 40px;}
+        .sum > div span{color: red;font-size: 18px}*/
+
+        /* 2018-12-10 放开限制 自由填写 */
+        .xiao-auto span{ min-height: 250px !important;}
+        .center-auto span{min-height: 150px !important;}
+        .commemorate .move{border-color: #bbb;border-top-color: #87becf;}
+
+        .xiao-auto{position: absolute; top: 278px; left: 0; cursor: move;}
+
+        /* 拖拽 */
+        .drag.xiao div:first-child, .xiao div:last-child{display: block; text-align: left;}
+        .drag.xiao div:first-child h3, .drag.xiao div:last-child h3{cursor:move;position: absolute;left:90px;top: 250px;}
+        .drag.xiao div:last-child h3{top: 530px;}
+
+    </style>
+
+</head>
+
+<body>
+<div class="bei">
+    <!--统计-->
+<!--     <div class="sum">
+        <div>统计：</div>
+        <div>大字总数：<span class="Aalltext"></span></div>
+        <div>小字总数：<span class="Balltext"></span></div>
+    </div> -->
+
+    <div class="img">
+        <i class="s1"><span class="move" contenteditable="true"><img src="line.jpg"></span></i>
+        <i class="s2"><span class="move"  contenteditable="true">寿</span></i>
+        <i class="s3"><span class="move"  contenteditable="true">寿</span></i>
+    </div>
+
+    <!--小字区域-->
+<div class="date">
+        <div><p class="Bmove" contenteditable="true"><i>生</i></p></div>
+        <div><p class="Bmove" contenteditable="true"><i>于</i></p></div>
+
+        <div>
+            <p class="Bmove move" contenteditable="true" style="height: 90px;">
+                <span class="csignspan lsignspan1"></span></p>
+            <p class="Bmove move" contenteditable="true"><span class="lsignspan0"></span></p>
+            <p class="Bmove move" contenteditable="true"><span class="lsignspan2"></span></p>
+             <p class="Bmove move right" style="height: 94px" contenteditable="true"><span class="lsignspan3"></span></p>
+        </div>
+        <div><p class="Bmove" contenteditable="true"><i>年</i></p></div>
+
+        <div>
+            <p class="Bmove move" contenteditable="true"><span class="lsignspan1"></span></p>
+            <p class="Bmove move" contenteditable="true"><span class="lsignspan0"></span></p>
+            <p class="Bmove move" contenteditable="true"><span class="lsignspan2"></span></p>
+               <p class="Bmove move right" contenteditable="true"><span class="lsignspan3"></span></p>
+        </div>
+        <div><p class="Bmove" contenteditable="true"><i>月</i></p></div>
+
+        <div>
+            <p class="Bmove move" contenteditable="true"><span class="lsignspan1"></span></p>
+            <p class="Bmove move" contenteditable="true"><span class="lsignspan0"></span></p>
+            <p class="Bmove move" contenteditable="true"><span class="lsignspan2"></span></p>
+               <p class="Bmove move right" style="height: 50px" contenteditable="true"><span class="lsignspan3"></span></p>
+        </div>
+        <div><p class="Bmove" contenteditable="true"><i>日</i></p></div>
+
+
+
+        <div><p class="Bmove" contenteditable="true"><i>殁</i></p></div>
+        <div><p class="Bmove" contenteditable="true"><i>于</i></p></div>
+
+        <div>
+            <p class="Bmove deathc move" style="height: 90px;"><span class="signspan1" contenteditable="true"></span></p>
+            <p class="Bmove deathc move"><span class="signspan0" contenteditable="true"></span></p>
+            <p class="Bmove deathc move"><span class="signspan2" contenteditable="true"></span></p>
+             <p class="Bmove deathc move right" style="height: 90px;"><span class="signspan3" contenteditable="true"></span></p>
+        </div>
+        <div><p class="Bmove" contenteditable="true"><i>年</i></p></div>
+
+        <div>
+            <p class="Bmove deathc move" contenteditable="true"><span class="signspan1"></span></p>
+            <p class="Bmove deathc move" contenteditable="true"><span class="signspan0"></span></p>
+            <p class="Bmove deathc move" contenteditable="true"><span class="signspan2"></span></p>
+                <p class="Bmove deathc move right" style="height: 42px"><span class="signspan3" contenteditable="true"></span></p>
+        </div>
+        <div><p class="Bmove" contenteditable="true"><i>月</i></p></div>
+
+        <div>
+            <p class="Bmove deathc move" contenteditable="true"><span class="signspan1"></span></p>
+            <p class="Bmove deathc move" contenteditable="true"><span class="signspan0"></span></p>
+            <p class="Bmove deathc move" contenteditable="true"><span class="signspan2"></span></p>
+                <p class="Bmove deathc move right" style="height: 50px"><span class="signspan3" contenteditable="true"></span></p>
+        </div>
+        <div><p class="Bmove" contenteditable="true"><i>日</i></p></div>
+
+    </div>
+
+
+    <!--大字区域-->
+    <div id="ct" style="position: absolute; top: 160px; left: 0; overflow: visible;">
+ 
+        <div class="center" style="left: 265px; width: 120px;">
+             <div class="drag_c" style="position: absolute;left: 20px;top: -50px;">
+                <h1><span class="Amove move" contenteditable="true">慈</span></h1>
+            </div>
+            <div class="drag_d" style="position: absolute; left: 0px; top: 0px;"> 
+            <div>
+                <h1><span class="Amove move maxsex" contenteditable="true"></span></h1>
+                <h1><span class="Amove move maxsex" contenteditable="true"></span></h1>
+                <h1><span class="Amove move maxsex" contenteditable="true"></span></h1>
+            </div>
+
+            <div class="center-auto ">
+                <h1><span class="Amove move maxname" contenteditable="true"></span></h1>    
+                <h1><span class="Amove move maxname" contenteditable="true"></span></h1>
+                <h1><span class="Amove move maxname" contenteditable="true"></span></h1>
+            </div>
+</div>
+         <div class="drag_c" style="position: absolute;top: 230px;left: 20px;"><h1><span class="Amove move"  contenteditable="true">之墓</span></h1></div>
+        </div>
+
+        <div class="center drag_d" style="left: 223px; width: 50px;top: -83px;">
+            <div style="visibility: hidden;">
+                <h1><span class="Amove move" contenteditable="true"></span></h1>
+            </div>
+            <div>
+                <h1><span class="Amove move" contenteditable="true"></span></h1>
+            </div>
+
+            <div class="center-auto">
+                <h1><span class="Amove move " contenteditable="true"></span></h1>
+            </div>
+
+        </div>
+ 
+        <div style="position: absolute; left: 390px; top: 200px;">
+            <div class="xiao drag_d" style="padding-top: 0;">
+                <div><h3><span class="Bmove move by" contenteditable="true" style="min-height: 80px;"></span></h3></div>
+                <div><h3><span class="Bmove move" contenteditable="true">建</span></h3></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--小字区域-->
+    <div class="xiao drag">
+        <div><h3><span class="Bmove move" contenteditable="true">孝</span></h3></div>
+
+        <div class="xiao-auto">
+            <h3><span class="Bmove move" contenteditable="true"></span></h3>
+            <h3><span class="Bmove move" contenteditable="true"></span></h3>
+            <h3><span class="Bmove move" contenteditable="true"></span></h3>
+            <h3><span class="Bmove move" contenteditable="true"></span></h3>
+            <h3><span class="Bmove move" contenteditable="true"></span></h3>
+            <h3><span class="Bmove move" contenteditable="true"></span></h3>
+            <h3><span class="Bmove move" contenteditable="true"></span></h3>
+            <h3><span class="Bmove move" contenteditable="true"></span></h3>
+        </div>
+
+        <div><h3><span class="Bmove move" contenteditable="true">敬立</span></h3></div>
+
+    </div>
+
+</div>
+<div>大字：<span style="color: red" class="mintext"></span> 个</div>
+<div>小字：<span style="color: red"  class="maxtext"></span> 个</div>
+<!-- <script src="http://www.jq22.com/jquery/jquery-1.9.1.js"></script> -->
+    
+<script src="__STATIC__/module/admin/js/data.js"></script>
+<script>
+    //拖拽
+    $.fn.extend({
+        drag: function(){
+            this.on('mousedown',function(e){
+                $(this).css('position','absolute');
+                var disX = e.clientX - $(this).position().left,
+                    disY = e.clientY - $(this).position().top,
+                    $self = $(this);
+                $(document).on('mousemove',function(e){
+                      e.stopPropagation();
+                    $self.css('left',e.clientX - disX);
+                    $self.css('top',e.clientY - disY);
+                })
+                $(document).on('mouseup',function(){
+                          e.stopPropagation();
+                    $(document).off();
+                })
+            });
+        }
+    });
+    $('.xiao.drag div:first-child h3').drag();
+    $('.xiao.drag div:last-child h3').drag();
+    $('.drag_c').drag();
+    $('.drag_d').drag()
+    $('.img').drag();
+    $('.xiao-auto').drag();
+
+
+function connect(){
+
+var hiddenclasslength = $('.hiddenclass').length/2-2
+
+for(i=0;i<hiddenclasslength;i++){
+     $('.maxname').eq(i).text($('input[name="bury[' + i + '][name]"').val())
+     $('.maxsex').eq(i).text($('input[name="bury[' + i + '][sex]"').val())
+  }
+if($('.iseditmb').val() == 0){
+ for(o=0;o<hiddenclasslength;o++){
+   timerbirth = $('input[name="bury['+ o +'][birth]"').val()
+   timerdeath = $('input[name="bury['+ o +'][death]"').val()
+  if(hiddenclasslength == 0){
+   if(timerdeath != '' || timerdeath != ''){
+    convert(timerbirth).split(',').forEach(function(k,y){
+    $('.lsignspan0').eq(y).text(k)
+    })
+    convert(timerdeath).split(',').forEach(function(k,y){
+    $('.signspan0').eq(y).text(k)
+    })
+   } 
+  }else if(hiddenclasslength >0 && hiddenclasslength <= 2){
+    if(timerdeath != '' || timerdeath != ''){
+    convert(timerbirth).split(',').forEach(function(k,y){
+    $('.lsignspan' + (o+1)).eq(y).text(k)
+    })
+    convert(timerdeath).split(',').forEach(function(k,y){
+    $('.signspan' + (o+1)).eq(y).text(k)
+    })
+   } 
+  }else if(hiddenclasslength>2){
+    if(timerdeath != '' || timerdeath != ''){
+    convert(timerbirth).split(',').forEach(function(k,y){
+    $('.lsignspan' + o).eq(y).text(k)
+    })
+    convert(timerdeath).split(',').forEach(function(k,y){
+    $('.signspan' + o).eq(y).text(k)
+    })
+   } 
+  }
+}
+}
+
+}
+
+                          
+connect()
+
+function Aalltext() {
+    var Amove = $(".Amove").text();
+    var textlength = ($.trim(Amove.replace(/[^\x00-\xff]/g, "xx")).length) / 2;
+    $('.maxtext').text(textlength)
+    return textlength;
+}
+Balltext();
+Aalltext();
+$('.Amove').blur(function(){
+    Aalltext();
+})
+$('.Bmove').blur(function(){
+    Balltext();
+})
+$('.Bmove span').blur(function(){
+    Balltext();
+})
+function Balltext() {
+    var Bmove = $(".Bmove").text().replace(/\ +/g, "");
+    var textlength = ($.trim(Bmove.replace(/[^\x00-\xff]/g, "xx")).length) / 2;
+    var Clength=$(".Cmove").text().length;
+    $('.mintext').text(textlength)
+
+    return textlength;
+}
+
+</script>
+</body>
+
+</html>

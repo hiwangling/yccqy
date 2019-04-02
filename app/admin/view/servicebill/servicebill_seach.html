@@ -1,0 +1,109 @@
+<div class="box" style="padding-top:10px;">
+<form action="{:url('seach')}" method="post" class="layui-form form_single" lay-filter="test1">
+ <div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label">墓穴名称</label>
+      <div class="layui-input-inline">
+        <input type="tel" name="cemetery_name" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-inline">
+      <label class="layui-form-label">服务名称</label>
+      <div class="layui-input-inline">
+        <input type="text" name="service" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+	  <div class="layui-inline">
+      <label class="layui-form-label">时间查询</label>
+      <div class="layui-input-inline" style="width: 100px;">
+        <input type="text" name="startime" placeholder="开始时间" autocomplete="off" class="layui-input" id="date">
+      </div>
+      <div class="layui-form-mid">-</div>
+      <div class="layui-input-inline" style="width: 100px;">
+        <input type="text" name="endtime" placeholder="结束时间" autocomplete="off" class="layui-input" id="date1">
+      </div>
+    </div>
+  </div>
+  
+   <div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label">负责人</label>
+      <div class="layui-input-inline">
+        <input type="tel" name="nickname" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+	 <button class="layui-btn" lay-submit="test1">立即提交</button>
+  </div>
+   </form>
+  <div class="box-body table-responsive">
+    <table  class="table table-bordered table-hover">
+      <thead>
+      <tr>
+          <th>墓穴名称</th>
+          <th>服务名称</th>
+		  <th>服务次数</th>
+		  <th>开始时间</th>
+		  <th>服务要求</th>
+		  <th>负责人</th>
+          <th>完成时间</th>
+		  <th>操作人</th>
+          <th>操作</th>
+      </tr>
+      </thead>
+      
+      {notempty name='list'}
+        <tbody>
+            {volist name='list' id='vo'}
+                <tr>
+                  <td>{$vo.cemetery_name}</td>
+                  <td>{$vo.service}</td>
+				  <td>{$vo.serviceamount}</td>
+				  <td>{$vo.begindate}</td>
+				  <td>{$vo.vcnote}</td>
+                  <td>{$vo.nickname}</td>
+				  {notempty name='vo.execdate'}
+				  <td>{$vo.execdate|date="y-m-d",###}</td>
+				  {else/}
+				  <td></td>
+				  {/notempty}
+				  <td>{$vo.operatename}</td>
+                  <td class="col-md-3 text-center">
+                      <ob_link><a href="{:url('ServicebillInfo', array('id' => $vo['id']))}" class="btn"><i class="fa fa-edit"></i>{if condition="$vo.resutlstatus eq 1"} 完 成{else/}查看{/if}</a></ob_link>
+                      &nbsp;
+                      <ob_link><a class="btn confirm ajax-get"  href="{:url('servicebillDel', array('id' => $vo['id']))}"><i class="fa fa-trash-o"></i> 删 除</a></ob_link>
+                  </td>
+                </tr>
+            {/volist}
+        </tbody>
+        {else/}
+        <tbody><tr class="odd"><td colspan="8" class="text-center" valign="top">{:config('empty_list_describe')}</td></tr></tbody>
+      {/notempty}
+    </table>
+  </div>
+
+  <div class="box-footer clearfix text-center">
+      {$list->render()}
+  </div>
+
+</div>
+
+<script>
+layui.use(['form', 'layedit', 'laydate'], function(){
+  var form = layui.form
+  ,layer = layui.layer
+ // ,layedit = layui.layedit
+  ,laydate = layui.laydate;
+    laydate.render({
+    elem: '#date'
+  });
+  laydate.render({
+    elem: '#date1'
+  });
+  
+  })
+    //导出功能
+    $(".export").click(function(){
+        
+        window.location.href = searchFormUrl($(".export"));
+    });
+</script>

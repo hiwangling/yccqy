@@ -1,0 +1,72 @@
+<form action="{:url()}" method="post" class="form_single">
+    <div class="box">
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>部门名称</label>
+              <span></span>
+              <input class="form-control" name="name" placeholder="请输入名称" type="text" value="{$info['name']|default=''}">
+            </div>
+          </div>
+            
+           <div class="col-md-6">
+            <div class="form-group">
+              <label>联系电话</label>
+              <span></span>
+              <input class="form-control" name="phone" placeholder="请输入联系电话"  type="text" value="{$info['phone']|default=''}">
+            </div>
+          </div>
+            
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>负责人</label>
+              <span> </span>
+              <input class="form-control" name="managername" placeholder="请输入负责人"  type="text" value="{$info['managername']|default=''}">
+            </div>
+          </div>
+         
+             <div class="col-md-6">
+            <div class="form-group">
+              <label>办公地点</label>
+              <span> </span>
+              <input class="form-control" name="office" placeholder="请输入办公地点"  type="text"  value="{$info['office']|default=''}" >
+            </div>
+          </div>
+             <div class="col-md-6">
+            <div class="form-group">
+              <label>上级部门</label>
+              <span> </span>
+                <select name="parentid" class="form-control">
+                        <option value="0">顶级部门</option>
+                     {volist name='deptlist' id='vo'}
+                        <option value="{$vo['id']}" {notempty name="info['parentid']"}{if condition="$info['parentid'] eq $vo['id']"} selected="selected" {/if}{/notempty}   >{$vo['name']}</option>
+                    {/volist}
+                </select>
+            </div>
+          </div>
+            
+             <div class="col-md-6">
+            <div class="form-group">
+              <label>显示顺序</label>
+              <span> </span>
+              <input class="form-control" name="iorder" placeholder="请输入iorder"  type="text" value="{$info['iorder']|default='0'}">
+            </div>
+          </div>
+            
+          <div class="col-md-12">
+            <div class="form-group">
+                <label>描述</label>
+                <span> </span>
+                <textarea class="form-control" name="vcdesc" rows="2" placeholder="请输入部门描述">{$info['vcdesc']|default=''}</textarea>
+            </div>
+          </div>
+            
+        </div>
+      </div>
+      <div class="box-footer">
+           <input type="hidden" name="id" value="{$info['id']|default='0'}"/>
+        {include file="layout/edit_btn_group"/}
+      </div>
+    </div>
+</form>

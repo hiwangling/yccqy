@@ -1,0 +1,384 @@
+<style>
+  .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 5px;
+}  
+    .fl{
+        float: right;
+        margin-right:20px;
+    }
+    .fy{
+        text-align:center;
+        margin-top:30px;
+    }
+    .title{
+        height:100%;
+    }
+</style>
+<div id="my-app">
+
+<section>
+          <div class="row">
+          <div class="nav-tabs-custom">
+             <form  id="formreserve">
+            <div class="tab-content">
+            
+                  <div class="row">
+                      <div class="col-md-4" style=" border-right:  1px #000 dashed;">
+                                
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3 class="from_title-header">
+                                            <i class="fa fa-globe"></i>旧墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name}
+                                        </h3>
+                                    </div>
+  </div>        
+                                 <table class="table">
+                                    <tbody>            
+                                        <tr>
+                                            <td>
+                                                <div  class="">购买人：</div> 
+                                                <input value="{$oldsellinfo.buyer|default=''}"   readonly="true" class=""   type="text">
+                                            </td>
+                                            <td>
+                                                <div  class="">墓主信息：</div> 
+                                                <input    value="{$buryanme} "  class=""   readonly="true"  type="text"  style="width: 110px">
+                                            </td>
+                                            
+                                        </tr>
+                                       
+                                      
+                                    </tbody>
+                                </table>
+                                   
+                             <table class="table table-striped">
+                                   <caption>购墓收费明细</caption>
+                                    <tbody>
+                                         <thead>
+                                        <tr>
+                                          <th>收费项目</th>
+                                            <th>金额</th>
+                                         </tr>
+                                    </thead>
+                                    {volist name='oldFinanceinfo' id='vo' }
+                                    <tr>
+                                  <td>{$vo.selltitle} </td>
+                                  <td>{$vo.realprice} </td>
+                                </tr>
+                                    {/volist}
+                                     <tr>
+                                  <td>总金额： </td>
+                                  <td>{$oldsellinfo.billTolamount} </td>
+                                </tr>
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+
+                            <div class="col-md-7">
+                              <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3 class="from_title-header">
+                                            <i class="fa fa-globe"></i>新墓穴信息：     <a href="javascript:;" @click="dialogTableVisible = true" type="button"  class="btn btn-default"><span class="ladda-label ">
+                                    <i class="fa fa-search"></i>选择.....
+                                </span>
+                            </a>
+                                        </h3>
+                                    </div>
+                            </div> 
+                                 <div class="row invoice-info">
+       <table class="table">
+           <tbody>
+            <tr>
+                <td>
+          <div  class="div_lable_zhj">墓穴位置:</div> 
+           <input  name="newcname"  v-model="name" class="form-control_zhj2"   type="text">
+              <input type="hidden" name="newcid" v-model="newcid" value="0"/>   
+           <input type="hidden" name="oldsid" value="{$oldsellinfo.id}"/> 
+            <input type="hidden" name="oldcid" value="{$info.id}"/>   
+            <input type="hidden" name="oldcname" value="{$info.name}"/>   
+                </td>
+               <td><div  class="div_lable_zhj">墓型</div>  <select   name="CemeteryType"  class="myselect form-control_zhj2"   >
+                                                {volist name='CemeteryType' id='vo'}
+                                                <option value="{$vo['id']}"  {if condition="$info.typeID eq $vo.id"}selected="selected"{/if}>{$vo['name']}</option>
+                                                {/volist}
+                                            </select>  </td>
+                <td>
+          <div  class="div_lable_zhj">迁墓时间</div> 
+           <input  name="movetime" value="" class="form-control_zhj2 date"    type="text">
+           
+                </td>
+            
+                </tr>
+             
+            
+             </tbody>
+          </table>
+        </div> 
+                                
+                                <div class="row invoice-info">
+       <table class="table">
+           <tbody>
+            <tr>
+                <td>
+          <div  class="div_lable_zhj">联系人:</div> 
+           <input   name="buyer" value="{$sellinfo.buyer|default=''}"  class="form-control_zhj2"   type="text">
+                </td>
+               <td><div  class="div_lable_zhj">联系电话</div> <input name="phone"  value="{$sellinfo.phone|default=''}"  class="form-control_zhj2 "   type="text"></td>
+              <td><div  class="div_lable_zhj">工作单位</div> <input name="job"  value="{$sellinfo.job|default=''}"  class="form-control_zhj2 " type="text"></td>
+            
+               <td><div  class="div_lable_zhj"> 家庭住址</div> <input   name="address" value="{$sellinfo.address|default=''}"  class="form-control_zhj2"   type="text"></td>
+            	   </tr>
+             <tr>
+                 <td>  <div  class="div_lable_zhj">关系</div> 
+           <input   name="relation" value="{$sellinfo.relation|default=''}"  class="form-control_zhj2"   type="text">
+                </td>
+               <td><div  class="div_lable_zhj">性别</div> <select name="sex" class="form-control_zhj2"> <option value="1"  {if condition="$sellinfo.sex eq 1"}selected="selected"{/if}>男</option>
+                                           <option value="2"  {if condition="$sellinfo.sex eq 2"}selected="selected"{/if}>女</option>
+		   </select></td>
+               <td><div  class="div_lable_zhj">缴费方式</div>  <select class="form-control_zhj2"  name="paytype"   >
+                                                    {foreach name="paytype" item="vo" key="k" }
+                                                    <option value="{$k}"  {if condition="$sellinfo.paytype eq $k"}selected="selected"{/if}>{$vo}</option>
+                                                    {/foreach}</select></td>     	 
+                  <td><div  class="div_lable_zhj">是否开票</div><select name="isvoice" class="form-control_zhj2"> 
+                                                    <option value="0"  {if condition="$sellinfo.isvoice eq 0"}selected="selected"{/if}>不开票</option>
+                                                    <option value="1"   {if condition="$sellinfo.isvoice eq 1"}selected="selected"{/if}>开票</option>
+                                                </select></td>    
+             </tr>
+            
+             </tbody>
+          </table>
+        </div> 
+                                
+                                 <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>收费项目
+           </h3>
+        </div>
+         
+      </div>
+      
+      <div class="row invoice-info">
+       <table class="table">
+           <tbody>
+                 {volist name='chargeitem' id='vo' mod="4"}
+                {eq name="mod" value="0"} <tr>{/eq}
+            <td>
+                    <div  class="div_lable_zhj">{$vo.name}:</div>
+                        {if condition="($vo.showtype ==2 )"}
+                         <select class="form-control_zhj selebox"  name="chargeitem[{$vo.id}]" onchange="allprice()"  >
+                                                    {foreach name="vo['select']" item="v3" key="k" }
+                                                    <option value="{$k}" {if condition="$vo.defaultprice eq $k"}selected="selected"{/if}> {$v3} </option> 
+                                                    {/foreach}  
+                                                </select>
+                           {else /}
+                            <input   name="chargeitem[{$vo.id}]" value="{$vo.defaultprice|default=0}"  class="form-control_zhj s_price" onblur="allprice()"  type="text">
+                            {/if}
+             </td>
+              {eq name="mod" value="3"}  </tr>{/eq}
+                {/volist}
+             </tbody>
+          </table>
+        </div>
+         <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>服务项目
+           </h3>
+        </div>
+      </div>
+      
+       <div class="row invoice-info">
+       <table class="table">
+           <tbody>
+                 <tr> 
+            <td>
+               {volist name='Serviceinfoitem' id='v1'}  
+                 <span style=" margin-right: 10px;"><input   type="checkbox" name="Serviceinfo[{$v1.id}]" {if condition="$v1.ischeck eq 1"} checked="true" {/if}   class="checkprice" onclick="allprice()" value="{$v1.price}" >{$v1.servicename}({$v1.price})  
+               </span>
+               {/volist}    
+             </td>
+              </tr> 
+             </tbody>
+          </table>
+        </div>
+      <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+              <i class="fa fa-globe"></i>总费用：<span>{$sellinfo.billTolamount}</span>
+           </h3>
+        </div>
+         
+      </div>
+                                
+                   </div>                 
+                            </div> 
+
+  <div class="modal-footer"  >
+                             <a   href="javascript:" onclick="chang_submit();"  type="button"  class="btn btn-default"><span class="ladda-label">
+                                    <i class="fa fa-check"></i>提交 
+                                </span>
+                            </a>
+                            
+                          
+                            <a type="button" class="btn btn-default" data-dismiss="modal"> 
+                                <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                    </form>
+                </div>
+                      
+                        </div>  
+                  
+           
+              <!-- /.tab-pane -->
+             
+            
+               
+              
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div> </div></section>
+    <el-dialog title="墓穴查询" 
+      :visible.sync="dialogTableVisible" 
+      :modal-append-to-body="false" 
+      append-to-body width="900px"
+       top="3vh">
+      <my-component 
+      :datatable="tableData" 
+      :gardens="gardenData" 
+      :areas="areaData"
+      :types="typeData" 
+      :styles="styleData" 
+       @garden_param="garden_param"
+       @tableinit="tableinit"
+       @rowdata="rowdata"
+       >
+       </my-component>
+     </el-dialog>
+ <script>
+     new Vue({
+        el: '#my-app',
+        components: {
+          'my-component': httpVueLoader('__ROOT__/VueCom/itable.vue')
+        },
+        data: {
+        gardenData:[],
+        tableData:[],
+        areaData:[],
+        typeData:[],
+        styleData:[],
+        formInline:'',
+        name:'',
+        couponSelected:[{
+             name : '单穴',
+             value : 1
+        },{
+             name : '双穴',
+             value : 2
+        },{
+             name : '三穴',
+             value : 3
+        }
+        ],
+        selected: 1,
+        newcid:'',
+        dialogTableVisible: false,
+       },
+      created (){
+        this.tableinit(),
+        this.Gardeninit(),
+        this.Typeinit()
+        this.Styleinit()
+        },
+     methods: {
+            tableinit: function(param) {
+              axios.post("{:url('Cemetery/getCemeteryList_ajax')}", {
+              param
+            }).then ( response=> {
+                this.tableData = response.data.data
+              })
+          },
+            Gardeninit: function() {
+               axios.post("{:url('Cemetery/getCemeteryGarden_ajax')}")
+              .then ( response=> {
+                this.gardenData = response.data
+              })
+          },
+           Typeinit: function() {
+               axios.post("{:url('Cemetery/getCemeterytype_ajax')}")
+              .then ( response=> {
+                this.typeData = response.data
+              })
+          },
+          Styleinit: function() {
+               axios.post("{:url('Cemetery/getCemeteryStyle_ajax')}")
+              .then ( response=> {
+                this.styleData = response.data
+              })
+          },
+
+          garden_param: function(param){
+              axios.post("{:url('Cemetery/getCemeteryArea_ajax')}",{
+              id: param,
+            })
+              .then (response=> {
+                 this.areaData = response.data
+              })
+           },
+          updata_table: function(param){
+              axios.post("{:url('Cemetery/getCemeteryArea_ajax')}",{
+              id: param,
+            })
+              .then (response=> {
+                 this.areaData = response.data
+              })
+           },
+           
+          rowdata: function(param){
+               this.dialogTableVisible = false;
+               this.name = param.name
+               this.newcid=param.id
+               let provinces=this.couponSelected.filter(function (area) {
+                return area.name == param.type_name;
+            });
+               this.selected = provinces[0].value
+                
+           },
+    }
+      });
+ $('.date').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+ 
+ 
+function chang_submit() {
+    
+    var info=confirm("您确定要变更信息吗？变更后所有旧的墓穴相关信息将转移到新的墓穴信息中");
+    if (info==true){
+         url = "{:url('Sellchang/Chang_submit')}";
+        sj = Math.random(1000);
+        data = $("#formreserve").serialize() + "&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("该墓穴变更成功！");
+                     $('#myModal').modal('hide');
+                 location.reload();   
+               } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    }
+    
+         
+}
+
+ 
+ </script>

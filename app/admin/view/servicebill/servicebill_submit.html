@@ -1,0 +1,40 @@
+	<div class="cd-quick-view">
+            <div class="cd-slider-wrapper cd-item-info_sx" style="  width: 45%">
+                <h2><b>{$info.cemetery_name}</b></h2>
+			<ul>
+           <li>
+                 <li> <i class="icon_font icon-shuxing"></i>死者姓名: {$Bury.vcname}</li>
+                    <li> <i class="icon_font icon-shuxing"></i>安葬日期 {$Bury.bury}</li>
+                <li>  <i class="icon_font icon-shuxing"></i>购买人: {$sellinfo.buyer}</li>
+		   <li><i class="iconfont icon-zhanyong"></i>联系电话: {$sellinfo.phone}</li>
+                   <li><i class="iconfont icon-icon"></i>家庭地址: {$sellinfo.address}</li>
+                  <li><i class="iconfont icon-icon"></i>服务内容: {$info.service|default=''}</li>
+                   <li><i class="iconfont icon-icon"></i>服务数量: {$info.serviceamount|default='1'}</li>
+              
+                <li><i class="iconfont icon-icon"></i>服务要求:{$info.vcnote|default=''}</li>
+             </ul>
+                       </div> <!-- cd-slider-wrapper -->
+ 
+     
+		<div class="cd-item-info" style="  width: 50%">
+                   
+                   <form class="form-horizontal" role="form">
+   
+    <div class="form-group">
+    <label for="name">完成说明</label>
+    <textarea class="form-control" rows="3" style="width: 90%"  id='vcnote'></textarea>
+  </div>
+   
+</form>
+                   
+                    
+			<ul class="cd-item-action">
+                             <li>  <a class="btn btn-default add-to-cart"  onclick='service_sumit({$info.id},{$sellinfo.financetype})' class="btn btn-default" data-dismiss="modal">提交</a></li>
+                          
+                                <li>  <a class="btn btn-default add-to-cart"  class="btn btn-default" data-dismiss="modal">关闭</a></li>
+                          
+			</ul> <!-- cd-item-action -->
+		 </div> <!-- cd-item-info -->
+	</div>
+
+                       

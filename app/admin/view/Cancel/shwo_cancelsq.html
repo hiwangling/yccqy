@@ -1,0 +1,59 @@
+ <div class="box">
+      <div class="box-body">
+        <div class="row"  >
+             {volist name='canclelist' id='vo'}
+          <div class="panel panel-success">
+    <div class="panel-heading">申请退款记录</div>
+    
+    <ul class="list-group">
+        <li class="list-group-item">申请人:{$vo.buyer|default=''}</li>
+        <li class="list-group-item">联系人：{$vo.phone|default=''}</li>
+        <li class="list-group-item">单据金额：{$vo.billprice|default='0.00'}</li>
+            <li class="list-group-item"> 退款金额：{$vo.returnprice|default='0.00'}</li>
+         <li class="list-group-item">手续费：{$vo.readprice}</li>
+        <li class="list-group-item">申请日期:{$vo.create_time }</li>
+        <li class="list-group-item">审批人：{$vo.nickname|default=''}</li>
+         <li class="list-group-item">处理状态：{$vo.isok|getisok}</li>
+    </ul>
+    <div class="panel-body">
+        <p> 
+           {$vo.returndesc|default=''} 
+        </p>
+    </div>
+</div> 
+             
+         </div>
+           <div class="modal-footer"  >
+                {if condition="$vo['isok'] eq 1 || $vo['isok'] eq 0"}
+                      <a href="javascript:;"  class="btn"   onclick='delete_cancel({$vo.id})'><i class="fa fa-trash-o"></i> 删 除</a>
+                     {/if} 
+                    <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                 </div>    
+          {/volist}
+      </div>
+       
+</div>
+
+    <script>
+ function delete_cancel(id) {
+     var info=confirm("您确定要删除申请吗？");
+    if (info==true){
+         url = "{:url('canacel_delete_ajax')}";
+        sj = Math.random(1000);
+         data ="id=" +id+ "&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("删除操作成功！");
+                  $('#myModal2').modal('hide'); 
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+             
+           
+        });
+    }
+}
+ 
+ </script>

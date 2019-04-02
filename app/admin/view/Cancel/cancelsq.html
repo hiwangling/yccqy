@@ -1,0 +1,210 @@
+<style>
+  .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 5px;
+    
+}  
+</style>
+
+<section>
+          <div class="row">
+          <div class="nav-tabs-custom">
+          
+            <div class="tab-content">
+            
+                  <div class="row">
+                      <div class="col-md-4" style=" border-right:  1px #000 dashed;">
+                                
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3 class="from_title-header">
+                                            <i class="fa fa-globe"></i>墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name}
+                                        </h3>
+                                    </div>
+  </div>        
+                                 <table class="table">
+                                    <tbody>            
+                                        <tr>
+                                            <td>
+                                                <div  class="">购买人：{$sellinfo.buyer|default=''}</div> 
+                                                
+                                                 </td>
+                                            <td>
+                                                <div  class="">墓主信息：{$sellinfo.buyer|default=''}</div> 
+                                               
+                                            </td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div  class="">联系电话：{$sellinfo.phone|default=''}</div> 
+                                             </td>
+                                            <td>
+                                                <div  class="">购买日期：{$sellinfo.orderbegin|default=''}</div> 
+                                               
+                                            </td>
+                                            
+                                        </tr>
+                                      <tr>
+                                            <td>
+                                                <div  class="">经办人：{$sellinfo.sellname|default=''}</div> 
+                                                </td>
+                                            <td>
+                                                <div  class="">单据金额：{$sellinfo.billTolamount|default='0.00'}</div> 
+                                              
+                                            </td>
+                                            
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                   
+                             <table class="table table-striped">
+                                   <caption>购墓收费明细</caption>
+                                    <tbody>
+                                         <thead>
+                                        <tr>
+                                          <th>收费项目</th>
+                                            <th>金额</th>
+                                         </tr>
+                                    </thead>
+                                    {volist name='Financeinfo' id='vo' }
+                                    <tr>
+                                  <td>{$vo.selltitle} </td>
+                                  <td>{$vo.realprice} </td>
+                                </tr>
+                                    {/volist}
+                                    
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+   <form  id="formreserve">
+                        <input type="hidden" name="cid" value="{$info.id}"/>   
+                        <input type="hidden" name="sid" value="{$sellinfo.id}"/> 
+                       
+                <div class="col-md-7"  >             
+           <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3 class="from_title-header">
+                                            <i class="fa fa-globe"></i>退费申请：     
+                                        </h3>
+                                    </div>
+                            </div>             
+                                
+                                <div class="row invoice-info">
+       <table class="table">
+           <tbody>
+               <tr>
+                   <td colspan="2">
+          <div  class="div_lable_zhj">审批人:</div> 
+          <select class="myselect"  name="manager" id='manager' style="width: 150px;">
+								   {volist name='member' id='vo'}
+									 <option value="{$vo['id']}">{$vo['nickname']}</option>
+								  {/volist}
+								</select> </td>
+                  </tr>
+            
+              <tr>
+                <td>
+            <td><div  class="div_lable_zhj">联系人</div> <input   name="buyer" value="{$sellinfo.buyer|default=''}"  class="form-control_zhj2"   type="text"></td>
+             <td><div  class="div_lable_zhj"> 联系电话</div><input name="phone"  value="{$sellinfo.phone|default=''}"  class="form-control_zhj2 "   type="text"></td>
+            </tr>
+                   
+                    <tr>
+                <td>
+            <td><div  class="div_lable_zhj">工作单位</div> <input name="job"  value="{$sellinfo.job|default=''}"  class="form-control_zhj2 " type="text"></td>
+            
+               <td><div  class="div_lable_zhj"> 家庭住址</div> <input   name="address" value="{$sellinfo.address|default=''}"  class="form-control_zhj2"   type="text"></td>
+            	   </tr>
+                  
+                     <tr>
+                <td>
+                <td><div  class="div_lable_zhj">已收金额</div> <input  name='billprice'  value="{$sellinfo.billTolamount|default='0.00'}" readonly="true"  class="form-control_zhj2 " type="text"></td>
+                 <td><div  class="div_lable_zhj"> 退还金额</div> <input   name='returnprice'  value="{$cancel_retrun|default='0.00'}" readonly="true"   class="form-control_zhj2"   type="text"></td>
+            	 <input  type='hidden'  name="chargeitem[{$returnprice.id}]" value="{$returnprice.defaultprice|default=0}"  >
+                     </tr>
+                   
+                   <tr>
+                <td>
+                <td><div  class="div_lable_zhj">退款手续费：</div> <input  name="chargeitem[{$returnprice.id}]" value="{$returnprice.defaultprice|default=0}"  class="form-control_zhj2 " type="text"></td>
+                 <td> </td>
+            	  
+                     </tr>     
+                     
+                </tbody>
+          </table>
+        </div> 
+                    
+      
+      <div class="row invoice-info">
+       <table class="table">
+           <tbody>
+                 {volist name='chargeitem' id='vo' mod="4"}
+                {eq name="mod" value="0"} <tr>{/eq}
+            <td>
+                    <div  class="div_lable_zhj">{$vo.name}:</div>
+                        {if condition="($vo.showtype ==2 )"}
+                         <select class="form-control_zhj selebox"  name="chargeitem[{$vo.id}]"   >
+                                                    {foreach name="vo['select']" item="v3" key="k" }
+                                                    <option value="{$k}" {if condition="$vo.defaultprice eq $k"}selected="selected"{/if}> {$v3} </option> 
+                                                    {/foreach}  
+                                                </select>
+                           {else /}
+                            <input   name="chargeitem[{$vo.id}]" value="{$vo.defaultprice|default=0}"  class="form-control_zhj s_price"    type="text">
+                            {/if}
+             </td>
+              {eq name="mod" value="3"}  </tr>{/eq}
+                {/volist}
+             </tbody>
+          </table>
+        </div>
+                     <div class="row">
+                                    <div class="col-xs-12">
+                                       <div  class="div_lable_zhj">退款原因:</div> 
+                 <textarea class="form-control" name="returndesc" id="returndesc" rows="3" placeholder="撤销理由"></textarea>  
+                                    </div>
+                            </div>             
+                                
+       
+             </div>                 
+                            </div> 
+
+  <div class="modal-footer"  >
+                             <a   href="javascript:" onclick="Cancel_submit(2);"  type="button"  class="btn btn-default"><span class="ladda-label">
+                                    <i class="fa fa-check"></i>提交 
+                                </span>
+                            </a>
+                            
+                          
+                            <a type="button" class="btn btn-default" data-dismiss="modal"> 
+                                <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                    </form>
+                </div>
+                      
+                </div>          
+              
+            </div>
+            <!-- /.tab-content -->
+   
+          <!-- /.nav-tabs-custom -->
+       </section>
+ 
+ <script>
+ function Cancel_submit() { 
+          url = "{:url('Cancel/Cancel_submit_ajax')}";
+        sj = Math.random(1000);
+         data = $("#formreserve").serialize() + "&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success(infodate.msg);
+                   $('#myModal2').modal('hide');
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+}
+
+ 
+ </script>

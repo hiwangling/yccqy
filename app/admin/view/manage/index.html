@@ -1,0 +1,263 @@
+<style>
+  .el-dialog__body{
+        padding: 0px 20px 20px 20px;
+  }
+
+  .title_{
+
+  }
+  .el-form-item{
+    margin-bottom: 15px;
+  }
+  .pay{
+    margin-right: 10px;
+  }
+  .el-date-editor.el-input, .el-date-editor.el-input__inner{
+    width: 117px;
+  }
+  .el-table th>.cell{
+        font-weight: 100;
+  }
+  .filter-container{
+    margin-bottom: 10px;
+  }
+  .ft{
+        float: left;
+  }
+  .title{
+       margin:10px 0 15px 0;
+    font-weight: 100;
+    color: #1f2f3d;
+    font-size: 22px;
+  }
+.el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .el-col {
+    border-radius: 4px;
+  }
+  .bg-purple-dark {
+    background: #99a9bf;
+  }
+  .bg-purple {
+    background: #67C23A;
+  }
+  .bg-purple-light {
+    background: #e5e9f2;
+  }
+  .grid-content {
+    border-radius: 4px;
+    padding: 5px;
+    min-height: 120px;
+    margin-bottom: 10px;
+  }
+  .row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
+  }
+  .page4{
+    background-color: #964884
+  }
+  .page3{
+    background-color: #CF0120
+  }
+  .page2{
+    background-color: #F39C12
+  }
+   .page1{
+    background-color: #67C23A
+  }
+</style>
+<!-- pageColor[item.usestatus] -->
+<div id="main">
+<el-row :gutter="20">
+  <el-col :span="3" v-for="(item, index) in list" :key="index">
+    <div class="grid-content bg-purple" :class="pageColor[item.usestatus]" @click="getCategoryId(item.id,item.usestatus)">
+        <p>{{item.garden_name}}</p>
+        <p>{{item.name}}</p>
+        <p>{{item.usestatus}}</p>
+        <p>{{item.id}}</p>
+        <p>墓号：{{item.vno}}</p>
+    </div>
+</el-col>
+</el-row>
+
+<el-dialog
+  :title="title"
+  :visible.sync="dialogVisible"
+  width="80%"
+  top="5vh"
+  @open="tabActive"
+  append-to-body>
+   <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tab-pane label="预定" name="reserve">
+          <my-reserve :status="usestatus" :getmember="Getmember" :schedulelist="Schedulelist" @closedialog="closedialog" :cid="cid" @color_pop="color_pop"></my-reserve>
+    </el-tab-pane>
+     <el-tab-pane label="寄存">
+           <my-savelist
+           :data="savedata"
+           :cid="cid" 
+           :savearea="savearea"
+           ></my-savelist>
+   </el-tab-pane>
+    <el-tab-pane label="购墓">
+         <my-sell :status="usestatus" :selldata="selldata" :cid="cid" :buryinfo="buryinfo"><my-sell>
+  </el-tab-pane>
+     <el-tab-pane label="殡葬服务">
+         <my-service :status="usestatus" :cid="cid" :service_show="service_show" :selldata="selldata"><my-service>
+  </el-tab-pane>
+<!--   <el-tab-pane label="安葬">
+         <my-bury :burydata ="burydata" :buryfrom="buryFrom" @bury="bury"><my-bury>
+  </el-tab-pane> -->
+  <el-tab-pane label="换墓">
+         <my-chang><my-chang>
+  </el-tab-pane>
+    <el-tab-pane label="碑文">
+         <my-monumen><my-monumen>
+  </el-tab-pane>
+  </el-tabs>
+</el-dialog>
+
+</div>
+ <script>
+        new Vue({
+        el: '#main',
+        components: {
+          'my-reserve': httpVueLoader('__ROOT__/VueCom/reserve.vue'),
+          'my-savelist': httpVueLoader('__ROOT__/VueCom/savelist.vue'),
+          'my-sell': httpVueLoader('__ROOT__/VueCom/sell.vue'),
+          // 'my-bury': httpVueLoader('__ROOT__/VueCom/bury.vue'),
+          'my-service': httpVueLoader('__ROOT__/VueCom/service.vue'),
+          'my-chang': httpVueLoader('__ROOT__/VueCom/chang.vue'),
+          'my-monumen': httpVueLoader('__ROOT__/VueCom/monumen.vue')
+        },
+        data: {
+           list:[],
+           title:'',
+           cid:'',
+           colorstatus:false,
+           pageColor:[0,'page1','page2','page3','page4'],
+           usestatus:'',
+           savearea:[],
+           savedata:[],
+           service_show:{},
+           selldata:[],
+           buryinfo:[],
+           Getmember:[],
+           Schedulelist:[],
+           // burydata:[],
+           // buryFrom:[],
+           dialogVisible: false,
+           activeName:'reserve',
+           // classative:[
+           // {
+           //  name: '待售',
+           //  class:'page1',
+           //  value: '1'
+           // },
+           // {
+           //  name: '预定',
+           //  class:'page2',
+           //  value: '2'
+           // },
+           // {
+           //  name: '已销售',
+           //  class:'page3',
+           //  value: '3'
+           // },
+           // {
+           //  name: '安葬',
+           //  class:'page4',
+           //  value: '4'
+           // },
+           // ]
+        },
+        created(){
+        this.initdata()
+        },
+        methods:{
+          handleClick(tab, event){
+            index = Number(tab.index)
+             switch(index)
+             {
+              case 0:
+                break;
+              case 1:
+              axios.post("{:url('Api/SaveList')}",{cid: this.cid})
+                  .then (res=> {
+                    this.savedata = res.data.data
+                  })
+              axios.get('../Api/savearealist').then(res=>this.savearea = res.data)
+                break;
+              case 2:
+              axios.post("{:url('Api/update_table')}",{cid: this.cid})
+                  .then (res=> {
+                    this.selldata = res.data.data.data
+                    this.buryinfo = res.data.buryinfo
+                  })
+                break;
+               case 3:
+             axios.post("{:url('Api/update_table')}",{cid: this.cid})
+                  .then (res=> {
+                    this.selldata = res.data.data.data
+                  })
+              axios.post("{:url('Api/Buryservice_ajax_show')}",{cid: this.cid,id:0})
+                  .then (res=> {
+                    this.service_show = res.data
+                  })
+                break;
+                case 4:
+                // axios.post("{:url('Api/BuryList')}",{msg:0,cid: this.cid})
+                //   .then (res=> {
+                //     this.burydata = res.data.data
+                //   })
+                break;
+              default:
+                 
+              }
+          },
+          initdata:function(){
+                   axios.post("{:url('Api/ajax_cemetery')}").then ( response=> {
+                        this.list = response.data.data
+                  })
+          },
+         getCategoryId:function(id,status){
+                   this.dialogVisible = true;
+                   this.usestatus = status;
+                   this.cid = id;
+                axios.post("{:url('Api/Schedulelist')}",{cid: this.cid}).then(res=> {
+                       this.Schedulelist = res.data.data
+                  })
+                 axios.post("{:url('Api/work_show_ajax')}",{cid: id}).then (response=> {
+                        this.title = response.data.cinfo
+                  })
+                 axios.post("{:url('Api/Getmember')}").then (response=> {
+                        this.Getmember = response.data
+                  })                 
+          },
+          // bury:function(row){
+          //   axios.post("{:url('Api/BuryList')}",{msg:1,cid: row.cid,id:row.id})
+          //   .then ( response=> {
+          //      this.buryFrom= response.data.data
+          //         })
+          // },
+          closedialog(val){
+          this.dialogVisible = val
+          },
+          tabActive(){
+          this.activeName="reserve"
+          },
+          color_pop(val){
+           for (const v of this.list) {
+              if (v.id === val.cid) {
+                v.usestatus = val.color
+              }
+           }
+          }
+        }
+
+        })
+ </script>

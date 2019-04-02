@@ -1,0 +1,243 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2018-7-26, 11:11:39
+    Author     : Administrator
+*/
+.demo{width:100%; margin:auto 0 auto; min-height:450px;}
+@media screen and (max-width: 360px) {.demo {width:340px}}
+
+.front{width: 100%; margin-bottom: 10px;  font-size: 16px; line-height: 25px;color: #000;text-align: center;padding: 3px;border-radius: 5px;}
+.booking-details {float: right;position: relative;width:200px;height: 450px; }
+.booking-details h3 {margin: 5px 5px 0 0;font-size: 16px;}
+.booking-details p{line-height:26px; font-size:16px; color:#999}
+.booking-details p span{color:#666}
+ 
+div.seatCharts-cell {display:table-cell;color: #182C4E;height: 122px;width:125px;line-height:20px;margin: 2px;float: left;text-align: left;outline: none;font-size: 14px;}
+ .seatCharts-cell p { margin-left:4px; margin-bottom: 0px;}
+div.seatCharts-seat {color: #fff;cursor: pointer;-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;}
+div.seatCharts-row {height: 65px; clear:both; }
+div.seatCharts-seat.available {background-color: #F39C12;}
+div.seatCharts-seat.focused {background-color: #CF0120;border: none;}
+div.seatCharts-seat.selected {background-color: #48966C;}
+div.seatCharts-seat.unavailable {background-color: #964884;cursor: not-allowed;}
+div.seatCharts-container { width: 100%;padding: 10px;float: left;}
+div.seatCharts-legend {padding-left: 0px;position: absolute;bottom: 16px;}
+ul.seatCharts-legendList {padding-left: 0px;}
+.seatCharts-legendItem{float:left; width:90px;margin-top: 10px;line-height: 2;}
+span.seatCharts-legendDescription {margin-left: 5px;line-height: 30px;}
+.checkout-button {display: block;width:80px; height:24px; line-height:20px;margin: 10px auto;border:1px solid #999;font-size: 14px; cursor:pointer}
+#selected-seats {max-height: 150px;overflow-y: auto;overflow-x: none;width: 200px;}
+#selected-seats li{float:left; width:72px; height:26px; line-height:26px; border:1px solid #d3d3d3; background:#f7f7f7; margin:6px; font-size:14px; font-weight:bold; text-align:center}
+ 
+.cd-item-info_sx h2{
+    font-size: 16px;
+    color: red;
+}
+.cd-quick-view {
+    display: block;   
+}
+.cd-slider-wrapper
+{
+    float: left;
+    width: 45%
+}
+.cd-item-info
+{
+    float: right;
+   width: 50%
+}
+.cd-item-info .add-to-cart {
+    appearance: none;
+    border-radius: 0.25em;
+    border: none;
+    background-color: #f82f53;
+    color: #ffffff;
+    width: 80px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.cd-item-action
+{
+  margin-top: 18px;   
+}
+.cd-item-info .cd-item-action li {
+    display: inline-block;
+    
+}
+.cd-item-info ul{
+    font-size: 16px;
+    line-height:30px;
+    float: left;
+    width: 100%;
+}
+.cd-item-info_sx{
+    border-right: 1px #000 dotted;
+}
+.cd-slider-wrapper ul 
+{
+     font-size: 16px;
+    line-height:30px;
+    float: left;
+    width: 100%;
+}
+.wei {
+    float: left;
+    height: 20px;
+    width: 20px;
+  -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;
+    background-color: #48966C;
+}
+.yd {
+    float: left;
+    height: 20px;
+    width: 20px;
+  -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;
+    background-color: #F39C12;
+}
+.an {
+    float: left;
+    height: 20px;
+    width: 20px;
+    background-color: #964884;
+    -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;
+}
+.gou {
+    float: left;
+    height: 20px;
+    width: 20px;
+    background-color: #CF0120;
+    -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;
+}
+.infodiv{
+   border-bottom: 1px #182C4E dashed; clear:both;
+   margin-bottom: 10px;
+   width: 100%;
+   padding-bottom: 5px;
+   height: 30px;
+}
+
+.infodiv ul li{
+    float: left; 
+   padding-right: 5px; 
+   list-style: none;
+}
+.infodiv span{float: left;  }
+ 
+.inputlink{
+    width: 150px;  height: 28px; background-color:transparent;border:0; border-bottom: 1px #000 solid;
+    margin-left: 10px;
+}
+ 
+#sellModal .modal-body{
+    height:500px;
+  
+ 
+}
+#sellModal .modal-dialog { 
+    position: absolute; 
+    top: 0; 
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+} 
+
+#sellModal .modal-content { 
+    /*overflow-y: scroll; */ 
+    position: absolute; 
+    top: 0; 
+    bottom: 0; 
+    width: 100%; 
+} 
+
+#sellModal .modal-body { 
+    overflow-y: scroll; 
+    position: absolute; 
+    top: 55px; 
+    bottom: 65px; 
+    width: 100%; 
+} 
+
+#sellModal .modal-header .close {margin-right: 15px;} 
+
+#sellModal .modal-footer {
+    position: absolute; 
+    width: 100%; 
+    bottom: 0; 
+}
+
+#test3 {
+    margin: 10px;
+}
+
+.layui-form-label {
+    width: 100px;
+        padding: 9px 8px;
+}
+
+.demo-class {
+    width: 660px!important;
+    top: 14px!important
+}
+.demo-class .layui-layer-content{
+      overflow-x: hidden;
+}
+.demo-class-x {
+    top: 10px!important;
+    width: 800px!important;
+}
+
+.layui-field-title {
+    margin: 0
+}
+
+.layui-elem-field legend {
+    border-bottom: none!important;
+    margin-bottom: 10px!important;
+    width: auto!important;
+}
+
+.monument {
+    display: none
+}
+.addbox,.deletebox{
+    margin: 5px;
+}
+
+.seatCharts-cell a { color:  #fff}
+
+ .from_title-header {
+    margin: 5px 0 10px 0;
+    font-size: 16px;
+   border-bottom: 1px solid #524a4a;
+   padding-bottom:3px;
+}
+.form-control_zhj {
+    display:inline;
+    width: 160px;
+    height: 33px;
+    padding: 2px 5px;
+    font-size: 12px;
+    line-height:22px;
+    
+}
+.form-control_zhj2 {
+    display:inline;
+    width: 140px;
+    height: 30px;
+    padding: 2px 5px;
+    font-size: 12px;
+    line-height:20px;
+    
+}
+.div_lable_zhj
+{
+   display:inline-block;width: 70px;
+}
+
+.table_zhj {
+     margin-bottom: 10px;
+}

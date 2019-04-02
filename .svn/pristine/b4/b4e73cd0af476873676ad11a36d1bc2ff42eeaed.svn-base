@@ -1,0 +1,93 @@
+<form action="{:url()}" method="post" class="form_single">
+    <div class="box">
+      <div class="box-body">
+        <div class="row">
+          
+ 
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>产品编号</label>
+              <input class="form-control" name="sn"   value="{$info['sn']}" placeholder="请输入产品编号" type="text">
+            </div>
+          </div>
+              <div class="col-md-6">
+            <div class="form-group">
+              <label>产品名称</label>
+              <input class="form-control" name="name"  value="{$info['name']}" placeholder="请输入产品名称" type="text">
+            </div>
+          </div>
+             <div class="col-md-6">
+            <div class="form-group">
+              <label>厂家编号</label>
+              <input class="form-control" name="cjsn"  value="{$info['cjsn']}" placeholder="请输入厂家编号" type="text">
+            </div>
+          </div>
+             <div class="col-md-6">
+            <div class="form-group">
+              <label>内部编号</label>
+              <input class="form-control" name="nbsn"  value="{$info['nbsn']}" placeholder="请输入内部编号" type="text">
+            </div>
+          </div>
+             <div class="col-md-6">
+            <div class="form-group">
+              <label>默认类别</label>
+            <select class="form-control" name="category">
+                    <option value="0"  >默认</option> 
+                         {volist name='category' id='vo'}
+                    	<option value="{$vo.id}" {eq name="$info.category" value="$vo.id"} selected="selected" {/eq} >{$vo.name}</option>
+                    {/volist}
+
+                </select>  
+            </div>
+          </div>
+              <div class="col-md-6">
+            <div class="form-group">
+              <label>产品单位</label>
+              <select class="form-control" name="unit">
+                    <option value="0"  >默认</option> 
+
+                    {volist name='unit' id='vo'}
+                    	<option value="{$vo.id}"  {eq name="$info.unit" value="$vo.id"} selected="selected" {/eq}>{$vo.name}</option>
+                    {/volist}
+
+                </select>  
+            </div>    </div>
+                  <div class="col-md-6">
+                   <div class="form-group">
+              <label>默认供应商</label>
+              <select class="form-control" name="supplier">
+                    <option value="0"  >默认</option> 
+
+                    {volist name='supplier' id='vo'}
+                    	<option value="{$vo.id}"  {eq name="$info.supplier" value="$vo.id"} selected="selected" {/eq}>{$vo.name}</option>
+                    {/volist}
+
+                </select>  
+            </div>
+          </div>
+             <div class="col-md-6">
+            <div class="form-group">
+              <label>产品规格</label>
+              <input class="form-control" name="spec"   value="{$info['spec']}" placeholder="请输入产品规格" type="text">
+            </div>
+          </div>
+             <div class="col-md-6">
+            <div class="form-group">
+              <label>产品价格</label>
+              <input class="form-control" name="price"  value="{$info['price']}" placeholder="请输入产品价格" type="text">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label> 描述</label>
+			  <textarea class="form-control" name="vcdesc" rows="3" placeholder="请输入类别名称描述">{$info['vcdesc']}</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="box-footer">
+           <input type="hidden" name="id" value="{$info['id']|default='0'}"/>
+        {include file="layout/edit_btn_group"/}
+      </div>
+    </div>
+</form>

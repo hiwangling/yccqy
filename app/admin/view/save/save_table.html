@@ -1,0 +1,132 @@
+ <table class="table table-striped table-bordered">
+  
+  <thead>
+    <tr>
+          
+            <th>寄存地点</th>
+            <th>寄存人</th>
+	 <th>关系</th>
+		  <th> 电话</th>
+                  <th> 地址</th>
+		  <th>逝者 </th>
+		  <th>开始日期</th>
+		  <th>结束日期</th>
+                   <th>费用</th>
+                  
+                  <th>状态</th>
+                  <th>过期天数</th>
+		  <th>取走日期</th>
+                    <th>操作</th>
+    </tr>
+  </thead>
+  
+    {notempty name='list'}
+        <tbody>
+            {volist name='list' id='vo'}
+                <tr  > 
+				   <td>{$vo.saveareananme}</td>
+				   <td>{$vo.buyer}</td>
+                                   <td>{$vo.relation}</td>
+				   <td>{$vo.phone}</td>
+                                   <td>{$vo.address}</td>
+				   <td>{$vo.deathname}</td>
+				   <td>{$vo.savebegindate|date="Y-m-d",###}</td>
+				   <td>{$vo.saveenddate|date="Y-m-d",###}</td>
+                                   <td>{$vo.saveprice}</td>
+                                  
+				   <td>{$vo.savestatus|get_savestatus}</td>
+                                     <td>{$vo.ts}</td>
+                                   <td>{$vo.canceldate}</td>
+                  <td class=" text-center">
+                 <a href="#"  onclick="save_pay_ajax({$vo['id']},{$vo['cid']})" ><i class="fa fa-edit"></i>结算/打印</a> 
+                   &nbsp;
+                  <a href="#"  onclick="save_edit_ajax({$vo['id']})"><i class="fa fa-edit"></i> 编辑</a> 
+                      &nbsp;
+                  <a href="#"  onclick="save_take_ajax({$vo['id']},{$vo['cid']})" ><i class="fa fa-edit"></i>取走</a> 
+                    &nbsp;
+                    <a href="#"  onclick="save_del_ajax({$vo['id']},{$vo['cid']})" ><i class="fa fa-edit"></i>删除</a> 
+                      </td>
+                </tr>
+            {/volist}
+        </tbody>
+        {else/}
+        <tbody><tr class="odd"><td colspan="8" class="text-center" valign="top">{:config('empty_list_describe')}</td></tr></tbody>
+      {/notempty}
+    
+  
+</table>
+ <script>
+function save_edit_ajax(id) {
+    url = "{:url('Save/Save_edit_ajax')}";
+     sj = Math.random(1000);
+     $.post(url, {id:id, sj: sj }, function(result) {
+        infodate = JSON.parse(result);
+        if (infodate.code == 0) {
+              $('#myModal2 .modal-title').html("修改寄存记录");
+              $('#myModal2 .modal-body').html(infodate.data);
+              $("#myModal2").modal({ show: true, backdrop: false }); //手动开启*/
+              
+        } else {
+             toast.error(infodate.msg);   
+        }
+    });
+}
+
+function save_del_ajax(id,cid) {
+     var info=confirm("您确定要删除该寄存信息吗？");
+    if (info==true){
+         url = "{:url('Save/Save_delete_ajax')}";
+        sj = Math.random(1000);
+         data ="id=" +id+ "&cid="+cid+"&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("删除操作成功！");
+                  $('#show_data_table').html(infodate.data);  
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    }
+  }
+  
+  function save_take_ajax(id,cid) {
+     var info=confirm("您确定要取走吗？");
+    if (info==true){
+         url = "{:url('Save/Save_take_ajax')}";
+        sj = Math.random(1000);
+         data ="id=" +id+ "&cid="+cid+"&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("取走操作成功！");
+                  $('#show_data_table').html(infodate.data);  
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    }
+  }
+  
+   function save_pay_ajax(id,cid) {
+      url = "{:url('Save/Save_pay_ajax')}";
+        sj = Math.random(1000);
+         data ="id=" +id+ "&cid="+cid+"&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("删除操作成功！");
+                  $('#show_data_table').html(infodate.data);  
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    }
+ 
+ </script>

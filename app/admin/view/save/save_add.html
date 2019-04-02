@@ -1,0 +1,181 @@
+<style>
+  .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 5px;
+    
+}  
+</style>
+
+<section>
+          <div class="row">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#activity" data-toggle="tab" aria-expanded="false">寄存登记</a></li>
+              <li class=""><a href="#timeline" data-toggle="tab" aria-expanded="false">寄存管理</a></li>
+             
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="activity">
+                  <form  id="formreserve">
+                   <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name}
+           </h3>
+        </div>
+         
+      </div>
+              <table class="table">
+           <tbody>
+            <tr>
+                <td>
+                    <div  class="div_lable_zhj">寄存人</div> 
+           <input   name="buyer" value="{$sellinfo.buyer|default=''}"  class="form-control_zhj "   type="text">
+                </td>
+           <td><div  class="div_lable_zhj">开始日期</div> <input   name="savebegindate"  id="ordainbegin" value="{$sellinfo.savebegindate||date="Y-m-d",###}"  class="form-control_zhj "   type="text"  ></td>
+              <td><div  class="div_lable_zhj">结束日期</div> <input name="saveenddate"   id="ordainend" value="{$sellinfo.saveenddate||date="Y-m-d",###}"  class="form-control_zhj  "   type="text"></td>
+                 </tr>
+             <tr>
+                  <td><div  class="div_lable_zhj">联系电话</div> <input name="phone"  value="{$sellinfo.phone|default=''}"  class="form-control_zhj  "   type="text"></td>
+             
+              <td><div  class="div_lable_zhj">联系地址</div> <input name="address" value="{$sellinfo.address|default=''}"  class="form-control_zhj "   type="text"></td>
+              	 <td><div  class="div_lable_zhj">费用：</div> <input name="saveprice"  value="{$sellinfo.saveprice|default='0.00'}"  class="form-control_zhj  " type="text"></td>
+            	  
+             </tr>
+           <tr>
+            <td><div  class="div_lable_zhj">逝者姓名</div> <input name="deathname"  value="{$sellinfo.deathname|default=''}"  class="form-control_zhj  "   type="text"></td>
+             <td><div  class="div_lable_zhj">关系</div> <input name="relation"  value="{$sellinfo.relation|default=''}"  class="form-control_zhj  "   type="text"></td>
+              
+              <td><div  class="div_lable_zhj">寄存地址</div> <select class="form-control_zhj"  name="saveareaid"   >
+								  {volist name='savearealist' id='vo'}
+									 <option value="{$vo['id']}">{$vo['name']}</option>
+								  {/volist}
+								</select></td>
+              
+             </tr>
+             <tr>
+            <tr>
+            <td><div  class="div_lable_zhj">缴费方式</div>  <select class="form-control_zhj"  name="paytype"   >
+                 {foreach name="paytype" item="vo" key="k" }
+					   <option value="{$k}"  {if condition="$sellinfo.paytype eq $k"}selected="selected"{/if}>{$vo}</option>
+					{/foreach}</select>
+            </td>
+             <td><div  class="div_lable_zhj">是否开票</div> 
+             <select name="isvoice" class="form-control_zhj"> <option value="0"  {if condition="$sellinfo.isvoice eq 0"}selected="selected"{/if}>不开票</option>
+                                           <option value="1"  {if condition="$sellinfo.isvoice eq 1"}selected="selected"{/if}>开票</option>
+		   </select>
+             </td>
+              
+              <td> </td>
+              
+             </tr>
+             <tr>
+             <tr>
+                 <td colspan="3">
+                     <textarea class=" form-control textarea_editor" style=" width: 850px;" name="vcnote" placeholder="请输入备注信息">{$sellinfo.vcnote|default=''}</textarea>
+                 </td>
+             </tr>
+             </tbody>
+          </table>
+            <input type="hidden" name="id" value="{$sellinfo['id']|default='0'}"/>
+           <input type="hidden" name="cid" value="{$info.id}"/>
+      <div class="modal-footer"  >
+        <a   href="javascript:" onclick="save_submit();"  type="button"  class="btn btn-default"><span class="ladda-label">
+          {empty name="$sellinfo.id"}    <i class="fa fa-check"></i> 增加{else /}
+           <i class="fa fa-edit"></i> 修改{/empty}
+            </span></a>
+            
+        <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                  </form>
+      </div>
+              </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" id="timeline">
+                   <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name}
+           </h3>
+        </div>
+         
+      </div>
+                <!-- The timeline -->
+                <div id="show_data_table">
+                    {$table_lsit}
+          </div>
+                
+                 <div class="modal-footer"  >
+         <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                  </form>
+      </div> 
+              </div>
+            
+               
+              
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div></section>
+</form>
+ <script>
+ $('#ordainbegin').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+
+    $('#ordainend').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+    
+  
+function save_submit() {
+          url = "{:url('Save/Save_submit_ajax')}";
+        sj = Math.random(1000);
+         data = $("#formreserve").serialize() + "&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("操作成功！");
+                  $('.form-control_zhj').each(function(k,y){
+                      $('.form-control_zhj').eq(k).val('')
+                  })
+                 $('#show_data_table').html(infodate.data);
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+}
+
+function save_delete(id)
+{
+     var info=confirm("您确定要删除该寄存信息吗？");
+    if (info==true){
+         url = "{:url('Save/Save_delete_ajax')}";
+        sj = Math.random(1000);
+         data ="id=" +id+ "&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("删除操作成功！");
+                  $('#myModal').modal('hide');
+                 location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    }
+     
+     
+}
+ </script>

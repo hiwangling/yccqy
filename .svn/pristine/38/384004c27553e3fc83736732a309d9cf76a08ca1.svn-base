@@ -1,0 +1,142 @@
+<form  id="formreserve">
+    <div class="box">
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>服务名称</label>
+              <input class="form-control" name="servicename" value="{$info['servicename']}" placeholder="请输入服务名称" type="text">
+            </div>
+          </div>
+ 
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>类型</label>
+              <select name="servicetype" class="form-control">
+				{foreach name="servicetype" item="vo" key="k" }
+				   <option value="{$k}" {notempty name="info['servicetype']"}{if condition="$info['servicetype'] eq $k"} selected="selected" {/if}{/notempty}>{$vo}</option>
+			    {/foreach}
+              </select>
+            </div>
+          </div>
+		  
+		  <div class="col-md-6">
+            <div class="form-group">
+              <label>定价类型</label>
+              <select name="pricetype" class="form-control">
+					{foreach name="pricetype" item="vo" key="k" }
+					   <option value="{$k}" {notempty name="info['pricetype']"}{if condition="$info['pricetype'] eq $k"} selected="selected" {/if}{/notempty}>{$vo}</option>
+					{/foreach}
+              </select>
+            </div>
+          </div>
+		  
+		  <div class="col-md-6">
+            <div class="form-group">
+              <label>计价单位</label>
+              <select name="chargeunit" class="form-control">
+					{foreach name="chargeunit" item="vo" key="k" }
+					   <option value="{$vo}" {notempty name="info['chargeunit']"}{if condition="$info['chargeunit'] eq $vo"} selected="selected" {/if}{/notempty}>{$vo}</option>
+					{/foreach}
+              </select>
+            </div>
+          </div>
+		  
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>销售价格</label>
+			  <span></span>
+              <input class="form-control" name="price"  value="{$info['price']}" placeholder="请输入价格" type="text">
+            </div>
+          </div>
+		  
+		  <div class="col-md-6">
+            <div class="form-group">
+              <label>服务负责部门</label>
+              <select name="deptid" class="form-control" id="deptid">
+			        {volist name='branchlist' id='vo'}
+					   <option value="{$vo['id']}" {notempty name="info['deptid']"}{if condition="$info['deptid'] eq $vo['id']"} selected="selected" {/if}{/notempty}>{$vo['name']}</option>
+					{/volist}
+              </select>
+            </div>
+          </div>
+		  
+		  <div class="col-md-6">
+            <div class="form-group">
+              <label>是否推送</label>
+              <select name="ifpushbranch" class="form-control">
+			  		<option value="0" {if condition="$info['ifpushbranch'] eq 0"} selected="selected" {/if}>否</option>
+			        <option value="2" {if condition="$info['ifpushbranch'] eq 2"} selected="selected" {/if}>负责部门</option>
+					<option value="1" {if condition="$info['ifpushbranch'] eq 1"} selected="selected" {/if}>所有部门</option>
+              </select>
+            </div>
+          </div>
+		  
+		  <div class="col-md-6">
+            <div class="form-group">
+              <label>可后续添加服务</label>
+              <select name="iffollowadd" class="form-control">
+			        <option value="0" {if condition="$info['iffollowadd'] eq 0"} selected="selected" {/if}>否</option>
+					<option value="1" {if condition="$info['iffollowadd'] eq 1"} selected="selected" {/if}>是</option>
+              </select>
+            </div>
+          </div>
+		  
+		  <div class="col-md-6">
+            <div class="form-group">
+              <label>是否显示</label>
+              <select name="ifshow" class="form-control">
+			  		<option value="1" {if condition="$info['ifshow'] eq 1"} selected="selected" {/if}>是</option>
+			        <option value="0" {if condition="$info['ifshow'] eq 0"} selected="selected" {/if}>否</option>
+              </select>
+            </div>
+          </div>
+		  
+		  <div class="col-md-6">
+            <div class="form-group">
+              <label>是否可用</label>
+              <select name="status" class="form-control">
+			  		<option value="1" {if condition="$info['status'] eq 1"} selected="selected" {/if}>是</option>
+			        <option value="0" {if condition="$info['status'] eq 0"} selected="selected" {/if}>否</option>
+              </select>
+            </div>
+          </div>
+		
+               <div class="col-md-6">
+            <div class="form-group">
+              <label>是否反馈结果</label>
+              <select name="ifreturn" class="form-control">
+			  	<option value="1" {if condition="$info['ifreturn'] eq 1"} selected="selected" {/if}>是</option>
+			        <option value="0" {if condition="$info['ifreturn'] eq 0"} selected="selected" {/if}>否</option>
+              </select>
+            </div>
+          </div>
+            
+		  <div class="col-md-6">
+            <div class="form-group">
+              <label>排序</label>
+			  <span></span>
+              <input class="form-control" name="iorder" placeholder="排序" value="{$info['sort']}" type="text">
+            </div>
+          </div>
+		  
+		  <div class="col-md-6">
+            <div class="form-group">
+              <label>服务描述</label>
+			  <textarea class="form-control" name="vcnote" rows="3" placeholder="请输入服务描述">{$info['vcnote']}</textarea>
+			  <input type="hidden" name="id" value="{$info['id']|default='0'}"/>
+            </div>
+          </div>
+		  
+        </div>
+      </div>
+        <div class="modal-footer"  >
+       <a   href="javascript:" onclick="ServiceinfoEdit_ajax_submit();"  type="button"  class="btn btn-default"><span class="ladda-label"><i class="fa fa-check"></i> 提交</span></a>
+        <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+      
+      </div>
+    </div>
+<script>
+
+</script>
+</form>

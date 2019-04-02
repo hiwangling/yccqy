@@ -1,0 +1,103 @@
+<style>
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 5px;
+
+    }  
+</style>
+
+<section>
+    <div class="row">
+        <div class="nav-tabs-custom">
+
+            <div class="tab-content">
+
+                <div class="row">
+                    <div class="col-md-12"  >
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h3 class="from_title-header">
+                                    <i class="fa fa-globe"></i>墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name}
+                                </h3>
+                            </div>
+                        </div>        
+                        <table class="table">
+                            <tbody>            
+                                <tr>
+                                    <td>
+                                        <div  class="">购买人：{$sellinfo.buyer|default=''}</div> 
+                                    </td>
+                                    <td>
+                                        <div  class="">联系电话：{$sellinfo.phone|default=''}</div> 
+                                    </td>
+                                    <td>
+                                        <div  class="">购买日期：{$sellinfo.orderbegin|default=''}</div> 
+                                    </td>
+                                    <td>
+                                        <div  class="">经办人：{$sellinfo.sellname|default=''}</div> 
+                                    </td>
+                                </tr>
+ <tr>
+                                    <td>
+                                        <div  class="">工作单位：{$sellinfo.job|default=''}</div> 
+                                    </td>
+                                    <td>
+                                        <div  class="">家庭地址：{$sellinfo.address|default=''}</div> 
+                                    </td>
+                                    <td>
+                                        <div  class="">身份证：{$sellinfo.sfz|default=''}</div> 
+                                    </td>
+                                    <td>
+                                        <div  class="">单据状态：{$sellinfo.orderstatus|get_paystatus}</div> 
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                        <table class="table table-striped">
+                            <caption>{$sellinfo.financetype|getfinancetype}收费明细  &nbsp;&nbsp;&nbsp;&nbsp;  单据编号：{$sellinfo.orderNO}</caption>
+                            <tbody>
+                            <thead>
+                                <tr>
+                                    <th>收费项目</th>
+                                    <th>金额</th>
+                                </tr>
+                            </thead>
+                            {volist name='Financeinfo' id='vo' }
+                            <tr>
+                                <td>{$vo.selltitle} </td>
+                                <td>{$vo.realprice} </td>
+                            </tr>
+                            {/volist}
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+                </div> 
+
+                <div class="modal-footer"  >
+
+
+                    <a type="button" class="btn btn-default" data-dismiss="modal"> 
+                        <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                    </form>
+                </div>
+
+            </div>  
+
+
+            <!-- /.tab-pane -->
+
+
+
+
+        </div>
+        <!-- /.tab-content -->
+    </div>
+    <!-- /.nav-tabs-custom -->
+</div> </div></section>
+

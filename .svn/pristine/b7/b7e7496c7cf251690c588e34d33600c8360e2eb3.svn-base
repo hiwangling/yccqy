@@ -1,0 +1,86 @@
+<?php 
+
+// +---------------------------------------------------------------------+
+// | OneBase    | [ WE CAN DO IT JUST THINK ]                            |
+// +---------------------------------------------------------------------+
+// | Licensed   | http://www.apache.org/licenses/LICENSE-2.0 )           |
+// +---------------------------------------------------------------------+
+// | Author     | Bigotry <3162875@qq.com>                               |
+// +---------------------------------------------------------------------+
+// | Repository | https://gitee.com/Bigotry/OneBase                      |
+// +---------------------------------------------------------------------+
+
+namespace app\admin\controller;
+
+/**
+ * 服务信息控制器
+ */
+class Serviceinfo extends AdminBase
+{
+   
+   
+    private function getCommon(){
+                $this->assign('servicetype', parse_config_array('servicetype'));
+		$this->assign('chargeunit', parse_config_array('chargeunit'));
+		$this->assign('pricetype', parse_config_array('pricetype'));
+		
+	} 
+   /**
+     * 服务信息列表
+     */
+    public function ServiceinfoList()
+    {
+                 $where = $this->logicServiceinfo->getWhere($this->param);
+		
+		$this->getCommon();
+		
+		$this->assign('list', $this->logicServiceinfo->getServiceinfoList($where,'a.*,b.name as branch_name','a.iorder asc',10));
+		
+        return $this->fetch('serviceinfo_list');
+    }
+	 /**
+     * 服务信息添加
+     */
+    public function ServiceinfoAdd()
+    {
+        
+        IS_POST && $this->jump($this->logicServiceinfo->ServiceinfoAdd($this->param));
+		
+		$this->getCommon();
+		
+		$this->assign('iorder',$this->logicServiceinfo->getServiceinfoStat($where=[],'max','iorder'));
+		
+		$this->assign('branchlist', $this->logicServiceinfo->get_parent_dept());
+		
+        return $this->fetch('serviceinfo_add');
+    }
+	/**
+     * 服务信息编辑
+     */
+    public function ServiceinfoEdit()
+    {
+        
+        IS_POST && $this->jump($this->logicServiceinfo->ServiceinfoEdit($this->param));
+		
+        $info = $this->logicServiceinfo->getServiceinfoInfo(['id' => $this->param['id']]);
+		
+		$this->assign('branchlist', $this->logicServiceinfo->get_parent_dept());
+		
+		$this->getCommon();
+		
+		$this->assign('info', $info);
+		
+        return $this->fetch('serviceinfo_edit');
+    }
+    
+    /**
+     * 服务信息删除
+     */
+    public function ServiceinfoDel($id = 0)
+    {
+        
+        $this->jump($this->logicServiceinfo->ServiceinfoDel(['id' => $id]));
+    }
+	
+	
+}

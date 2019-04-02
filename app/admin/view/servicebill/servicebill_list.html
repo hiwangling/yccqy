@@ -1,0 +1,217 @@
+<link rel="stylesheet" href="__STATIC__/module/admin/css/cemetery.css">
+<div class="box">
+    <br>
+    <form action="{:url('index')}" method="post" class="layui-form form_single" lay-filter="test1">
+ <div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label">墓穴名称</label>
+      <div class="layui-input-inline">
+        <div class="layui-input-inline">
+            <input type="tel" name="cemetery_name" value="{$formcs.cemetery_name|default=''}" autocomplete="off" class="layui-input">
+      </div>
+      </div>
+    </div>
+    <div class="layui-inline">
+      <label class="layui-form-label">状态</label>
+      <div class="layui-input-inline">
+        <select name="resutlstatus">
+       <option value ="0" {if condition="(0==$formcs.resutlstatus) "} selected = "selected"{/if}>查询所有</option>
+        <option value ="1" {if condition="(1==$formcs.resutlstatus) "} selected = "selected"{/if}>待完成</option>
+        <option value ="2" {if condition="(2==$formcs.resutlstatus) "} selected = "selected"{/if}>已完成</option>
+   
+        </select>
+      </div>
+    </div>
+    <div class="layui-inline">
+      <label class="layui-form-label">服务类别</label>
+      <div class="layui-input-inline">
+       <select name="servicetype" class="form-control">
+             <option value ="0" {if condition="(0==$formcs.servicetype) "} selected = "selected"{/if}>查询所有</option>
+				{foreach name="servicetype" item="vo" key="k" }
+                                  {if condition="($k>1  ) "} 
+				   <option value="{$k}" {notempty name="$formcs.servicetype"}{if condition="$formcs.servicetype eq $k"} selected="selected" {/if}{/notempty}>{$vo}</option>
+			    {/if}
+                                   {/foreach}
+              </select>
+      </div>
+    </div>
+       </div>
+         <div class="layui-form-item">  
+	  <div class="layui-inline">
+      <label class="layui-form-label">时间查询</label>
+      <div class="layui-input-inline" style="width: 100px;">
+        <input type="text" name="startime" placeholder="开始时间" autocomplete="off" class="layui-input" id="date">
+      </div>
+      <div class="layui-form-mid">-</div>
+      <div class="layui-input-inline" style="width: 100px;">
+        <input type="text" name="endtime" placeholder="结束时间" autocomplete="off" class="layui-input" id="date1">
+      </div>
+    </div>
+
+  
+
+    <div class="layui-inline">
+      <label class="layui-form-label">联系人&nbsp; &nbsp;&nbsp; </label>
+      <div class="layui-input-inline">
+        <input type="tel" name="nickname"  value="{$formcs.nickname|default=''}" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+	&nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;  <button class="btn btn-info " lay-submit="test1">查询</button>
+        &nbsp; &nbsp; <button type="button" id="search"  onclick="execl();" class="btn btn-info  "><i class="fa fa-file-excel-o"></i> 数据导出</button>
+  </div>
+   </form>
+    
+  
+    
+  <div class="box-body table-responsive">
+    <table  class="table table-bordered table-hover">
+      <thead>
+      <tr>
+          <th>墓穴名称</th>
+          <th>服务名称</th>
+           <th>联系人</th>
+            <th>联系电话</th>
+		  <th>服务次数</th>
+		  <th>开始时间</th>
+                  
+		  <th>服务要求</th>
+		  <th>完成人</th>
+                   <th>状态</th>
+                <th>完成时间</th>
+		   
+          <th>操作</th>
+      </tr>
+      </thead>
+      
+     
+        <tbody>
+            {volist name='list' id='vo'}
+                <tr>
+                  <td>{$vo.cemetery_name}</td>
+                  <td>{$vo.service}</td>
+                   <td>{$vo.linkmane}</td>
+                    <td>{$vo.linkphone}</td>
+				  <td>{$vo.serviceamount}</td>
+				  <td>{$vo.begindate}</td>
+				  <td>{$vo.vcnote}</td>
+                  <td>{$vo.nickname}</td>
+                 
+				  
+				 <td> {if condition="$vo['resutlstatus'] eq 1"}待完成{else/}<b style=" color: red">已完成</b>{/if}</td>
+				{if condition="$vo['execdate'] neq ''"}
+				  <td>{$vo.execdate|date="y-m-d",###}</td>
+				  {else/}
+                                  <td></td>
+				  {/if}
+				
+				 
+				 
+                  <td class="col-md-3 text-center">
+                     {if condition="$vo['resutlstatus'] eq 1"}
+                      <a href="javascript:;" class="btn" onclick='openMotai("{$vo.id}")'><i class="fa fa-edit"></i>执行</a>   
+                      {/if} 
+                      <a href="javascript:;" class="btn" onclick='showbillinfo("{:url('showserviceinfo', array('id' => $vo['id'] ,'tc'=>1))}")'><i class="fa fa-search"></i>查 看</a>
+                    
+                  </td>
+                </tr>
+            {/volist}
+        </tbody>
+        
+    </table>
+  </div>
+
+  <div class="box-footer clearfix text-center">
+      {$list->render()}
+  </div>
+
+</div>
+ <!-- 模态框（Modal） -->
+<div class="modal fade" id="myModa2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">任务信息</h4>
+            </div>
+            <div class="modal-body"> 
+            	 
+            </div>
+           
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<script>
+    //导出功能
+        function openMotai(sid) {
+
+        url = "{:url('show_service_over_ajax')}";
+        sj = Math.random(1000);
+        $.post(url, { id: sid, sj: sj }, function(result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                $('#myModa2 .modal-body').html(infodate.data);
+                $("#myModa2").modal({ show: true, backdrop: false }); //手动开启*/
+            } else {
+                alert(infodate.msg);
+            }
+        });
+    } 
+    
+     function service_sumit(sid,servietype) {
+            note=$('#vcnote').val()
+            url= "{:url('upate_service_over_ajax')}" 
+            sj = Math.random(1000);
+         $.post(url, { billid: sid, sj: sj,note:note,servietype:servietype }, function(result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                location.reload();
+            } else {
+                alert(infodate.msg);
+            }
+
+        });
+        
+        
+    } 
+    
+    
+    layui.use(['form','table','layer'], function(){
+    var form = layui.form,
+    layer = layui.layer,
+    
+    table = layui.table
+ 
+ 
+ 
+   $(".export").click(function(){
+        
+        window.location.href = searchFormUrl($(".export"));
+    });
+    
+      showbillinfo = function(url){   
+					var vheight = $(window).height() - 150 + 'px'
+			    	var vwidth = $(window).width() - 200 + 'px'
+						  layer.open({
+						  type: 2,
+						  title: '',
+						  shadeClose: true,
+						  shade: [0.5, '#393D49'],
+						  maxmin: false, //开启最大化最小化按钮
+						  area: [vwidth, vheight],
+						  content: url
+						  });
+				  }
+        })
+    
+ 
+ function execl()
+ {
+      url ="{:url('export_execl')}";
+                                        var targetForm = document.forms[0];
+                                        targetForm.action = url;
+                                        targetForm.submit();
+ }
+  
+
+</script>

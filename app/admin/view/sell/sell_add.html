@@ -1,0 +1,387 @@
+<style>
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 5px;
+  }  
+    .form-control_zhj1{ width: 90px;}
+</style>
+
+<section>
+    <div class="row" id="selldiv">
+        <div class="nav-tabs-custom">
+           
+            <div class="tab-content">
+                <div class="tab-pane active" id="activity">
+                    <form  id="formreserve">
+                        <input type="hidden" name="cid" value="{$info.id}"/>   
+                        <input type="hidden" name="id" value="{$sellinfo.id|default=0}"/> 
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3 class="from_title-header">
+                                            <i class="fa fa-globe"></i>墓穴信息：{$info.gardename}/{$info.areaname}/{$info.name}
+                                        </h3>
+                                    </div>
+
+                                </div>        
+                                <table class="table">
+                                    <tbody>
+
+                                    <th>朝向</th>
+                                    <th>面积</th>
+                                    <th>风格</th>
+                                    <th>墓型</th>
+                                    <th>墓位销售价</th>
+                                    <tr>
+
+                                        <td> 
+                                            {$info.orientation} </td>
+                                        <td> 
+                                            {$info.area} </td>
+                                        <td> 
+                                            {$info.stylename}</td>
+
+                                        <td> <select class=""  name="CemeteryType">
+                                                {volist name='CemeteryType' id='vo'}
+                                                <option value="{$vo['id']}"  {if condition="$info.typeID eq $vo.id"}selected="selected"{/if}>{$vo['name']}</option>
+                                                {/volist}
+                                            </select>
+                                        </td>
+                                        <td> <select class="myselect"  name="mw_sellprice"  onchange="selectAll()">
+                                                <option value="0">请选择</option>
+                                                {foreach name="mw_sellprice['select']" item="vo" key="k" }
+                                                <option value="{$k}" {if condition="$sellinfo.mw_sellprice eq $k"}selected="selected"{/if}>{$vo}</option>
+                                                {/foreach}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3 class="from_title-header">
+                                            <i class="fa fa-globe"></i>墓主信息
+                                        </h3>
+                                    </div>
+
+                                </div>    
+                                <table class="table">
+                                    <tbody>
+
+                                    <thead>
+                                        <tr>
+
+                                            <th>姓名</th>
+                                            <th>性别</th>
+                                            <th>身份证</th>
+                                            <th>出生日期</th>
+                                            <th>死亡日期</th>
+                                            <th>安葬日期</th>
+                                             <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                     {volist name='bury' id='vo' }
+                                    <tr>
+
+                                        <td> 
+                                            <input type="hidden" class="hiddenclass" name="bury[{$key}][id]" value="{$vo.id|default=0}"/> 
+                                            <input name="bury[{$key}][deathname]"  value="{$vo.vcname|default=''}"  class=" form-control_zhj1 "   type="text"></td>
+                                        <td> <select name="bury[{$key}][sex]" class=" control_zhj1"> 
+                                                <option value="1"  {if condition="$vo.sex eq 1"}selected="selected"{/if}  >男</option>
+                                                <option value="2"  {if condition="$vo.sex eq 2"}selected="selected"{/if} >女</option>
+                                            </select></td>
+                                        <td> <input name="bury[{$key}][sfz]"  value="{$vo.sfz|default=''}"  class="form-control_zhj1 " type="text"></td>
+                                        <td> 
+                                            <input   name="bury[{$key}][birth]"  id="birth0" value="{$vo.birth}"  class="form-control_zhj1 date "   type="text"  ></td>
+                                        <td> 
+                                            <input   name="bury[{$key}][death]"  id="death0" value="{$vo.death}"  class="form-control_zhj1 date"   type="text"  ></td>
+                                        <td> 
+                                            <input   name="bury[{$key}][bury]"  id="bury0" value="{$vo.bury}"  class=" form-control_zhj1 date"   type="text"  ></td>
+                                    <td> 
+                                        <i class="fa fa-trash-o deleteBury" title="删除墓主" onclick="deleteBury({$vo.id},{$vo.burystatus},this)"></i>
+                                    </td>
+                                    </tr>
+                                    </tr>
+                                    {/volist}
+
+                                    </tbody>
+                                </table>
+
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3 class="from_title-header">
+                                            <i class="fa fa-globe"></i>认购人信息
+                                        </h3>
+                                    </div>
+
+                                </div>
+                                <table class="table">
+                                    <tbody>            
+                                        <tr>
+                                            <td>
+                                                <div  class="">姓名</div> 
+                                                <input   name="buyer" value="{$sellinfo.buyer|default=''}"  class=""   type="text">
+                                            </td>
+                                            <td><div  class="">联系电话</div> <input name="phone"  value="{$sellinfo.phone|default=''}"  class=""   type="text"></td>
+                                            <td><div  class="">工作单位</div><input name="job"  value="{$sellinfo.job|default=''}"  class=" "   type="text"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><div  class="">家庭住址</div> <input name="address"  value="{$sellinfo.address|default=''}"  class="  "   type="text"></td>
+                                            <td><div  class="">关系</div> <input name="relation"  value="{$sellinfo.relation|default=''}"  class=" " type="text"></td>
+                                            <td><div  class="">性别</div> <select name="sex" class="">
+                                                    <option value="1" {if condition="$sellinfo.sex eq 1"}selected="selected"{/if} >男</option>
+                                                    <option value="2" {if condition="$sellinfo.sex eq 2"}selected="selected"{/if}>女</option>
+                                                </select></td>    
+                                           </tr>
+                                        <tr>
+                                            <td><div  class="">购买日期</div> <input   name="orderbegin"    value="{$sellinfo.orderbegin}"  class="date"   type="text"  ></td>
+                                            <td><div  class="">到期日期</div> <input name="orderend"  value="{$sellinfo.orderend}"  class="date" type="text"></td>
+                                             <td><div  class="">备注</div> <input   name="vcdesc" value="{$sellinfo.vcdesc|default=''}"  class=" "   type="text"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3 class="from_title-header">
+                                            <i class="fa fa-globe"></i>缴费信息
+                                        </h3>
+                                    </div>
+
+                                </div> 
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div  class="div_lable_zhj">墓位实收价</div> 
+                                                <input name="mw_realprice" value="{$sellinfo.mw_realprice|default=''}"  class="form-control_zhj s_price" onblur="allprice()" type="text">
+                                            </td>
+                                        </tr>
+                                        {volist name='chargeitem' id='vo'}
+                                        {if condition="($vo.showtype ==2 )"}
+                                        <tr>
+                                            <td>
+                                                <div  class="div_lable_zhj">{$vo.name}</div> 
+                                                <select class="form-control_zhj selebox"  name="chargeitem[{$vo.id}]" onchange="allprice()"  >
+                                                    {foreach name="vo['select']" item="v3" key="k" }
+                                                    <option value="{$k}" {if condition="$vo.defaultprice eq $k"}selected="selected"{/if}> {$v3} </option> 
+                                                    {/foreach}  
+                                                </select>
+                                            </td>
+                                        </tr>
+
+                                        {else /}
+                                        <tr>
+                                            <td>
+                                                <div  class="div_lable_zhj">{$vo.name}</div> 
+                                                <input   name="chargeitem[{$vo.id}]" value="{$vo.defaultprice|default=0}"  class="form-control_zhj s_price" onblur="allprice()"  type="text">
+                                            </td>
+                                        </tr>
+
+                                        {/if}
+                                        {/volist}
+                                    </tbody>
+                                </table>  
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3 class="from_title-header">
+                                            <i class="fa fa-globe"></i>相关服务
+                                        </h3>
+                                    </div>
+                                </div>
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td> 
+                                                {volist name='Serviceinfoitem' id='v1'}  
+                                                <input type="checkbox" name="Serviceinfo[{$v1.id}]" {if condition="$v1.ischeck eq 1"} checked="true" {/if}   class="checkprice" onclick="allprice()" value="{$v1.price}">{$v1.servicename}({$v1.price})  
+                                                       {/volist}
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>   
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3 class="from_title-header">
+                                            <i class="fa fa-globe"></i>汇总信息
+                                        </h3>
+                                    </div>
+                                </div>
+                                <table class="table">
+                                    <tbody>
+
+                                        <tr>
+                                            <td><div  class="div_lable_zhj">缴费方式</div>  <select class="form-control_zhj"  name="paytype"   >
+                                                    {foreach name="paytype" item="vo" key="k" }
+                                                    <option value="{$k}"  {if condition="$sellinfo.paytype eq $k"}selected="selected"{/if}>{$vo}</option>
+                                                    {/foreach}</select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><div  class="div_lable_zhj">是否开票</div> 
+                                                <select name="isvoice" class="form-control_zhj"> 
+                                                    <option value="0"  {if condition="$sellinfo.isvoice eq 0"}selected="selected"{/if}>不开票</option>
+                                                    <option value="1"   {if condition="$sellinfo.isvoice eq 1"}selected="selected"{/if}>开票</option>
+                                                </select>
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td><div  class="div_lable_zhj">总金额：</div> 
+                                                <span class="all_cost">{$sellinfo.billTolamount}</span>
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>   
+
+                            </div> 
+
+
+                        </div>  
+
+                        <div class="modal-footer"  >
+                             <a   href="javascript:" onclick="save_submit(2);"  type="button"  class="btn btn-default"><span class="ladda-label">
+                                    <i class="fa fa-check"></i>提交 
+                                </span>
+                            </a>
+                            {if condition="$sellinfo.id neq 0"}
+                              <a   href="javascript:" onclick="sell_del_ajax({$sellinfo.id});"  type="button"  class="btn btn-default"><span class="ladda-label">
+                                    <i class="fa fa-check"></i>删除
+                                </span>
+                            </a>
+                             {/if}
+                          
+                            <a type="button" class="btn btn-default" data-dismiss="modal"> 
+                                <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+                    </form>
+                </div>
+            </div>
+            <!-- /.tab-pane -->
+           
+        </div>
+        <!-- /.tab-content -->
+    </div>
+    <!-- /.nav-tabs-custom -->
+</div>
+</div>
+</section>
+
+<script>
+   var sum;
+ var constAlls;
+ var selectAll;
+ allprice()
+function selectAll(){
+    var selectAll = parseInt($('.myselect').val())
+    $("input[name='mw_realprice']").val(selectAll)
+    allprice()
+}
+function allprice(){
+    var constAlls = 0;
+    var sum=0;
+    var selebox = 0
+    $('.s_price').each(function(){
+           constAlls += parseInt($(this).val())
+    })
+    $('.selebox').each(function(){
+        selebox += parseInt($(this).val());
+        
+    })
+
+    $("input:checkbox:checked").each(function(){
+            sum+= parseInt($(this).val());
+     });
+     $('.all_cost').text(constAlls + sum + selebox)
+}
+
+    $('.date').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+
+    function save_submit(orderstatus) {
+        url = "{:url('Sell/Sell_submit')}";
+        sj = Math.random(1000);
+        data = $("#formreserve").serialize() + "&sj=" + sj+"&orderstatus="+orderstatus
+        $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                toast.success("操作成功！");
+                 $('#myModal').modal('hide');
+                 location.reload();   
+            } else
+            {
+                toast.error(infodate.msg);
+            }
+
+        });
+    }
+
+function sell_del_ajax(id) {
+   var info=confirm("您确定要删除该购墓信息吗？删除后所有相关信息都将丢失");
+    if (info==true){
+         url = "{:url('Sell/sell_delete_ajax')}";
+        sj = Math.random(1000);
+         data ="id=" +id+"&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("删除操作成功！");
+                  $('#myModal').modal('hide');
+                  location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    }
+  }
+  function deleteBury(id,state,which)
+  {  
+    
+     
+      
+     
+      if (id==0)
+     {
+         return ;
+     }
+      if(state==1)
+      {
+          toast.error("已经安葬，不能删除");
+           return;
+       }
+     var info = confirm("您确定要删除墓主信息吗？");
+        if (info == true) {
+           url = "{:url('Sell/Sell_deleteBury_ajax')}";
+           sj = Math.random(1000);
+           data = "id=" + id + "&sj=" + sj
+           $.post(url, data, function (result) {
+               infodate = JSON.parse(result);
+                if (infodate.code == 0) {
+                   toast.success("删除操作成功！");
+                   ////请空表格
+                   $(which).parent().siblings().find('input').val('')
+     $(which).parent().siblings().find('.hiddenclass').val(0)
+                     
+               } else
+              {
+                  toast.error(infodate.msg);
+               }
+
+           });
+       }
+       
+  }
+</script>

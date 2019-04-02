@@ -1,0 +1,359 @@
+<?php
+// +---------------------------------------------------------------------+
+// | OneBase    | [ WE CAN DO IT JUST THINK ]                            |
+// +---------------------------------------------------------------------+
+// | Licensed   | http://www.apache.org/licenses/LICENSE-2.0 )           |
+// +---------------------------------------------------------------------+
+// | Author     | Bigotry <3162875@qq.com>                               |
+// +---------------------------------------------------------------------+
+// | Repository | https://gitee.com/Bigotry/OneBase                      |
+// +---------------------------------------------------------------------+
+
+// 扩展函数文件，系统研发过程中需要的函数建议放在此处，与框架相关函数分离
+use think\Db;
+
+function getWordstyleType($id)
+{
+    if($id==1)
+	{
+	    return "字体风格";
+	}
+	else
+	{
+	   return "照片风格";
+	}
+}
+
+function getSellId($id)
+{
+   $relsut = Db::name('sell')->where('cid',$id)->column('id');
+   return $relsut;
+}
+
+function getPid($id)
+{
+   $relsut = Db::name('bygserviceprice')->where('id',$id)->value('oid');
+   return $relsut;
+}
+function getMournStates($id)
+{
+   if($id==0)
+   {
+      return "空闲";
+   }
+   else if($id==1)
+   {
+      return "占用";
+   }
+   else if($id==2)
+   {
+      return "维修"; 
+   }
+   else
+   {
+      return "停用";
+   }
+}
+
+function getfamily($id)
+{
+   $relsut = Db::name('bygfamily')->where('id',$id)->value('name');
+   return $relsut;
+}
+
+function getGstatus($id)
+{
+   if($id==1)
+   {
+       return '有';
+   }
+   else
+   {
+      return '无';
+   }
+}
+
+function getTstatus($id)
+{
+   if($id==1)
+   {
+       return '是';
+   }
+   else
+   {
+      return '否';
+   }
+}
+
+function num_to_rmb($num){
+    $c1 = "零壹贰叁肆伍陆柒捌玖";
+    $c2 = "分角元拾佰仟万拾佰仟亿";
+    //精确到分后面就不要了，所以只留两个小数位
+    $num = round($num, 2); 
+    //将数字转化为整数
+    $num = $num * 100;
+    if (strlen($num) > 10) {
+        return "金额太大，请检查";
+    } 
+    $i = 0;
+    $c = "";
+    while (1) {
+        if ($i == 0) {
+            //获取最后一位数字
+            $n = substr($num, strlen($num)-1, 1);
+        } else {
+            $n = $num % 10;
+        }
+        //每次将最后一位数字转化为中文
+        $p1 = substr($c1, 3 * $n, 3);
+        $p2 = substr($c2, 3 * $i, 3);
+        if ($n != '0' || ($n == '0' && ($p2 == '亿' || $p2 == '万' || $p2 == '元'))) {
+            $c = $p1 . $p2 . $c;
+        } else {
+            $c = $p1 . $c;
+        }
+        $i = $i + 1;
+        //去掉数字最后一位了
+        $num = $num / 10;
+        $num = (int)$num;
+        //结束循环
+        if ($num == 0) {
+            break;
+        } 
+    }
+    $j = 0;
+    $slen = strlen($c);
+    while ($j < $slen) {
+        //utf8一个汉字相当3个字符
+        $m = substr($c, $j, 6);
+        //处理数字中很多0的情况,每次循环去掉一个汉字“零”
+        if ($m == '零元' || $m == '零万' || $m == '零亿' || $m == '零零') {
+            $left = substr($c, 0, $j);
+            $right = substr($c, $j + 3);
+            $c = $left . $right;
+            $j = $j-3;
+            $slen = $slen-3;
+        } 
+        $j = $j + 3;
+    } 
+    //这个是为了去掉类似23.0中最后一个“零”字
+    if (substr($c, strlen($c)-3, 3) == '零') {
+        $c = substr($c, 0, strlen($c)-3);
+    }
+    //将处理的汉字加上“整”
+    if (empty($c)) {
+        return "零元整";
+    }else{
+        return $c . "整";
+    }
+}
+
+ 
+
+function getCheckStatus($id)
+{
+      if($id==1)
+	  {
+	      return "<font color='#FF9933'>待办理</font>";
+		  
+	  }
+	  else if($id==2)
+	  {
+	      return "<font color='#FF0000'>办理中</font>";
+	  }
+	  else
+	  {
+	      return "<font color='#339999'>已结算</font>";
+	  }
+}
+
+function getNullStatus($id)
+{
+     if($id == '')
+	 {
+	    return "（无）";
+	 }
+	 else
+	 {
+	    return $id;
+	 }
+}
+
+function getMournTitle($id)
+{
+     $relsut = Db::name('bygmourn')->where('id',$id)->value('title');
+     return $relsut;
+}
+
+function get_Cemeterystate($state)
+{
+    $html="";
+    switch ($state) {
+        case 1: 
+             $html= "<font color='#48966C'><b>待售</b></font>";
+            break;
+        case 2: 
+            $html= "<font color='#F39C12'><b>预定</b></font>";
+            break;
+        case 3: 
+             $html= "<font color='#CF0120'><b>已购买</b></font>";
+            break;
+        case 4: 
+              $html= "<font color='#964884'><b>安葬</b></font>";
+            break;
+      }
+    return  $html;
+}
+
+function get_financetype($state)
+{
+    $html="";
+    switch ($state) {
+        case 2: 
+             $html= "<font color='#48966C'><b>墓穴预购单</b></font>";
+            break;
+        case 1: 
+            $html= "<font color='#B9DEA0'><b>墓穴认购单</b></font>";
+            break;
+        case 3: 
+             $html= "<font color='#CF0120'><b>墓穴管理续费单</b></font>";
+            break;
+        case 4: 
+              $html= "<font color='#964884'><b>墓穴服务费单</b></font>";
+            break;
+       case 5: 
+             $html= "<font color='#CF0120'><b>补录单</b></font>";
+            break;
+       case 6: 
+             $html= "<font color='#000'><b>作废单</b></font>";
+            break;
+         case 7: 
+             $html= "<font color='#000'><b>墓穴变更单</b></font>";
+            break;
+        
+        default:
+             $html= "<font color='#964884'><b>$state</b></font>";
+      }
+    return  $html;
+}
+function get_servicetype($state)
+{
+    $html="";
+    switch ($state) {
+        case 1: 
+             $html= "<font color='#964884'><b>购墓收费项目</b></font>";
+            break;
+        case 2: 
+            $html= "<font color='#B9DEA0'><b>点灯服务项目</b></font>";
+            break;
+        case 3: 
+             $html= "<font color='#CF0120'><b>鲜花服务项目</b></font>";
+            break;
+         case 4: 
+             $html= "<font color='#000'><b>补录服务项目</b></font>";
+            break;
+         case 10: 
+             $html= "<font color='#000'><b>安葬服务</b></font>";
+            break;
+        default:
+             $html= "<font color='#964884'><b>其他</b></font>";
+      }
+    return  $html;
+}
+
+function get_orderstatus($state)
+{
+    $html="";
+    switch ($state) {
+        case 2: 
+             $html= "<font color='#f93131'><b>未付款</b></font>";
+            break;
+        case 4: 
+            $html= "<font color='#097bf4'><b>已经付款</b></font>";
+            break;
+        
+        
+      }
+    return  $html;
+}
+function get_resutlstatus($state)
+{
+    $html="";
+    switch ($state) {
+        case 1: 
+             $html= "<font color='#f93131'><b>未完成</b></font>";
+            break;
+        case 2: 
+            $html= "<font color='#097bf4'><b>已完成</b></font>";
+            break;
+        
+        
+      }
+    return  $html;
+}
+function get_datestate($enddate)
+{
+    $html="";
+   $second2=time();
+   $ts=floor(($second2-$enddate) / 86400);
+    if ($ts>0)
+        return "<font color='#f93131'><b>过期".$ts."天</b></font>";
+    else
+         return  "<font color='#097bf4'><b>".abs($ts)."天后到期</b></font>";
+        
+}
+   
+/////查询时间范围的
+  function dateParse($start = '',$end = '')
+{
+    //区间查询
+    if($start && $end)
+    {
+        return array(strtotime($start),strtotime($end));
+    }
+    else if($start)
+    {
+        return array(strtotime($start),strtotime($start));
+    }
+    else if($end)
+    {
+        return array(strtotime($end),strtotime($end));
+    }
+}
+
+function getpreferentialStatus($id)
+{
+      if($id==1)
+	  {
+	      return "<font color='#FF9933'>已通过</font>";
+		  
+	  }
+	  else if($id==2)
+	  {
+	      return "<font color='#FF0000'>未通过</font>";
+	  }
+	  else
+	  {
+	      return "<font color='#339999'>未处理</font>";
+	  }
+}
+function getinvoiceStatus($id)
+{
+      if($id==1)
+	  {
+	      return "<font color='#FF9933'>开票</font>";
+		  
+	  }
+	  else  
+	  {
+	      return "<font color='#FF0000'>不开票</font>";
+	  }
+        
+}
+        
+        
+        
+
+        
+
+

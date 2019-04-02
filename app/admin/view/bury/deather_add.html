@@ -1,0 +1,122 @@
+<style>
+  .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 5px;
+    
+}  
+</style>
+<form  id="formreserve">
+<section>
+      <div class="row">
+        <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>墓穴信息
+           </h3>
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- info row -->
+      <div class="row invoice-info">
+        <div class="col-xs-12 table-responsive">
+          <table class="table table_zhj">
+           <tbody>
+            <tr>
+              <td>墓穴：{$info.name}</td>
+              <td>墓园：{$info.gardename}</td>
+              <td>墓区：{$info.areaname}</td>
+             </tr>
+            <tr>
+              <td>穴位：{$info.typename}</td>
+              <td>风格：{$info.stylename}</td>
+              <td>朝向：{$info.orientation}</td>
+             </tr>
+             </tbody>
+          </table>
+        </div>
+       
+      </div>
+        <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>增加墓主信息
+           </h3>
+        </div>
+      </div>
+      
+     <div class="row">
+         <table class="table">
+           <tbody>
+            <tr>
+                <td>
+                    <div  class="div_lable_zhj">墓主名称：</div> 
+           <input   name="vcname" value="{$Bury.vcname|default=''}"  class="form-control_zhj "   type="text">
+                </td>
+           <td><div  class="div_lable_zhj">出生日期</div> <input   name="birth"   value="{$Bury.birth|default=''}"  class="form-control_zhj data"   type="text"  ></td>
+              <td><div  class="div_lable_zhj">死亡日期</div> <input name="death"   value="{$Bury.death|default=''}"  class="form-control_zhj data "   type="text"></td>
+             
+            </tr>
+            <tr>
+                <td><div  class="div_lable_zhj">性别</div><select name="sex" class="form-control_zhj"> <option value="1"  {if condition="$Bury.sex eq 1"}selected="selected"{/if}>男</option>
+                                           <option value="2"  {if condition="$Bury.sex eq 2"}selected="selected"{/if}>女</option>
+		   </select></td>
+           <td><div  class="div_lable_zhj">身份证</div> <input   name="sfz"   value="{$Bury.sfz|default='' }"  class="form-control_zhj data"   type="text"  ></td>
+               
+           <td></td>       
+            </tr>
+             <tr>
+              <td><div  class="div_lable_zhj">联系人</div> <input name="buyer"  value="{$Bury.linkname|default=''}"  class="form-control_zhj  "   type="text"></td>
+              <td><div  class="div_lable_zhj">联系电话</div> <input name="phone"  value="{$Bury.phone|default=''}"  class="form-control_zhj  "   type="text"></td>
+              <td><div  class="div_lable_zhj">关系</div> <input name="relation"  value="{$Bury.ordainprice|default=' '}"  class="form-control_zhj  " type="text"></td>
+              </tr>
+            
+              <tr>
+                 <td colspan="3">
+                     <textarea class=" form-control textarea_editor"   name="vcdesc" placeholder="请输入预订备注">{$Bury.vcdesc|default=''}</textarea>
+                 </td>
+             </tr>
+             </tbody>
+          </table>
+      </div>
+        <input type="hidden" name="id" value="{$Bury['id']|default='0'}"/>
+           <input type="hidden" name="cid" value="{$info.id}"/>
+      <div class="modal-footer"  >
+        <a   href="javascript:" onclick="Bury_add_submit();"  type="button"  class="btn btn-default"><span class="ladda-label">
+          {empty name="$Bury.id"}    <i class="fa fa-check"></i> 增加{else /}
+           <i class="fa fa-edit"></i> 修改{/empty}
+            </span></a>
+             
+        <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+      
+      </div>
+      
+    </section></form>
+ <script>
+ $('.data').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+
+    
+  
+function Bury_add_submit() {
+          url = "{:url('Bury/deather_sumit_ajax')}";
+        sj = Math.random(1000);
+         data = $("#formreserve").serialize() + "&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("操作成功！");
+                $('#myModal2').modal('hide');
+                 location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+}
+
+ 
+ </script>

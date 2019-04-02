@@ -1,0 +1,113 @@
+<form  id="formreserve">
+    <div class="box">
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>收费项目名称</label>
+              <input class="form-control" name="name"  value="{$info['name']}" placeholder="请输入收费项目名称" type="text">
+            </div>
+          </div>
+		  
+		  <div class="col-md-6">
+            <div class="form-group">
+              <label>默认价格</label>
+			  <span></span>
+              <input class="form-control" name="defaultprice"  value="{$info['defaultprice']}"  placeholder="请输入默认价格" type="text">
+            </div>
+          </div>
+            
+             <div class="col-md-6">
+            <div class="form-group">
+              <label>显示样式</label>
+			  <span></span>
+               <select name="showtype" class="form-control">
+			   <option value="1"  {if condition="$info['showtype'] eq 1"} selected="selected" {/if}>文本输入框</option>
+			   <option value="2" {if condition="$info['showtype'] eq 2"} selected="selected" {/if}>下拉框</option>
+              </select>
+            </div>
+          </div>
+                 
+          <div class="col-md-6">
+            <div class="form-group">
+                <label>下拉选项值</label>
+                <span>（配置取值）</span>
+                <textarea class="form-control" name="value"  rows="3" placeholder="请输入配置取值">{$info['value']|default=''}</textarea>
+            </div>
+          </div>
+            
+              <div class="col-md-6">
+            <div class="form-group">
+              <label>收费单据</label><br/>
+			  <span></span>
+                 {foreach name="financetype" item="vo" key="k" }          
+                <input type="checkbox" name="financetype[{$k}]" {in name="k" value="$info['financetype']"}   checked="true" {/in} value="{$k}">{$vo}
+                                        {/foreach} 
+            </div>
+          </div>
+            <!--
+            <div class="col-md-6">
+            <div class="form-group">
+              <label>收费范围</label>
+			  <span></span>
+               <select name="publictype" class="form-control">
+			   <option value="0"  {if condition="$info['publictype'] eq 0"} selected="selected" {/if}>所有</option>
+			   <option value="1"  {if condition="$info['publictype'] eq 1"} selected="selected" {/if}>指定</option>
+              </select>
+            </div>
+          </div>
+            
+            
+            
+		  <div class="col-md-6">
+            <div class="form-group">
+              <label>墓园</label>
+              <span></span>
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control"  readonly="true" id="areaname"  name="areaname"  value="{$info['areaname']}" >
+                  <input type="hidden" name="area" id="area"  value="{$info['area']}"  />
+                  <span class="input-group-btn">
+                      <button type="button"  onclick="select_cemareainfo();" class="btn btn-info btn-flat" >选择..</button>
+                    </span>
+              </div>
+            </div>
+          </div>  
+            
+		  <div class="col-md-6">
+            <div class="form-group">
+              <label>风格</label>
+              <span></span>
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control"  readonly="true" id="stylename"  name="stylename"  value="{$info['stylename']}" >
+                  <input type="hidden" name="style" id="style"  value="{$info['style']}"  />
+                  <span class="input-group-btn">
+                      <button type="button"  onclick="select_CemeteryStyle();" class="btn btn-info btn-flat" >选择..</button>
+                    </span>
+              </div>
+            </div>
+          </div> !-->
+		  
+	 <div class="col-md-6">
+            <div class="form-group">
+              <label>排序</label>
+			  <span></span>
+              <input class="form-control" name="sort" placeholder="排序" value="10" type="text" value="{$info['sort']}">
+            </div>
+          </div>
+		  
+		  <div class="col-md-12">
+            <div class="form-group">
+              <label> 描述</label>
+			  <textarea class="form-control" name="vcnote" rows="3" placeholder="请输入服务描述">{$info['vcnote']}</textarea>
+            </div>
+          </div>
+        </div>
+	  <input type="hidden" name="id" value="{$info['id']|default='0'}"/>	
+      </div></form>
+
+       <div class="modal-footer"  >
+        <a   href="javascript:" onclick="ChargeitemEdit_ajax_submit();"  type="button"  class="btn btn-default"><span class="ladda-label"><i class="fa fa-check"></i> 提交</span></a>
+        <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+      </div>
+    </div>
+ 

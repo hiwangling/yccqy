@@ -1,0 +1,87 @@
+<link rel="stylesheet" href="__STATIC__/module/admin/css/zTreeStyle/zTreeStyle.css">
+<script src="__STATIC__/module/admin/js/ztree/jquery.ztree.all.min.js"></script>  
+<style>
+    .modal-dialog2 {
+        width: 400px !important;
+        margin: 10px auto; 
+    }
+    .modal-header2 {
+        padding: 6px;
+        background: #F5F5F5;
+        border-bottom: 1px solid #e5e5e5;
+    }
+    .treesell{
+        height: 300px;
+        overflow:auto;
+    }
+
+</style>
+<SCRIPT type="text/javascript">
+    var setting = {
+        check: {
+            enable: true,
+            chkStyle: "checkbox"
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        }
+    };
+
+    var zNodes = [{$treestr}];
+    $(document).ready(function () {
+        zTreeObj = $.fn.zTree.init($("#folderTree"), setting, zNodes);
+        yxzjlist = $('#member').val();
+        var kcidArr = yxzjlist.split(",");
+        if (kcidArr.length > 0)
+        {
+            for (var i = 0; i < kcidArr.length; i++) {
+                if (kcidArr[i] > 0)
+                {
+                    var kcnodes = zTreeObj.getNodeByParam("id", "c" + kcidArr[i]);
+                    zTreeObj.checkNode(kcnodes, true, true);
+
+                    var node = zTreeObj.getNodeByParam("id", kcnodes["pId"]);
+                    zTreeObj.expandNode(node, true, false, true);
+                }
+            }
+        }
+
+    });
+
+    function dosel() {
+        var zTree = $.fn.zTree.getZTreeObj("folderTree");
+        var selnode = zTree.getCheckedNodes(true);
+        kc_ids = "";
+        kc_name = "";
+        rs = 0;
+        for (var i = 0, len = selnode.length; i < len; i++)
+        {
+            if (selnode[i].id.substr(0, 1) == "c")
+            {
+                kc_ids = kc_ids + selnode[i].id.substring(1) + ",";
+                kc_name = kc_name + selnode[i].name + ",";
+            }
+        }
+        if (kc_ids!="")
+        {
+           kc_ids = kc_ids.substring(0, kc_ids.lastIndexOf(','));  
+            kc_name = kc_name.substring(0, kc_name.lastIndexOf(','));  
+        }
+        $('#member').val(kc_ids);
+        $('#membername').val(kc_name);
+        $('#myModal2').modal('hide');
+        return false;
+    }
+
+</SCRIPT>
+
+<div class="treesell">
+    <ul id="folderTree" class="ztree"></ul>
+</div>
+<div class="xm-footer">
+    <a  href="javascript:" onclick="dosel()"  type="button" class="btn btn-default"   >   <span class="ladda-label"><i class="fa fa-send"></i>确定</span></a>
+
+    <a type="button" class="btn btn-default" data-dismiss="modal">关闭</a>    
+</div>

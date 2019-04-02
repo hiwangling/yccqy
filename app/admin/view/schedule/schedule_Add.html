@@ -1,0 +1,175 @@
+<style>
+  .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 5px;
+    
+}  
+</style>
+<form  id="formreserve">
+<section>
+      <!-- title row -->
+      <div class="row">
+        <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>墓穴信息
+           </h3>
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- info row -->
+      <div class="row invoice-info">
+        <div class="col-xs-12 table-responsive">
+          <table class="table table_zhj">
+           <tbody>
+            <tr>
+              <td>墓穴：{$info.name}</td>
+              <td>墓园：{$info.gardename}</td>
+              <td>墓区：{$info.areaname}</td>
+             </tr>
+            <tr>
+              <td>穴位：{$info.typename}</td>
+              <td>风格：{$info.stylename}</td>
+              <td>朝向：{$info.orientation}</td>
+             </tr>
+             </tbody>
+          </table>
+        </div>
+       
+      </div>
+      <!-- /.row -->
+
+      <!-- Table row -->
+      <div class="row">
+         <div class="col-xs-12">
+          <h3 class="from_title-header">
+            <i class="fa fa-globe"></i>预订信息
+           </h3>
+        </div>
+         
+      </div>
+      
+     <div class="row">
+         <table class="table">
+           <tbody>
+            <tr>
+                <td>
+                    <div  class="div_lable_zhj">预订人</div> 
+           <input   name="buyer" value="{$sellinfo.buyer|default=''}"  class="form-control_zhj "   type="text">
+                </td>
+           <td><div  class="div_lable_zhj">预定日期</div> <input   name="ordainbegin"  id="ordainbegin" value="{$sellinfo.ordainbegin||date="Y-m-d",###}"  class="form-control_zhj "   type="text"  ></td>
+              <td><div  class="div_lable_zhj">到期日期</div> <input name="ordainend"   id="ordainend" value="{$sellinfo.ordainend||date="Y-m-d",###}"  class="form-control_zhj  "   type="text"></td>
+                 </tr>
+             <tr>
+                  <td><div  class="div_lable_zhj">联系电话</div> <input name="phone"  value="{$sellinfo.phone|default=''}"  class="form-control_zhj  "   type="text"></td>
+              <td><div  class="div_lable_zhj">订金</div> <input name="ordainprice"  value="{$sellinfo.ordainprice|default='0.00'}"  class="form-control_zhj  " type="text"></td>
+            
+               <td><div  class="div_lable_zhj"> 邮箱</div> <input   name="email" value="{$sellinfo.email|default=''}"  class="form-control_zhj "   type="text"></td>
+            			  
+             </tr>
+           <tr>
+                 <td><div  class="div_lable_zhj">身份证</div> <input name="sfz"  value="{$sellinfo.sfz|default=''}"  class="form-control_zhj  "   type="text"></td>
+              <td><div  class="div_lable_zhj">性别</div> <select name="sex" class="form-control_zhj"> <option value="1"  {if condition="$sellinfo.sex eq 1"}selected="selected"{/if}>男</option>
+                                           <option value="2"  {if condition="$sellinfo.sex eq 2"}selected="selected"{/if}>女</option>
+		   </select></td>
+		
+              <td><div  class="div_lable_zhj">联系地址</div> <input name="address" value="{$sellinfo.address|default=''}"  class="form-control_zhj "   type="text"></td>
+              
+             </tr>
+             <tr>
+                 <td><div  class="div_lable_zhj">逝者关系</div> <input name="relation"  value="{$sellinfo.relation|default=''}"  class="form-control_zhj  "   type="text"></td>
+              <td><div  class="div_lable_zhj">预订方式</div>  <select name="ordaintype" class="form-control_zhj">
+					{foreach name="ordaintype" item="vo" key="k" }
+					   <option value="{$k}"  {if condition="$sellinfo.ordaintype eq $k"}selected="selected"{/if}>{$vo}</option>
+					{/foreach}
+              </select>
+              </td>
+              <td><div  class="div_lable_zhj">业务人员</div> <select class="form-control_zhj"  name="sellerinfo"   >
+								  <option value="0-无">人员选择</option>
+								  {volist name='member' id='vo'}
+									 <option value="{$vo['id']}-{$vo['nickname']}" {if condition="$sellinfo.seller eq $vo.id"}selected="selected"{/if}>{$vo['nickname']}</option>
+								  {/volist}
+								</select> </td>
+             </tr>
+             <tr>
+                 <td colspan="3">
+                     <textarea class=" form-control textarea_editor" style=" width: 850px;" name="vcdesc" placeholder="请输入预订备注">{$sellinfo.vcdesc|default=''}</textarea>
+                 </td>
+             </tr>
+             </tbody>
+          </table>
+      </div>
+        <input type="hidden" name="id" value="{$sellinfo['id']|default='0'}"/>
+           <input type="hidden" name="cid" value="{$info.id}"/>
+      <div class="modal-footer"  >
+        <a   href="javascript:" onclick="schedule_submit();"  type="button"  class="btn btn-default"><span class="ladda-label">
+          {empty name="$sellinfo.id"}    <i class="fa fa-check"></i> 增加{else /}
+           <i class="fa fa-edit"></i> 修改{/empty}
+            </span></a>
+            {notempty name="$sellinfo['id']"}
+               <a   href="javascript:" onclick="schedule_delete({$sellinfo['id']|default=0});"  type="button"  class="btn btn-default">  <span class="ladda-label"> <i class="fa fa-trash"></i>撤销预订
+              </span></a>
+             {/notempty}
+        <a type="button" class="btn btn-default" data-dismiss="modal"> <span class="ladda-label"><i class="fa fa-close"></i> 关闭</span></a>
+      
+      </div>
+      
+    </section></form>
+ <script>
+ $('#ordainbegin').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+
+    $('#ordainend').datetimepicker({
+        format: 'yyyy-mm-dd', //显示格式可为yyyymm/yyyy-mm-dd/yyyy.mm.dd
+        autoclose: true,
+        startView: 2,
+        minView: 'month',
+        language: 'zh-CN' //语言
+    });
+    
+  
+function schedule_submit() {
+          url = "{:url('Schedule/Schedule_submit_ajax')}";
+        sj = Math.random(1000);
+         data = $("#formreserve").serialize() + "&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("操作成功！");
+                $('#myModal').modal('hide');
+                 location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+}
+
+function schedule_delete(id)
+{
+     var info=confirm("您确定要撤销该预订吗？");
+    if (info==true){
+         url = "{:url('Schedule/Schedule_delete_ajax')}";
+        sj = Math.random(1000);
+         data ="id=" +id+ "&sj=" + sj
+       $.post(url, data, function (result) {
+            infodate = JSON.parse(result);
+            if (infodate.code == 0) {
+                  toast.success("预订撤销操作成功！");
+                  $('#myModal').modal('hide');
+                 location.reload();   
+            } else
+            {
+                  toast.error(infodate.msg);
+            }
+           
+        });
+    }
+     
+     
+}
+ </script>
