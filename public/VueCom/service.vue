@@ -96,7 +96,7 @@
       class-name="tableClassTd"
       label="实收">
      <template scope="scope">
-        <el-input v-if="scope.row.status == 1" v-model="scope.row.defaultprice" style="width: 80px" @blur="CheckRow(scope.row)">
+        <el-input v-if="scope.row.status == 1" v-model="scope.row.defaultprice" style="width: 80px" @blur="CheckRow(scope.row,false)">
         </el-input>
       </template>
     </el-table-column>
@@ -164,7 +164,7 @@
       ServicedialogVisible:false,
       orientation:'',
       isvoice:'2',
-      service_edit:'',
+      service_edit:this.service_show.chargeitem,
       sels:[],
       chargeitem:[],
       Serviceinfo:[],
@@ -198,9 +198,16 @@
     serviceEdit:function(v){
        axios.post("../Api/Buryservice_ajax_show",{cid: this.cid,id:v.id})
                   .then (res=> {
-                    this.service_edit = res.data
-                    console.log(this.service_edit)
+                    this.ServicedialogVisible = true;
+                    this.service_show = res.data
+                    this.$nextTick(function () {
+                    this.service_show.chargeitem.forEach((v,k)=>{
+                        if(v.defaultprice != 0 && v.defaultprice != undefined){
+                          this.CheckRow(v,true)
+                        }
+                    })
                   })
+              })
 
     },
     fklxvalChange:function(val){
@@ -248,10 +255,14 @@
       this.phone = v
       },
       //输入选中
-     CheckRow:function(row){
+     CheckRow:function(row,para){
+      if(para){
+      this.$refs.multipleTable.toggleRowSelection(row,true);
+      }else{ 
       Number(row.chargeitem) == 0 ? 
       this.$refs.multipleTable.toggleRowSelection(row,false) : 
       this.$refs.multipleTable.toggleRowSelection(row,true);
+      }
      },
 
      ServiceConfirm:function(){
