@@ -304,11 +304,8 @@ class Api extends AdminBase
         exit(json_encode($result));
     }
     
-       public function update_table() {
-         if (empty($this->param['cid'])) {
-            $result = array("code" => 1, "msg" => "参数错误");
-            exit(json_encode($result));
-        }
+
+    public function update_table() {
         $cid = $this->param['cid'];
         $where["cid"] = $cid;
         $where["financetype"] = 1;
@@ -317,17 +314,71 @@ class Api extends AdminBase
            $orderstatus=$list[0]["orderstatus"];
        else
            $orderstatus=1;
-      
+
         $Buryinfo = $this->logicBury->getBuryList(["a.cid" => $cid], "a.* ", "sort", FALSE);
+
          foreach ($Buryinfo as $key => $value) {
             $Buryinfo[$key]['buyer'] = $Buryinfo[$key]['linkname'];
          }
-         // echo "<pre>";
-         // print_r($list);
-         //  echo "</pre>";
-        $result = array("code" => 0, "msg" => "", "data" =>$list,"buryinfo" => $Buryinfo,);
-        exit(json_encode($result));
+           $result = array(
+            "code" => 0,
+            "cid"=>$cid,
+            "orderstate" => $orderstatus,
+            "msg" => "success",
+             "data" =>$list,
+             "buryinfo" => $Buryinfo
+         );
+           exit(json_encode($result));
     }
+
+
+    public function getserviceTable() {
+        $cid = $this->param['cid'];
+        $where["cid"] = $cid;
+        $where["financetype"] =3;
+        $where["isstory"] =0;
+        $list = $this->logicSell->getSellList_nodeathname($where, 'a.*,cw.zj,y.name as garden_name,q.name as area_name,c.name as c_canme', 'a.create_time desc');
+        $this->assign('cid', $cid);
+        if(!empty($list[0]))
+           $orderstatus=$list[0]["orderstatus"];
+       else
+           $orderstatus=1;
+
+       $result = array(
+            "code" => 0,
+            "cid"=>$cid,
+            "orderstate" => $orderstatus,
+            "msg" => "success",
+            "data" =>$list,
+         );
+         exit(json_encode($result));
+    }
+
+
+    //    public function update_table() {
+    //      if (empty($this->param['cid'])) {
+    //         $result = array("code" => 1, "msg" => "参数错误");
+    //         exit(json_encode($result));
+    //     }
+    //     $cid = $this->param['cid'];
+    //     $where["cid"] = $cid;
+    //     $where["financetype"] = 1;
+    //     $list = $this->logicSell->getSellList($where, 'a.*,cw.xszj,cw.zj,y.name as garden_name,q.name as area_name,c.name as c_canme,c.monumename', 'a.create_time desc');
+    //    if(!empty($list[0]))
+    //        $orderstatus=$list[0]["orderstatus"];
+    //    else
+    //        $orderstatus=1;
+      
+    //     $Buryinfo = $this->logicBury->getBuryList(["a.cid" => $cid], "a.* ", "sort", FALSE);
+    //      foreach ($Buryinfo as $key => $value) {
+    //         $Buryinfo[$key]['buyer'] = $Buryinfo[$key]['linkname'];
+    //      }
+    //      // echo "<pre>";
+    //      // print_r($list);
+    //      //  echo "</pre>";
+    //     $result = array("code" => 0, "msg" => "", "data" =>$list,"buryinfo" => $Buryinfo,);
+    //     exit(json_encode($result));
+    // }
 
     public function savearealist(){
         $result = $this->logicSavearea->getSaveareaList(['status' => ['eq', 1]], 'id,name', 'sort desc', false);
@@ -525,7 +576,7 @@ class Api extends AdminBase
         $data= array(
           'chargeitem' => array_merge($chargeitem,$Serviceinfoitem),
           "bury" => $Buryinfo,
-          "orderNO" => $orderNO = !empty($bury) ? $bury[0]['orderNO'] : '',
+          "orderNO" => $orderNO = !empty($bury) ? $bury[0]['orderNO'] : '' || !empty($linkmanlist) ? $linkmanlist[0]['orderNO'] : '' ,
           "linkmanlist" => $linkmanlist,
         );
 

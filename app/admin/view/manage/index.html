@@ -200,7 +200,7 @@
                   })
                 break;
                case 3:
-             axios.post("{:url('Api/update_table')}",{cid: this.cid})
+             axios.post("{:url('Api/getserviceTable')}",{cid: this.cid})
                   .then (res=> {
                     this.selldata = res.data.data.data
                   })
