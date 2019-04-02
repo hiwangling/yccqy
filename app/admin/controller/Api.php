@@ -508,18 +508,13 @@ class Api extends AdminBase
         /////////////////////////////////////////////////
         $Buryinfolist=$this->logicSell->get_buryname_array($sellinfo["buryname"],$Buryinfo);
         $payarray=$this->logicSell->get_pay_array($sellinfo["payvarchar"]);
-        //  $this->assign('Bury', $Buryinfolist);
-        // $this->assign('paytype', $payarray);
-        // $this->assign('sellinfo', $sellinfo);
-        // $this->assign('linkmanlist', $linkmanlist);
 
-        // $update_table = $this->update_table($this->param['cid']);
         //循环处理
          foreach ($Serviceinfoitem as $key => $value) {
              $Serviceinfoitem[$key]['name'] =$Serviceinfoitem[$key]['servicename'];
              $Serviceinfoitem[$key]['defaultprice'] =$Serviceinfoitem[$key]['price'];
          }
-        /////////
+
         array_unshift($Serviceinfoitem, array("title" =>"服务名称","name" =>"特殊服务"));
         array_unshift($chargeitem, array("title" =>"服务名称","name" =>"配套服务"));
 
@@ -529,9 +524,7 @@ class Api extends AdminBase
           "orderNO" => $orderNO = !empty($linkmanlist) ? $linkmanlist[0]['orderNO'] : '',
           "linkmanlist" => $linkmanlist,
         );
-        // $this->view->engine->layout(false);
-        // $infohtml = $this->fetch("buryservice_add");
-        // $result = array("code" => 0, "msg" => "", "data" => $infohtml);
+
         exit(json_encode($data));  
     }
     
@@ -559,10 +552,6 @@ class Api extends AdminBase
        }
        $this->param['fklx'] = array_filter($fklx);
        $this->param['fklxval'] = array_filter($fklxval);
-
- /*       echo "<pre>";
-        echo  print_r($this->param);
-        echo "</pre>";*/
 
         ///////////////服务项目////////////
         $Serviceinfo_where["servicetype"] = array('like', '%,3,%');

@@ -24,6 +24,7 @@
           <el-button
           size="small "
           type="primary"
+          @click="serviceEdit(scope.row)"
           >编辑</el-button>
           <el-button
           size="small "
@@ -165,6 +166,7 @@
       ServicedialogVisible:false,
       orientation:'',
       isvoice:'2',
+      service_edit:'',
       sels:[],
       chargeitem:[],
       Serviceinfo:[],
@@ -195,6 +197,13 @@
    
      },
      methods: {
+    serviceEdit:function(v){
+       axios.post("../Api/Buryservice_ajax_show",{cid: this.cid,id:v.id})
+                  .then (res=> {
+                    this.service_edit = res.data
+                  })
+
+    },
     fklxvalChange:function(val){
        this.fklx.find((item)=>{
            if(item.fklx === false){
