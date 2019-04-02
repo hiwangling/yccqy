@@ -61,11 +61,11 @@
       :data="bury"
       style="width: 100%">
       <el-table-column
-        prop="deathname"
+        prop="monumename"
         align="center"
         label="姓名">
          <template slot-scope="scope">
-        <el-input v-model="bury[scope.$index].deathname" placeholder=""></el-input>
+        <el-input v-model="bury[scope.$index].monumename" placeholder=""></el-input>
         </template>
       </el-table-column>
       <el-table-column
@@ -366,7 +366,7 @@ module.exports = {
       { prop: 'buyer', label: '购买人' },
       { prop: 'relation', label: '关系' },
       { prop: 'phone', label: '手机' },
-      { prop: 'deathname', label: '墓主' },
+      { prop: 'monumename', label: '墓主' },
       { prop: 'orderbegin', label: '订单日期' },
       { prop: 'zj', label: '费用' },
       { prop: 'orderstatus', label: '订单状态' }
@@ -476,7 +476,7 @@ module.exports = {
             },
         temp:{
             id:0,
-            deathname: '',
+            monumename: '',
             sex: '',
             sfz: '',
             birth:'',
@@ -485,7 +485,7 @@ module.exports = {
           },
         bury:[{
             id:0,
-            deathname: '',
+            monumename: '',
             sex: '',
             sfz: '',
             birth:'',

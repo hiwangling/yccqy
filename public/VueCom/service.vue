@@ -20,7 +20,7 @@
           type="danger"
           class="ft"
           >结算/打印</el-button>
-          <div v-if="scope.row.orderstatus ==1">
+          <div >
           <el-button
           size="small "
           type="primary"
@@ -30,9 +30,7 @@
           size="small "
           >删除</el-button>
           </div>
-          <el-button
-          size="small" v-else
-          >删除</el-button>
+
       </template>
     </el-table-column>
      </el-table>
@@ -157,7 +155,7 @@
       { prop: 'orderNO', label: '编号' },
       { prop: 'buyer', label: '购买人' },
       { prop: 'phone', label: '手机' },
-      { prop: 'deathname', label: '墓主' },
+      { prop: 'monumename', label: '墓主' },
       { prop: 'orderbegin', label: '办理时间' },
       { prop: 'zj', label: '费用' },
       { prop: 'orderstatus', label: '缴费状态' }

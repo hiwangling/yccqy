@@ -52,7 +52,6 @@ class Buryservice extends AdminBase {
         $this->assign('info', $info[0]);
         ///////死者信息
          $Buryinfo= $this->logicBury->getBuryList(["cid"=> $this->param['cid']],"a.* ","sort",FALSE);
-         
          $this->assign('bury', $Buryinfo);
        
         //////联系人信息
@@ -142,6 +141,9 @@ class Buryservice extends AdminBase {
         $member = session('member_info');
         $this->param['seller'] = $member['id'];
         $this->param['sellname'] = $member['nickname'];
+        //       echo "<pre>";
+        // print_r($this->param);
+        // echo "</pre>";
         if (empty($this->param['id'])) {
              $result = $this->logicSell->Sell_add_submit($this->param, $chargeitemlist, $Serviceinfoitem, 3); ////增加
         } else {

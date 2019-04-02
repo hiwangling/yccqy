@@ -59,7 +59,7 @@ class Manage extends AdminBase
               $title.=" 查询关键字：" .$kewword;
        }
         $this->assign('seachinfo', $title); 
-        $this->assign('list', $this->logicManage->getManageList($where,'a.*,t.hrm,g.name as garden_name,r.name as area_name,t.name as type_name,s.name as style_name,death.deathname', 'a.vno desc',28));
+        $this->assign('list', $this->logicManage->getManageList($where,'a.*,t.hrm,g.name as garden_name,r.name as area_name,t.name as type_name,s.name as style_name', 'a.vno desc',28));
 	$tjinfo = $this->logicManage->get_cemetery_usestatus_tj($where);
         $zs = 0;
         if (!empty($tjinfo)) {

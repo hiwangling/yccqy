@@ -28,7 +28,7 @@
         label="地址">
       </el-table-column>
       <el-table-column
-        prop="deathname"
+        prop="monumename"
         label="逝者">
       </el-table-column>
       <el-table-column
@@ -101,7 +101,7 @@
 	    <el-input v-model="temp.address" name="name"></el-input>
 	  </el-form-item>
 	  	  <el-form-item label="逝者姓名">
-	    <el-input v-model="temp.deathname" name="name"></el-input>
+	    <el-input v-model="temp.monumename" name="name"></el-input>
 	  </el-form-item>
 	  	  <el-form-item label="关系">
 	    <el-input v-model="temp.relation" name="name"></el-input>
@@ -214,7 +214,7 @@ module.exports = {
           relation: '',
           phone:'',
           address:'',
-          deathname:'',
+          monumename:'',
           savebegindate:'',
           saveenddate:'',
           saveprice:'',
@@ -245,7 +245,7 @@ module.exports = {
           relation: '',
           phone:'',
           address:'',
-          deathname:'',
+          monumename:'',
           savebegindate:'',
           saveenddate:'',
           saveprice:'',

@@ -84,7 +84,6 @@ class Save extends AdminBase {
         }
          $where["id"] = $data["id"];
         $Savefo = $this->getSaveInfo($where);
-
          if (empty($Savefo)) {
             $result = array("code" => 1, "msg" => "数据异常，请检查");
             return $result;
@@ -93,7 +92,6 @@ class Save extends AdminBase {
         $data['saveenddate'] = strtotime($data['saveenddate']);
         
         $sellinfo = $this->logicSell->getSellInfo(["id" => $Savefo['tid']]);
-               
         if (empty($sellinfo)) {
             $result = array("code" => 1, "msg" => "数据异常，请检查");
             return $result;
@@ -221,7 +219,7 @@ class Save extends AdminBase {
     public function getWhere($data = []) {
 
         $where = [];
-        !empty($data['search_data']) && $where['a.buyer|c.name|a.deathname'] = ['like', '%' . $data['search_data'] . '%'];
+        !empty($data['search_data']) && $where['a.buyer|c.name|monumename'] = ['like', '%' . $data['search_data'] . '%'];
 
         if (!empty($data['sbbegin'])) {
             $where['a.savebegindate'] = array("EGT", strtotime($data['sbbegin']));

@@ -27,6 +27,17 @@ class Bury extends AdminBase {
         $Bury = $this->modelBury->getInfo($where, $field);
         return $Bury;
     }
+    
+     public function get_Buryname_bcid($cid) {
+         $sql="select group_concat(vcname separator ',') as deathname    
+from " . SYS_DB_PREFIX . "bury  where cid=$cid and status!=-1 group by cid";
+        $Bury = $this->modelBury->query($sql);
+         if (!empty($Bury))
+             return $Bury[0]["deathname"];
+         else
+             return "";
+       
+    }
 
     public function Bury_delete($where = [], $isdel = true) {
         return $this->modelBury->deleteInfo($where, $isdel);
@@ -156,12 +167,12 @@ class Bury extends AdminBase {
                     'vcname' => $data['vcname'],
                     'sex' => $data['sex'],
                     'age' => $age,
-                    'birth' => !empty($data['birth']) ? $data['birth'] : null,
-                    'death' => !empty($data['death']) ? $data['death'] : null,
-                    'bury' => !empty($data['death']) ? $data['bury'] : null,
+                    'birth' => !empty(trim($data['birth'])) ? trim($data['birth']) : null,
+                    'death' => !empty(trim($data['death'])) ? trim($data['death']) : null,
+                    'bury' => !empty(trim($data['bury'])) ? trim($data['bury']) : null,
                     'sfz' => $data['sfz'],
-                    'filelist' => "",
-                    'sort' => 10,
+                  
+                 
                      'linkname' =>$data["buyer"],
                      'relation' =>$data["relation"],
                     'phone' => $data["phone"],
@@ -172,6 +183,7 @@ class Bury extends AdminBase {
                 );
                 if ($data['id'] != 0) {
                         $where["id"] = $data['id'];
+                        $data['sort']=10;
                         $buryId = $this->modelBury->updateinfo($where,$buryData);
                    
                 } else {
@@ -181,7 +193,11 @@ class Bury extends AdminBase {
             
          if ($buryId != FALSE) {
             action_log('新增加', '管理墓主信息表：' . $data['vcname']);
-         
+            $buryname=$this->get_Buryname_bcid($data['cid']);
+            $wherebury["id"]=$data['cid'];
+            
+            $this->modelCemetery->updateInfo($wherebury, ['monumename'=>$buryname]);
+           
             $result = array("code" => 0, "msg" => "success");
         } else {
          $result = array("code" => 1, "msg" => "error");
@@ -194,6 +210,10 @@ class Bury extends AdminBase {
         $result = $this->modelBury->deleteInfo(["id" => $data["id"]]);
         if ($result != FALSE) {
             action_log('删除', '墓主信息删除' . '，where：' . http_build_query(['id' => $data['id']]));
+             $buryname=$this->get_Buryname_bcid($data['cid']);
+            $wherebury["id"]=$data['cid'];
+            // $wherebury["usestatus"]=array("egt",3);
+            $this->modelCemetery->updateInfo($wherebury, ['monumename'=>$buryname]);
             $result = array("code" => 0, "msg" => "success");
         } else {
             $result = array("code" => 1, "msg" => $this->modelBury->getError());

@@ -45,7 +45,7 @@ class Retrunprice extends AdminBase{
             'cid' => $data['cid'],
              'manager' => $data['manager'],
              'isok' => 0,
-             'returndesc'=>  $data['manager'],
+             'returndesc'=>  $data['returndesc'],
              'operater' => $data['seller'],
             'operatername' => $data['sellname'],
             'status' => 1

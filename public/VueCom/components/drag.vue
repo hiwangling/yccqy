@@ -53,7 +53,14 @@ data: function() {
           left: '600px',
           top: '128px',
         },
-        
+        },{
+          txt:'一九五二',
+          label:'逝于',
+          type:'max',
+          styleObject: {
+          left: '600px',
+          top: '128px',
+        },
         }
         ]
    }

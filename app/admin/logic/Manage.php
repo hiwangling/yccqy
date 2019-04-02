@@ -21,8 +21,7 @@ class Manage extends AdminBase {
             [SYS_DB_PREFIX . 'cemetery_area r', 'a.areaID = r.id'],
             [SYS_DB_PREFIX . 'cemetery_type t', 'a.typeID = t.id'],
             [SYS_DB_PREFIX . 'cemetery_style s', 'a.styleID = s.id'],
-            ['(select cid,group_concat(vcname separator \',\') as deathname  from ' . SYS_DB_PREFIX . 'bury where status=1 group by cid) as death', 'death.cid = a.id', 'left']
-        ];
+              ];
          $this->modelCemetery->join = $join;
        
         $where['a.' . DATA_STATUS_NAME] = ['neq', DATA_DELETE];
@@ -38,7 +37,7 @@ class Manage extends AdminBase {
         !empty($data['area']) && $where['a.areaID'] = $data['area'];
         
         if (!empty($data['search_data'])) {
-             $where['a.name|deathname'] = ['like', '%'.$data['search_data'].'%'];
+             $where['a.name|monumename'] = ['like', '%'.$data['search_data'].'%'];
         }
 
         return $where;

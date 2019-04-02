@@ -362,7 +362,7 @@ class Sell extends AdminBase {
     private function update_table($cid) {
         $where["cid"] = $cid;
         $where["financetype"] = 1;
-        $list = $this->logicSell->getSellList($where, 'a.*,cw.zj,death.deathname,y.name as garden_name,q.name as area_name,c.name as c_canme', 'a.create_time desc');
+        $list = $this->logicSell->getSellList($where, 'a.*,cw.xszj,cw.zj,y.name as garden_name,q.name as area_name,c.name as c_canme,c.monumename', 'a.create_time desc');
        if(!empty($list[0]))
            $orderstatus=$list[0]["orderstatus"];
        else

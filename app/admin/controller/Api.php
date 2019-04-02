@@ -156,7 +156,7 @@ class Api extends AdminBase
 
     public function ajax_cemetery(){
        $where = $this->logicManage->getWhere($this->param);
-       $list = $this->logicManage->getManageList($where,'a.*,t.hrm,g.name as garden_name,r.name as area_name,t.name as type_name,s.name as style_name,death.deathname', 'a.vno desc',28);
+       $list = $this->logicManage->getManageList($where,'a.*,t.hrm,g.name as garden_name,r.name as area_name,t.name as type_name,s.name as style_name', 'a.vno desc',28);
        exit(json_encode($list));
     }
 
@@ -312,7 +312,7 @@ class Api extends AdminBase
         $cid = $this->param['cid'];
         $where["cid"] = $cid;
         $where["financetype"] = 1;
-        $list = $this->logicSell->getSellList($where, 'a.*,cw.zj,death.deathname,y.name as garden_name,q.name as area_name,c.name as c_canme', 'a.create_time desc');
+        $list = $this->logicSell->getSellList($where, 'a.*,cw.xszj,cw.zj,y.name as garden_name,q.name as area_name,c.name as c_canme,c.monumename', 'a.create_time desc');
        if(!empty($list[0]))
            $orderstatus=$list[0]["orderstatus"];
        else
@@ -322,6 +322,9 @@ class Api extends AdminBase
          foreach ($Buryinfo as $key => $value) {
             $Buryinfo[$key]['buyer'] = $Buryinfo[$key]['linkname'];
          }
+         // echo "<pre>";
+         // print_r($list);
+         //  echo "</pre>";
         $result = array("code" => 0, "msg" => "", "data" =>$list,"buryinfo" => $Buryinfo,);
         exit(json_encode($result));
     }

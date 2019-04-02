@@ -25,9 +25,8 @@ class Sell extends AdminBase {
             [SYS_DB_PREFIX . 'cemetery c', 'a.cid = c.id', 'left'],
             [SYS_DB_PREFIX . 'cemetery_garden y', 'c.gardenID = y.id', 'left'],
             [SYS_DB_PREFIX . 'cemetery_area q', 'c.areaID = q.id', 'left'],
-            ['(select  tid,sum(realprice) as zj from ' . SYS_DB_PREFIX . 'finance where status=1 group by tid) as cw', 'cw.tid = a.id'],
-            ['(select  sellID,group_concat( vcname separator \',\') as deathname  from ' . SYS_DB_PREFIX . 'bury group by sellID) as death', 'death.sellID = a.id', 'left']
-        ];
+            ['(select  tid,sum(sellprice) as xszj,sum(realprice) as zj from ' . SYS_DB_PREFIX . 'finance where status=1 group by tid) as cw', 'cw.tid = a.id'],
+             ];
         $this->modelSell->join = $join;
         $where['a.' . DATA_STATUS_NAME] = ['neq', DATA_DELETE];
 
@@ -84,8 +83,9 @@ class Sell extends AdminBase {
             $titleid = $chargeitem["id"];
             $this->logicFinance->Finance($data["orderNO"], $data["cid"], $sellId, $data["paytype"], $data["financetype"], $data["orderstatus"], $data["mw_sellprice"], $data["mw_realprice"], 1, $data["mw_realprice"], $title, $titleid, $data["isvoice"]);
             $this->logicLinkman->update_linkname($data["buyer"], $data);
+               $buryname=$this->logicBury->get_Buryname_bcid($data['cid']);
             // $this->logicCemetery->update_CemeteryInfo(['id' => $data['cid']], ['usestatus' => 3, 'typeID' => $data['CemeteryType']]);
-            $this->logicCemetery->update_CemeteryInfo(['id' => $data['cid']], ['typeID' => $data['CemeteryType'], 'expiredate' => $data["orderend"]]);
+            $this->logicCemetery->update_CemeteryInfo(['id' => $data['cid']], ['typeID' => $data['CemeteryType'], 'expiredate' => $data["orderend"],'monumename'=>$buryname]);
             $result = array("code" => 0, "msg" => "success");
         } else {
 
@@ -140,6 +140,7 @@ class Sell extends AdminBase {
             $sellFinanceData["payerdate"] = TIME_NOW;
             $fwhere["tid"] = $data["id"];
             $this->modelFinance->updateInfo_zhj($fwhere, $sellFinanceData);
+           
             $this->modelCemetery->updateInfo(['id' => $data['cid']], ['usestatus' => 3, 'expiredate' => $data['orderend']]);
             $isupdate = 3;
             action_log('付款', '购墓信息付款' . '，where：' . http_build_query(['id' => $data["id"]]));
@@ -164,8 +165,9 @@ class Sell extends AdminBase {
             action_log('删除', '购墓信息删除' . '，where：' . http_build_query(['id' => $where['id']]));
             $this->Sell_Del_other_all(["tid" => $sellinfo["id"]]);
             $this->modelBury->deleteInfo(["cid" => $sellinfo["cid"]]);
+             $this->modelLinkman->deleteInfo(["cid" => $sellinfo["cid"]]);
             /////更新墓穴的状态为可操作状态
-            $this->modelCemetery->updateInfo(['id' => $sellinfo['cid']], ['usestatus' => 1, 'expiredate' => null]);
+            $this->modelCemetery->updateInfo(['id' => $sellinfo['cid']], ['usestatus' => 1, 'expiredate' => null,'monumename'=>'','monumenhtml'=>'']);
             ///////
             $result = array("code" => 0, "msg" => "success");
         } else {
@@ -248,8 +250,6 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
     }
     
     public function getSellInfo($where = [], $field = 'a.*') {
-
-        //  print_r($where);
         $this->modelSell->alias('a');
         $where['a.status'] = 1;
         return $this->modelSell->getInfo($where, $field);
@@ -258,7 +258,6 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
     public function getsellinfo_ajax($where = [], $search_bury = true) {
 
         $data = $this->getSellInfo($where);
- // print_r($where);
         if (empty($data)) {
             $data["relation"] = "";
             $data["sex"] = 1;
@@ -277,7 +276,6 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
             $data['buryname'] = "";
             return $data;
         }
-
         $finacewhere["tid"] = $data["id"];
         //$finacewhere["financetype"] = $financetype;
         $data['Financeinfo'] = $this->logicFinance->sellList($finacewhere, "*", "kmtype", false);
@@ -321,7 +319,7 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
     public function getWhere($data = []) {
 
         $where = [];
-        !empty($data['search_data']) && $where['a.buyer|c.name|a.deathname'] = ['like', '%' . $data['search_data'] . '%'];
+        !empty($data['search_data']) && $where['a.buyer|c.name|monumename'] = ['like', '%' . $data['search_data'] . '%'];
 
         if (!empty($data['sbbegin'])) {
             $where['a.savebegindate'] = array("EGT", strtotime($data['sbbegin']));
@@ -384,9 +382,11 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
 
     public function sell_save_bury($sellId, $data = []) {
         $buryData = array();
+        
         foreach ($data['bury'] as $k => $v) {
             unset($buryData);
             if (!empty($v['deathname'])) {
+               
                 if (!empty($v['birth']) && !empty($v['death'])) {
                     $death = substr($v['death'], 0, 4);
                     $birth = substr($v['birth'], 0, 4);
@@ -417,12 +417,13 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
                 );
                 if ($v['id'] != 0) {
                     $where["id"] = $v['id'];
-                    $buryId = $this->modelBury->updateinfo($where, $buryData);
+                    $buryId = $this->modelBury->updateInfo_zhj($where, $buryData);
                 } else {
                     $buryId = $this->modelBury->addInfo($buryData);
                 }
             }
         }
+       
     }
 
     public function sell_save_selldate($sellId, $data = [], $chitem = [], $Serviceinfoitem = [], $ismwfw = false) {
@@ -445,9 +446,6 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
             }
         }
         //////////服务收费
-        //               echo "<pre>";
-        // print_r($data['Serviceinfo']);
-        // echo "</pre>";
         foreach ($Serviceinfoitem as $key => $value) {
             $titleid = $value["id"];
             if (isset($data['Serviceinfo'][$titleid])) {
@@ -456,7 +454,6 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
                 $exechrm = $value["manager"];
                 $deptid = $value["deptid"];
                  $price=$price+$realprice;
-                  print_r($realprice);
                 $this->logicFinance->Finance($data["orderNO"], $data["cid"], $sellId, $data["paytype"], $data["financetype"], $data["orderstatus"], $realprice, $realprice, 1, $realprice, $title, $titleid, $data["isvoice"], 2);
                 $this->logicServicebill->add_Servicebill($data["orderNO"], $data["cid"], $sellId, $titleid, $title, $data["buyer"], $data['phone'], $exechrm, $deptid);
             }
