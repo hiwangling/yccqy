@@ -5,6 +5,7 @@
       :data="selldata"
       border
       fit
+      v-loading="loading"
       highlight-current-row
       style="width: 100%;margin-top: 10px">
       <el-table-column
@@ -50,7 +51,7 @@
 </span>
     <el-form :inline="true">
   <el-form-item label="购买人">
-  <el-select v-model="tempSelect" clearable placeholder="请选择" style="width:100px" @change="Servicebury" >
+  <el-select v-model="buryer" clearable placeholder="请选择" style="width:100px" @change="Servicebury" >
     <el-option
       v-for="item in service_show.linkmanlist"
       :key="item.key"
@@ -62,7 +63,7 @@
     <el-form-item label="电话">
   <el-input v-model="phone" style="width: 120px"></el-input>
     </el-form-item>
-    <el-form-item label="墓主">
+    <el-form-item label="墓主" v-if="bury != ''">
       <el-checkbox-group 
     v-model="bury">
     <el-checkbox v-for="item in service_show.bury" :label="item.vcname" :key="item.key">{{item.vcname}}</el-checkbox>
@@ -130,7 +131,7 @@
  </el-col>
  <el-col :md="10">
     <el-form-item label="是否开票" style="width: 100px!important;text-align: left;">
-   <el-radio v-model="isvoice" label="2">不开票</el-radio>
+   <el-radio v-model="isvoice" label="0">不开票</el-radio>
     <el-radio v-model="isvoice" label="1">开票</el-radio>
     </el-form-item>  
  </el-col>
@@ -147,6 +148,10 @@
      module.exports = {
      	props: {
         cid:null,
+        loading: {
+          type: Boolean,
+          default:true
+        },
         service_show:Object,
         selldata:Array
      	},
@@ -164,13 +169,13 @@
       ServicedialogVisible:false,
       orientation:'',
       isvoice:'2',
+      id:0,
       service_edit:this.service_show,
       sels:[],
       chargeitem:[],
       Serviceinfo:[],
       phone:'',
       bury:[],
-      tempSelect:'',
       buryer:'',
       fklx :[{
           fklx:false,
@@ -200,13 +205,39 @@
                   .then (res=> {
                     this.ServicedialogVisible = true;
                     this.service_show = res.data
-                    this.$nextTick(function () {
+                    this.isvoice = res.data.isvoice.toString()
+                    this.buryer = v.buyer
+                    this.phone = v.phone
+                    this.id=v.id
+                    let fklx = res.data.payvarchar.split("|")//分割
+                    let fklxArray = []
+                    let fklxvalArray = []
+                    //付款分割
+                    fklx.forEach((v,k)=>{
+                      if(v){
+                       let para = v.split("|")[0]
+                       fklxArray.push(para.split(',')[0])
+                       fklxvalArray.push(para.split(',')[1])
+                      }
+                    })
+                    //付款赋值
+                    this.fklx.filter((v,k)=>{
+                      fklxArray.forEach((n,m)=>{
+                         if(v.text == n){
+                          v.fklx = true
+                          v.fklxval = fklxvalArray[m]
+                          }
+                       })
+                    })
+                    //多选赋值
+                    this.$nextTick(()=> 
                     this.service_show.chargeitem.forEach((v,k)=>{
                         if(v.defaultprice != 0 && v.defaultprice != undefined){
                           this.CheckRow(v,true)
                         }
                     })
-                  })
+                  )
+
               })
 
     },
@@ -220,8 +251,14 @@
      Servicehadd: function(){
        this.ServicedialogVisible = true;
      },
+     //关闭清空
      closeDiaglog:function(){
       this.$refs.multipleTable.clearSelection();
+      this.fklx.forEach((v,k)=>{
+        v.fklx = false
+        v.fklxval = ''
+      })
+      this.isvoice = '0'
      },
      selsChange: function (sels) {
       this.sels = sels;
@@ -264,7 +301,7 @@
       this.$refs.multipleTable.toggleRowSelection(row,true);
       }
      },
-
+     //服务提交
      ServiceConfirm:function(){
       this.chargeitem=[];
       this.Serviceinfo=[];
@@ -290,13 +327,19 @@
           buyer:this.buryer,
           bury:this.bury,
           phone:this.phone,
-          id:0
+          id:this.id
         })
          .then (res=> {
+          if(res.data.code == 0){
+            this.ServicedialogVisible = true;
             this.$message({
             message: '操作成功',
              type: 'success'
                });
+          }else{
+            this.$message.error('操作失败');
+          }
+             
            })
      },
      //计算统计

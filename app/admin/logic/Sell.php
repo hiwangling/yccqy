@@ -508,7 +508,7 @@ public function Sell_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem 
     }
 
     public function get_pay_typename($data = []) {
-        $Payment = parse_config_array('Payment');
+        $Payment = array_values(parse_config_array('Payment'));
         $paystr = "";
         foreach ($Payment as $key => $value) {
             if (isset($data["fklx"][$key])) {

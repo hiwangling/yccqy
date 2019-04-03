@@ -760,5 +760,11 @@ function closure_list_exe($list = [])
     }
 }
 
+function p($arr){
+        echo "<pre>";
+        print_r($arr);
+        echo "</pre>";
+     }
+
  
  

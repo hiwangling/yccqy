@@ -154,7 +154,7 @@ class Api extends AdminBase
         $this->jump($this->logicAdminBase->setSort('Api', $this->param));
     }
 
-    public function ajax_cemetery(){
+     public function ajax_cemetery(){
        $where = $this->logicManage->getWhere($this->param);
        $list = $this->logicManage->getManageList($where,'a.*,t.hrm,g.name as garden_name,r.name as area_name,t.name as type_name,s.name as style_name', 'a.vno desc',28);
        exit(json_encode($list));
@@ -379,7 +379,7 @@ class Api extends AdminBase
     //     $result = array("code" => 0, "msg" => "", "data" =>$list,"buryinfo" => $Buryinfo,);
     //     exit(json_encode($result));
     // }
-
+   
     public function savearealist(){
         $result = $this->logicSavearea->getSaveareaList(['status' => ['eq', 1]], 'id,name', 'sort desc', false);
          exit(json_encode($result));
@@ -525,7 +525,7 @@ class Api extends AdminBase
         $sellwhere["financetype"] = 3;
         $sellinfo = $this->logicSell->getsellinfo_ajax($sellwhere, FALSE);
         //////////
-
+        //p($sellinfo);
         // 收费项目
         $chargeitem = $this->logicChargeitem->getChargeitemStat_value(3, 0);
         ////////服务项目///////
@@ -576,6 +576,8 @@ class Api extends AdminBase
         $data= array(
           'chargeitem' => array_merge($chargeitem,$Serviceinfoitem),
           "bury" => $Buryinfo,
+          "isvoice" =>$sellinfo['isvoice'],
+          "payvarchar" =>$sellinfo['payvarchar'],
           "orderNO" => $orderNO = !empty($bury) ? $bury[0]['orderNO'] : '' || !empty($linkmanlist) ? $linkmanlist[0]['orderNO'] : '' ,
           "linkmanlist" => $linkmanlist,
         );
@@ -589,7 +591,7 @@ class Api extends AdminBase
             $result = array("code" => 1, "msg" => "参数错误");
             exit(json_encode($result));
         }
-
+  //p($this->param);
        $chargeitem_pram =array();
        $Serviceinfo_parm = array();
        $fklx= array();
@@ -625,6 +627,7 @@ class Api extends AdminBase
                 $chargeitemlist[$value["id"]]["id"] = $value["id"];
             }
         }
+
         //////////////
         $buryname="";
           if (isset($this->param['bury']))
@@ -640,6 +643,7 @@ class Api extends AdminBase
         $this->param['sellname'] = $member['nickname'];
        unset( $this->param['serviceinfoId']);
        unset( $this->param['chargeitemId']);
+        // p($this->param);
         if (empty($this->param['id'])) {
            $result = $this->logicSell->Sell_add_submit($this->param, $chargeitemlist, $Serviceinfoitem, 3); ////增加
         } else {
