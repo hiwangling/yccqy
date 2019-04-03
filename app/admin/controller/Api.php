@@ -643,7 +643,7 @@ class Api extends AdminBase
         $this->param['sellname'] = $member['nickname'];
        unset( $this->param['serviceinfoId']);
        unset( $this->param['chargeitemId']);
-        // p($this->param);
+ 
         if (empty($this->param['id'])) {
            $result = $this->logicSell->Sell_add_submit($this->param, $chargeitemlist, $Serviceinfoitem, 3); ////增加
         } else {
@@ -652,6 +652,114 @@ class Api extends AdminBase
 
         exit(json_encode($result));
     }
+
+
+
+
+    public  function Monumenservice_ajax_show()
+    {
+       if (empty($this->param['cid'])) {
+            $result = array("code" => 1, "msg" => "参数错误");
+            exit(json_encode($result));
+        }
+
+        $info = $this->logicCemetery->getCemeteryList(['a.id' => $this->param['cid']], "a.*,g.name as gardename ,r.name as areaname,t.name as typename , s.name as stylename", null, 1);
+        if (empty($info[0])) {
+            $result = array("code" => 1, "msg" => "参数错误");
+            exit(json_encode($result));
+        }
+
+        $this->assign('info', $info[0]);
+        ///////死者信息
+         $Buryinfo= $this->logicBury->getBuryList(["cid"=> $this->param['cid']],"a.* ","sort",FALSE);
+
+        //////联系人信息
+        $linkmanlist = $this->logicLinkman->getlinkmanList(['cid' => $this->param['cid']], "*", "id", FALSE);
+        ////////销售单据信息 
+
+        if (!empty($this->param['id']))
+        {
+           $monumeninfo = $this->logicMonumen->getMonumenInfo(["id"=>$this->param['id']]);  
+        }
+        else
+        {
+           $monumeninfo["tid"]=0; 
+           $monumeninfo["cid"]=$this->param['cid'];
+           $monumeninfo["monumendate"]= date("Y-m-d");
+           $monumeninfo["monumenstyle"]= 1;
+           $monumeninfo["monumenttype"]= 1;
+        }
+
+        $sellwhere["cid"] = $this->param['cid'];
+        $sellwhere["id"] = $monumeninfo["tid"];
+        $sellwhere["financetype"] = 8;
+        $sellinfo = $this->logicSell->getsellinfo_ajax($sellwhere, FALSE);
+        ////////////////////////////////////////////
+        
+        //////////
+        // 收费项目
+        $chargeitem = $this->logicChargeitem->getChargeitemStat_value(8, 0);
+        ////////服务项目///////
+        $Serviceinfo_where["servicetype"] = array('like', '%,8,%');
+        $Serviceinfoitem = $this->logicServiceinfo->getServiceinfoList($Serviceinfo_where, "a.id,a.servicename,a.price,a.manager,deptid", "sort", FALSE);
+        foreach ($Serviceinfoitem as $key => $value) {
+            $Serviceinfoitem[$key]["ischeck"] = 0;
+        }
+        ////////////初始化价格
+        if (isset($sellinfo["Financeinfo"])) {
+            foreach ($sellinfo["Financeinfo"] as $key => $value) {
+                if ($value["kmtype"] == 1) {////收费项目类型
+                    foreach ($chargeitem as $key => $value1) {
+                        if ($value1["id"] == $value["selltitleid"]) {
+                            $chargeitem[$key]["defaultprice"] = $value["realprice"];
+                        }
+                    }
+                } else { ///////服务项目价格获取
+                    foreach ($Serviceinfoitem as $key => $value1) {
+                        if ($value1["id"] == $value["selltitleid"]) {
+                            $Serviceinfoitem[$key]["ischeck"] = 1;
+                        }
+                    }
+                }
+            }
+        } else {
+            $sellinfo["billTolamount"] = 0;
+        }
+        $payarray=$this->logicSell->get_pay_array($sellinfo["payvarchar"]);
+      
+         $Buryinfolist=$this->logicSell->get_buryname_array($sellinfo["buryname"],$Buryinfo);
+
+        /////////
+        // $this->view->engine->layout(false);
+        // $infohtml = $this->fetch("monumen_add");
+        $result =array(
+        'monumentype' => parse_config_array('monumentype'),
+        'monumenstyle' => parse_config_array('monumenstyle'),
+        'chargeitem' => $chargeitem,
+        'Serviceinfoitem' => $Serviceinfoitem,
+        'bury' => $Buryinfolist,
+        'paytype' => $payarray,
+        'sellinfo' => $sellinfo,
+        'linkmanlist' => $linkmanlist,
+        'Buryinfo' => $Buryinfo,
+        'monumeninfo' => $monumeninfo,
+        'data' => $this->monumen_table($this->param['cid'])
+        );
+        exit(json_encode($result));  
+    }
     
+      public function monumen_table($cid) {
+        $where["a.cid"] = $cid;;
+        $where["a.isstory"] = 0;
+        $list = $this->logicMonumen->getMonumenList($where, 'a.*,s.id as sid,s.orderstatus', 'create_time desc');
+        $this->assign('cid', $cid);
+        if(!empty($list[0]))
+           $orderstatus=$list[0]["orderstatus"];
+       else
+           $orderstatus=1;
+       $result = array("orderstate" => $orderstatus, "cid" =>$cid, "data" => $list);
+       return $result;
+    }
+
 }
 
