@@ -1,6 +1,6 @@
   <template>
   	<div style="height: 800px" class="app">
-    <el-form :inline="true"  class="demo-form-inline" v-if="status">
+    <el-form :inline="true"  class="demo-form-inline" v-if="status" style="position: relative;">
    <template v-for="item in content" >
   		<my-edit :child="item" :styleobject="item.styleObject" ></my-edit>
   		<el-form-item :label="item.label">
