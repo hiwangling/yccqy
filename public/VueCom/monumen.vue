@@ -159,7 +159,7 @@ data: function() {
    return { 
     MonumenDialogVisible:false,
     MonumenPayDialogVisible:false,
-    count:'80',
+    count:0,
     monumen:{
     buryer:'',
     phone:'',
@@ -191,8 +191,10 @@ Monumenbury:function(){
   console.log(this.monumen)
  },
  ChangeCount:function(){
-  console.log(this.monumen.chargeitem);
-
+  this.count = 0
+  this.monumen.chargeitem.forEach((v,k)=>{
+  this.count+=Number(v);
+  })
  },
  }
 }
