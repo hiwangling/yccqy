@@ -1,7 +1,7 @@
   <template>
   	<div>
-    <el-button type="primary" @click="Monumenpayment">缴费</el-button>
-    <el-button type="primary" @click="MonumenDrag">刻碑</el-button>
+    <el-button type="primary" @click="MonumenPayDialogVisible = true">缴费</el-button>
+    <el-button type="primary" @click="MonumenDialogVisible = true">刻碑</el-button>
     <el-dialog
     title="刻碑服务"
     :visible.sync="MonumenDialogVisible"
@@ -10,8 +10,8 @@
     append-to-body>
     <my-drag></my-drag>
      </el-dialog>
-<!--     <el-table
-      :data="monumen_show.data.data.data"
+   <el-table
+      :data="monumen_table"
       border
       fit
       highlight-current-row
@@ -41,7 +41,7 @@
           </div>
       </template>
     </el-table-column>
-     </el-table> -->
+     </el-table> 
 
       <el-dialog
     title="碑文缴费"
@@ -52,27 +52,29 @@
       <h3 class="title">墓穴信息</h3>
     <el-tag size="medium" type="danger" style="font-size:16px;margin-bottom: 10px;">生态园/花坛葬三区/生态园花坛葬三区3-2/山西黑/单穴  /南</el-tag>
 
-<el-form :inline="true" :model="monumen" class="demo-form-inline">
+<el-form :inline="true" :model="monumen" id="monumen" class="demo-form-inline">
+<div class="monumen_line">
+  <div style="display:block"> 
     <el-form-item label="购买人">
-  <el-select v-model="monumen.buryer" clearable placeholder="请选择" style="width:100px" @change="Monumenbury" >
+  <el-select v-model="monumen.buyer" clearable placeholder="请选择" style="width:100px" @change="Monumenbury" >
     <el-option
       v-for="(item, index) in monumen_show.linkmanlist"
       :key="index"
       :label="item.linkname"
-      :value="item.phone">
+      :value="item.linkname">
     </el-option>
   </el-select> 
       </el-form-item>
       <el-form-item label="电话">
   <el-input v-model="monumen.phone" style="width: 120px"></el-input>
     </el-form-item>
-    <el-form-item label="墓主" v-if="monumen.bury != ''">
+    <el-form-item label="墓主" v-if="monumen_show.bury != ''">
       <el-checkbox-group 
     v-model="monumen.bury">
-    <el-checkbox v-for="item in monumen_show.bury" :label="item.vcname" :key="item.key">{{item.vcname}}</el-checkbox>
+    <el-checkbox v-for="(item,index) in monumen_show.bury" :label="item.vcname" :key="index">{{item.vcname}}</el-checkbox>
   </el-checkbox-group>
     </el-form-item> 
-
+</div>
   <el-form-item label="墓碑类型">
   <el-select v-model="monumen.monumenstyle" clearable placeholder="请选择" style="width:100px" >
     <el-option
@@ -85,7 +87,7 @@
   </el-form-item>
 
  <el-form-item label="碑文类型">
-  <el-select v-model="monumen.monumentype" clearable placeholder="请选择" style="width:100px" >
+  <el-select v-model="monumen.monumenttype" clearable placeholder="请选择" style="width:120px" >
     <el-option
       v-for="(value, key, index) in monumen_show.monumentype"
       :key="index"
@@ -104,7 +106,7 @@
       placeholder="立碑时间">
     </el-date-picker> 
   </el-form-item>
-
+</div>
      <h3 class="title">配套服务</h3>
      <el-form-item v-for="(item, index) in monumen_show.chargeitem" :label="item.name" >
     <el-input v-model="monumen.chargeitem[item.id]" style="width: 120px" @blur="ChangeCount"></el-input>
@@ -112,10 +114,10 @@
 
     <h3 class="title">特殊服务</h3>
 
-       <el-form-item label="支付方式" >
-      <div v-for="(item, key, index) in monumen_show.paytype" :key="index" style="width: 170px;float: left;">
-        <el-checkbox v-model="monumen.fklx[key]" :label="item.name" class="pay"></el-checkbox>
-        <el-input v-model="monumen.fklxval[key]" style="width:80px;"></el-input>
+    <el-form-item label="支付方式" >
+      <div v-for="(item, key, index) in monumen_show.paytype" :key="index" style="float: left;margin-right:5px;">
+        <el-checkbox v-model="monumen.fklx[key]" :label="item.name" class="pay" @change="fklxvalChange(key)"></el-checkbox>
+        <el-input v-model="monumen.fklxval[key]" style="width:80px;" v-if="monumen.fklx[key] == true"></el-input>
       </div>
     </el-form-item>
   <el-form-item label="是否开票" style="display: block;">
@@ -128,7 +130,7 @@
   <span class="font18" style="color: red;">{{count}} 元</span>
 </div>
     <div slot="footer" class="dialog-footer">
-        <el-button>取消</el-button>
+        <el-button @click="MonumenPayDialogVisible = false">取消</el-button>
         <el-button type="primary" @click="MonumenConfirm">确定</el-button>
           </div>
     </el-dialog>
@@ -142,7 +144,8 @@ components: {
         },
   props: {
         cid:null,
-        monumen_show:[Array, Object, Boolean,String]
+        monumen_table:Array,
+        monumen_show:[Array, Object]
       },
 data: function() {
   this.serviceForData = [
@@ -161,13 +164,16 @@ data: function() {
     MonumenPayDialogVisible:false,
     count:0,
     monumen:{
-    buryer:'',
+    buyer:'',
     phone:'',
-    bury:'',
-    isvoice:'',
+    bury:[],
+    id:0,
+    sid:0,
+    cid:this.cid,
+    isvoice:'0',
     monumenstyle:'',
-    monumentype:'',
-    monumendate:'',
+    monumenttype:'',
+    monumendate:new Date(),
     chargeitem:[],
     fklx:[],
     fklxval:[],
@@ -175,20 +181,35 @@ data: function() {
    }
  },
  methods:{
-Monumenbury:function(){
-
+ Monumenbury:function(v){
+      if(!v){
+        this.monumen.phone = ''
+        return false
+      }
+      let obj = {};
+      obj = this.monumen_show.linkmanlist.find((item)=>{
+          return item.phone === v;
+      });
+      this.monumen.buyer = obj.linkname
+      this.monumen.phone = v
 },
- MonumenDrag:function(){
-  this.MonumenDialogVisible = true
- },
- Monumenpayment:function(){
-  this.MonumenPayDialogVisible = true
- },
- MonumenEdit:function(val){
-
- },
  MonumenConfirm:function(){
-  console.log(this.monumen)
+  axios.post("../Api/Monumenservice_save_submit",this.monumen)
+         .then (res=> {
+            if(res.data.code == 0){
+            this.MonumenPayDialogVisible = false;
+            this.$message({
+            message: '操作成功',
+             type: 'success'
+               });
+            axios.post("../Api/Monumenservice_ajax_show",{cid: this.cid})
+                  .then (res=> {
+                    this.monumen_table = res.data.data.data.data
+                  })
+          }else{
+            this.$message.error('操作失败');
+          }
+         })
  },
  ChangeCount:function(){
   this.count = 0
@@ -196,11 +217,48 @@ Monumenbury:function(){
   this.count+=Number(v);
   })
  },
+fklxvalChange:function(v){
+    this.monumen.fklxval[v] = ''
+},
+MonumenEdit:function(row){
+ 
+  axios.post("../Api/Monumenservice_ajax_show",{cid: this.cid,id:row.id}) 
+ .then (res=> {
+let tamp = Object.assign({}, row)
+console.log(tamp)
+this.monumen.monumenttype = tamp.monumenttype == 0 ? '' : tamp.monumenttype.toString()
+this.monumen.monumenstyle = tamp.monumenstyle ==0 ? '' : tamp.monumenstyle.toString()
+this.monumen.buyer = tamp.buyer
+this.monumen.phone = tamp.phone
+this.monumen.monumendate = tamp.monumendate
+this.monumen.id = tamp.id
+this.monumen.sid = tamp.sid
+ res.data.chargeitem.forEach((v,k)=>{
+  this.monumen.chargeitem[v.id] = v.defaultprice
+ })
+  this.ChangeCount()
+  for (let n in res.data.paytype) {
+  this.monumen.fklx[n] = res.data.paytype[n].ischeck == 1 ? true : false
+  this.monumen.fklxval[n] = res.data.paytype[n].value
+  }
+  this.monumen.isvoice = res.data.sellinfo.isvoice.toString()
+  this.monumen.bury= tamp.buryname.split(",")
+  this.MonumenPayDialogVisible = true;
+  //  for (let i in this.monumen) {   //编辑赋值
+ //    if(row[i]){
+ //      this.monumen[i] = tamp[i]
+ //      }
+ // }
+ })
+ },
  }
 }
   </script>
 <style>
 .font18{
   font-size:18px;
+}
+#monumen .monumen_line .el-form-item__label{
+  width: 70px!important
 }
 </style>

@@ -332,7 +332,7 @@
         })
          .then (res=> {
           if(res.data.code == 0){
-            this.ServicedialogVisible = true;
+            this.ServicedialogVisible = false;
             this.$message({
             message: '操作成功',
              type: 'success'

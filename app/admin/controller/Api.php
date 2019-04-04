@@ -653,9 +653,6 @@ class Api extends AdminBase
         exit(json_encode($result));
     }
 
-
-
-
     public  function Monumenservice_ajax_show()
     {
        if (empty($this->param['cid'])) {
@@ -760,6 +757,60 @@ class Api extends AdminBase
        $result = array("orderstate" => $orderstatus, "cid" =>$cid, "data" => $list);
        return $result;
     }
+
+    public  function Monumenservice_ajax_show_(){
+        print_r($this->param);
+    }
+
+   public function Monumenservice_save_submit()
+    {
+         if (empty($this->param['cid']) ) {
+            $result = array("code" => 1, "msg" => "参数错误");
+            exit(json_encode($result));
+        }
+        ///////////////服务项目////////////
+        $Serviceinfo_where["servicetype"] = array('like', '%,8,%');
+        $Serviceinfoitem = $this->logicServiceinfo->getServiceinfoList($Serviceinfo_where, "a.id,a.servicename,a.price,a.manager,a.deptid", "sort", FALSE);
+        //////////获取收费项目
+        $chargeitem = $this->logicChargeitem->getChargeitemStat_value(8, -1);
+        $chargeitemlist = array();
+        if (!empty($chargeitem)) {
+            foreach ($chargeitem as $key => $value) {
+                $chargeitemlist[$value["id"]]["name"] = $value["name"];
+                $chargeitemlist[$value["id"]]["id"] = $value["id"];
+            }
+        }
+
+     $this->param['chargeitem'] =  unsetArray($this->param['chargeitem']); //去空
+
+       //p($this->param);
+        //////////////
+        $buryname="";
+          if (isset($this->param['bury']))
+           {
+               foreach ($this->param['bury'] as $key => $value) {
+                $buryname.=$value.",";
+            }
+            $this->param["buryname"] = rtrim($buryname,",");
+           }
+
+        ////////
+        $member = session('member_info');
+        $this->param['seller'] = $member['id'];
+        $this->param['sellname'] = $member['nickname'];
+        if (empty($this->param['id'])) {
+             $result = $this->logicMonumen->Monumen_add_submit($this->param, $chargeitemlist, $Serviceinfoitem, 8); ////增加
+        } else {
+            $result = $this->logicMonumen->Monumen_edit_submit($this->param, $chargeitemlist, $Serviceinfoitem); ////增加
+        }
+        
+        /////
+        // if ($result["code"] != 1) { ///更新表格
+        //     $result = array("code" => 0, "data" => $this->update_table($this->param['cid']));
+        // }
+       exit(json_encode($result));
+    }
+ 
 
 }
 

@@ -116,7 +116,7 @@
          <my-chang><my-chang>
   </el-tab-pane>
     <el-tab-pane label="碑文">
-         <my-monumen :cid="cid" :monumen_show="monumen_show"><my-monumen>
+         <my-monumen :cid="cid" :monumen_show="monumen_show" :monumen_table="monumen_table"><my-monumen>
   </el-tab-pane>
   </el-tabs>
 </el-dialog>
@@ -146,6 +146,7 @@
            savedata:[],
            monumen_show:{},
            service_show:{},
+           monumen_table:[],
            selldata:[],
            buryinfo:[],
            Getmember:[],
@@ -222,7 +223,7 @@
                 axios.post("{:url('Api/Monumenservice_ajax_show')}",{cid: this.cid})
                   .then (res=> {
                     this.monumen_show = res.data
-                    // console.log(this.monumen_show)
+                    this.monumen_table = res.data.data.data.data
                   })
                 break;
               default:

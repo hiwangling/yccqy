@@ -765,6 +765,13 @@ function p($arr){
         print_r($arr);
         echo "</pre>";
      }
+function unsetArray($arr = []){
+       foreach($arr as $k=>$v){   
+            if( !$v )   
+            unset($arr[$k]);   
+        }   
+        return $arr;
 
+}
  
  

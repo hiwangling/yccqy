@@ -47,11 +47,11 @@ class Monumen extends AdminBase {
     }
 
     public function Monumen_add_submit($data = [], $chargeitem = [], $Serviceinfoitem = [], $financetype = 8) {
-        $validate_result = $this->validateMonumen->scene('edit')->check($data);
-        if (!$validate_result) {
-            $result = array("code" => 1, "msg" => $this->validateMonumen->getError());
-            return $result;
-        }
+        // $validate_result = $this->validateMonumen->scene('edit')->check($data);
+        // if (!$validate_result) {
+        //     $result = array("code" => 1, "msg" => $this->validateMonumen->getError());
+        //     return $result;
+        // }
         $data['orderNO'] = get_cw_OrderNo();
         $data['financetype'] = $financetype; /////购墓操作
         $data['orderstatus'] = 1; //默认付款操作
@@ -75,11 +75,11 @@ class Monumen extends AdminBase {
     }
 
     public function Monumen_edit_submit($data = [], $chargeitem = [], $Serviceinfoitem = []) {
-        $validate_result = $this->validateMonumen->scene('edit')->check($data);
-        if (!$validate_result) {
-            $result = array("code" => 1, "msg" => $this->validateMonumen->getError());
-            return $result;
-        }
+        // $validate_result = $this->validateMonumen->scene('edit')->check($data);
+        // if (!$validate_result) {
+        //     $result = array("code" => 1, "msg" => $this->validateMonumen->getError());
+        //     return $result;
+        // }
         $Monumenid= $data["id"];
         $sellinfo = $this->logicSell->getSellInfo(["id" => $data['sid']]);
         if (empty($sellinfo)) {
