@@ -107,7 +107,7 @@
 
      <h3 class="title">配套服务</h3>
      <el-form-item v-for="(item, index) in monumen_show.chargeitem" :label="item.name" >
-    <el-input v-model="monumen.chargeitem[item.id]" style="width: 120px"></el-input>
+    <el-input v-model="monumen.chargeitem[item.id]" style="width: 120px" @blur="ChangeCount"></el-input>
     </el-form-item>
 
     <h3 class="title">特殊服务</h3>
@@ -118,8 +118,15 @@
         <el-input v-model="monumen.fklxval[key]" style="width:80px;"></el-input>
       </div>
     </el-form-item>
-
+  <el-form-item label="是否开票" style="display: block;">
+   <el-radio v-model="monumen.isvoice" label="0">不开票</el-radio>
+    <el-radio v-model="monumen.isvoice" label="1">开票</el-radio>
+    </el-form-item>  
 </el-form>
+<div>
+  <span class="font18">总金额：</span>
+  <span class="font18" style="color: red;">{{count}} 元</span>
+</div>
     <div slot="footer" class="dialog-footer">
         <el-button>取消</el-button>
         <el-button type="primary" @click="MonumenConfirm">确定</el-button>
@@ -152,10 +159,12 @@ data: function() {
    return { 
     MonumenDialogVisible:false,
     MonumenPayDialogVisible:false,
+    count:'80',
     monumen:{
     buryer:'',
     phone:'',
     bury:'',
+    isvoice:'',
     monumenstyle:'',
     monumentype:'',
     monumendate:'',
@@ -184,6 +193,14 @@ Monumenbury:function(){
  closeDiaglog(){
 
  },
+ ChangeCount:function(){
+  console.log(this.monumen.chargeitem)
+ },
  }
 }
   </script>
+<style>
+.font18{
+  font-size:18px;
+}
+</style>
