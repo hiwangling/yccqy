@@ -190,11 +190,9 @@ Monumenbury:function(){
  MonumenConfirm:function(){
   console.log(this.monumen)
  },
- closeDiaglog(){
-
- },
  ChangeCount:function(){
-  console.log(this.monumen.chargeitem)
+  console.log(this.monumen.chargeitem);
+
  },
  }
 }
