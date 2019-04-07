@@ -1,6 +1,6 @@
   <template>
   	<div>
-    <el-button type="primary" @click="MonumenPayDialogVisible = true">缴费</el-button>
+    <el-button type="primary" @click="CreatMonumen()">缴费</el-button>
     <el-button type="primary" @click="MonumenDialogVisible = true">刻碑</el-button>
     <el-dialog
     title="刻碑服务"
@@ -36,7 +36,8 @@
           @click="MonumenEdit(scope.row)"
           >编辑</el-button>
           <el-button
-          size="small "
+          size="small"
+          @click="MoumenDelete(scope.row)"
           >删除</el-button>
           </div>
       </template>
@@ -46,17 +47,17 @@
       <el-dialog
     title="碑文缴费"
     :visible.sync="MonumenPayDialogVisible"
-    width="80%"
+    width="700px"
     top="5vh"
     append-to-body>
       <h3 class="title">墓穴信息</h3>
     <el-tag size="medium" type="danger" style="font-size:16px;margin-bottom: 10px;">生态园/花坛葬三区/生态园花坛葬三区3-2/山西黑/单穴  /南</el-tag>
 
-<el-form :inline="true" :model="monumen" id="monumen" class="demo-form-inline">
+<el-form :inline="true" :model="monumen" id="monumen" ref="monumen" class="demo-form-inline">
 <div class="monumen_line">
   <div style="display:block"> 
-    <el-form-item label="购买人">
-  <el-select v-model="monumen.buyer" clearable placeholder="请选择" style="width:100px" @change="Monumenbury" >
+    <el-form-item label="购买人" prop="buyer">
+  <el-select v-model="monumen.buyer" clearable placeholder="请选择" style="width:100px" @change="Monumenbury">
     <el-option
       v-for="(item, index) in monumen_show.linkmanlist"
       :key="index"
@@ -65,17 +66,17 @@
     </el-option>
   </el-select> 
       </el-form-item>
-      <el-form-item label="电话">
+      <el-form-item label="电话" prop="phone">
   <el-input v-model="monumen.phone" style="width: 120px"></el-input>
     </el-form-item>
-    <el-form-item label="墓主" v-if="monumen_show.bury != ''">
+    <el-form-item label="墓主" v-if="monumen_show.bury != ''" prop="bury">
       <el-checkbox-group 
     v-model="monumen.bury">
     <el-checkbox v-for="(item,index) in monumen_show.bury" :label="item.vcname" :key="index">{{item.vcname}}</el-checkbox>
   </el-checkbox-group>
     </el-form-item> 
 </div>
-  <el-form-item label="墓碑类型">
+  <el-form-item label="墓碑类型" prop="monumenstyle">
   <el-select v-model="monumen.monumenstyle" clearable placeholder="请选择" style="width:100px" >
     <el-option
       v-for="(value, key, index) in monumen_show.monumenstyle"
@@ -86,7 +87,7 @@
   </el-select> 
   </el-form-item>
 
- <el-form-item label="碑文类型">
+ <el-form-item label="碑文类型" prop="monumenttype">
   <el-select v-model="monumen.monumenttype" clearable placeholder="请选择" style="width:120px" >
     <el-option
       v-for="(value, key, index) in monumen_show.monumentype"
@@ -108,13 +109,13 @@
   </el-form-item>
 </div>
      <h3 class="title">配套服务</h3>
-     <el-form-item v-for="(item, index) in monumen_show.chargeitem" :label="item.name" >
+     <el-form-item v-for="(item, index) in monumen_show.chargeitem" :label="item.name" prop="chargeitem" class='monumenServer'>
     <el-input v-model="monumen.chargeitem[item.id]" style="width: 120px" @blur="ChangeCount"></el-input>
     </el-form-item>
 
     <h3 class="title">特殊服务</h3>
 
-    <el-form-item label="支付方式" >
+    <el-form-item label="支付方式" prop="paytype">
       <div v-for="(item, key, index) in monumen_show.paytype" :key="index" style="float: left;margin-right:5px;">
         <el-checkbox v-model="monumen.fklx[key]" :label="item.name" class="pay" @change="fklxvalChange(key)"></el-checkbox>
         <el-input v-model="monumen.fklxval[key]" style="width:80px;" v-if="monumen.fklx[key] == true"></el-input>
@@ -163,6 +164,7 @@ data: function() {
     MonumenDialogVisible:false,
     MonumenPayDialogVisible:false,
     count:0,
+    tamp:{},
     monumen:{
     buyer:'',
     phone:'',
@@ -180,7 +182,17 @@ data: function() {
     },
    }
  },
+ mounted: function () {
+    this.tamp = Object.assign({}, this.monumen)
+ },
  methods:{
+  CreatMonumen:function(){
+    this.MonumenPayDialogVisible = true
+    this.monumen = Object.assign({}, this.tamp)
+    this.monumen.chargeitem=[]
+    this.count = 0
+    this.monumen.fklx = this.monumen.fklx.filter((v,k) =>v = false)
+  },
  Monumenbury:function(v){
       if(!v){
         this.monumen.phone = ''
@@ -188,10 +200,10 @@ data: function() {
       }
       let obj = {};
       obj = this.monumen_show.linkmanlist.find((item)=>{
-          return item.phone === v;
+          return item.linkname === v;
       });
       this.monumen.buyer = obj.linkname
-      this.monumen.phone = v
+      this.monumen.phone = obj.phone
 },
  MonumenConfirm:function(){
   axios.post("../Api/Monumenservice_save_submit",this.monumen)
@@ -221,11 +233,10 @@ fklxvalChange:function(v){
     this.monumen.fklxval[v] = ''
 },
 MonumenEdit:function(row){
- 
   axios.post("../Api/Monumenservice_ajax_show",{cid: this.cid,id:row.id}) 
  .then (res=> {
 let tamp = Object.assign({}, row)
-console.log(tamp)
+
 this.monumen.monumenttype = tamp.monumenttype == 0 ? '' : tamp.monumenttype.toString()
 this.monumen.monumenstyle = tamp.monumenstyle ==0 ? '' : tamp.monumenstyle.toString()
 this.monumen.buyer = tamp.buyer
@@ -251,7 +262,32 @@ this.monumen.sid = tamp.sid
  // }
  })
  },
+MoumenDelete:function(row){
+     const index = this.monumen_table.indexOf(row)
+     this.$confirm("您确认删除吗？", "提示", {}).then(() => {
+      axios.post("../Api/Monumenservice_delete_ajax",{
+      id: row.id
+      })
+      .then(res => {
+          if(res.data.code == 0){
+             this.$message({
+                 message: '删除成功',
+                 type: 'success'
+              });
+             this.monumen_table.splice(index, 1)
+          }else{
+             this.$message({
+                 message: '删除失败',
+                 type: 'warning'
+              });
+          }
+      })  
+    })
+      .catch(() => {
+      this.$message({message: '已取消'});
+     })
  }
+}
 }
   </script>
 <style>
@@ -260,5 +296,8 @@ this.monumen.sid = tamp.sid
 }
 #monumen .monumen_line .el-form-item__label{
   width: 70px!important
+}
+.monumenServer .el-form-item__label{
+  width: 100px!important;
 }
 </style>

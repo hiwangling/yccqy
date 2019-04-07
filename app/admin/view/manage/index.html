@@ -107,7 +107,7 @@
          <my-sell :status="usestatus" :selldata="selldata" :cid="cid" :buryinfo="buryinfo"><my-sell>
   </el-tab-pane>
      <el-tab-pane label="殡葬服务">
-         <my-service :status="usestatus" :cid="cid" :service_show="service_show" :selldata="selldata" :loading="loading"><my-service>
+   <my-service :status="usestatus" :cid="cid" :service_show_table="service_show_table" :service_show="service_show" :loading="loading"><my-service>
   </el-tab-pane>
 <!--   <el-tab-pane label="安葬">
          <my-bury :burydata ="burydata" :buryfrom="buryFrom" @bury="bury"><my-bury>
@@ -145,6 +145,7 @@
            savearea:[],
            savedata:[],
            monumen_show:{},
+           service_show_table:[],
            service_show:{},
            monumen_table:[],
            selldata:[],
@@ -203,14 +204,11 @@
                   })
                 break;
                case 3:
-             axios.post("{:url('Api/getserviceTable')}",{cid: this.cid})
-                  .then (res=> {
-                    this.selldata = res.data.data.data
-                    this.loading = false
-                  })
-              axios.post("{:url('Api/Buryservice_ajax_show')}",{cid: this.cid,id:0})
+               axios.post("{:url('Api/Buryservice_ajax_show')}",{cid: this.cid,id:0})
                   .then (res=> {
                     this.service_show = res.data
+                    this.service_show_table = res.data.list.data
+                    this.loading = false
                   })
                 break;
                 case 4:

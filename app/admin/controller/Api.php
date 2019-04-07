@@ -330,55 +330,6 @@ class Api extends AdminBase
          );
            exit(json_encode($result));
     }
-
-
-    public function getserviceTable() {
-        $cid = $this->param['cid'];
-        $where["cid"] = $cid;
-        $where["financetype"] =3;
-        $where["isstory"] =0;
-        $list = $this->logicSell->getSellList_nodeathname($where, 'a.*,cw.zj,y.name as garden_name,q.name as area_name,c.name as c_canme', 'a.create_time desc');
-        $this->assign('cid', $cid);
-        if(!empty($list[0]))
-           $orderstatus=$list[0]["orderstatus"];
-       else
-           $orderstatus=1;
-
-       $result = array(
-            "code" => 0,
-            "cid"=>$cid,
-            "orderstate" => $orderstatus,
-            "msg" => "success",
-            "data" =>$list,
-         );
-         exit(json_encode($result));
-    }
-
-
-    //    public function update_table() {
-    //      if (empty($this->param['cid'])) {
-    //         $result = array("code" => 1, "msg" => "参数错误");
-    //         exit(json_encode($result));
-    //     }
-    //     $cid = $this->param['cid'];
-    //     $where["cid"] = $cid;
-    //     $where["financetype"] = 1;
-    //     $list = $this->logicSell->getSellList($where, 'a.*,cw.xszj,cw.zj,y.name as garden_name,q.name as area_name,c.name as c_canme,c.monumename', 'a.create_time desc');
-    //    if(!empty($list[0]))
-    //        $orderstatus=$list[0]["orderstatus"];
-    //    else
-    //        $orderstatus=1;
-      
-    //     $Buryinfo = $this->logicBury->getBuryList(["a.cid" => $cid], "a.* ", "sort", FALSE);
-    //      foreach ($Buryinfo as $key => $value) {
-    //         $Buryinfo[$key]['buyer'] = $Buryinfo[$key]['linkname'];
-    //      }
-    //      // echo "<pre>";
-    //      // print_r($list);
-    //      //  echo "</pre>";
-    //     $result = array("code" => 0, "msg" => "", "data" =>$list,"buryinfo" => $Buryinfo,);
-    //     exit(json_encode($result));
-    // }
    
     public function savearealist(){
         $result = $this->logicSavearea->getSaveareaList(['status' => ['eq', 1]], 'id,name', 'sort desc', false);
@@ -429,9 +380,6 @@ class Api extends AdminBase
            $result = array("code" => 1, "msg" => "参数错误");
           exit(json_encode($result));
         }
-
-     
-
       foreach ($this->param['comp'] as $key => $value){
          $this->param[$key]  = $value;
        };
@@ -515,8 +463,17 @@ class Api extends AdminBase
         ///////死者信息
          $Buryinfo= $this->logicBury->getBuryList(["cid"=> $this->param['cid']],"a.* ","sort",FALSE);
          
-         $this->assign('bury', $Buryinfo);
+        $where["cid"] = $this->param['cid'];
+        $where["financetype"] =3;
+        $where["isstory"] =0;
+
+        $list = $this->logicSell->getSellList_nodeathname($where, 'a.*,cw.zj,y.name as garden_name,q.name as area_name,c.name as c_canme', 'a.create_time desc');
        
+        if(!empty($list[0]))
+           $orderstatus=$list[0]["orderstatus"];
+       else
+           $orderstatus=1;
+
         //////联系人信息
         $linkmanlist = $this->logicLinkman->getlinkmanList(['cid' => $this->param['cid']], "*", "id", FALSE);
         ////////销售单据信息 
@@ -577,9 +534,10 @@ class Api extends AdminBase
           'chargeitem' => array_merge($chargeitem,$Serviceinfoitem),
           "bury" => $Buryinfo,
           "isvoice" =>$sellinfo['isvoice'],
-          "payvarchar" =>$sellinfo['payvarchar'],
-          "orderNO" => $orderNO = !empty($bury) ? $bury[0]['orderNO'] : '' || !empty($linkmanlist) ? $linkmanlist[0]['orderNO'] : '' ,
+          "paytype" =>$payarray,
+          // "orderNO" => $orderNO = !empty($bury) ? $bury[0]['orderNO'] : '' || !empty($linkmanlist) ? $linkmanlist[0]['orderNO'] : '' ,
           "linkmanlist" => $linkmanlist,
+          "list" =>  $list
         );
 
         exit(json_encode($data));  
@@ -591,30 +549,8 @@ class Api extends AdminBase
             $result = array("code" => 1, "msg" => "参数错误");
             exit(json_encode($result));
         }
-  //p($this->param);
-       $chargeitem_pram =array();
-       $Serviceinfo_parm = array();
-       $fklx= array();
-       $fklxval = array();
-
-        foreach ($this->param['chargeitemId'] as $key => $value) {
-
-             $chargeitem_pram[$value] = $this->param['chargeitem'][$key];
-        }
-       foreach ($this->param['serviceinfoId'] as $key => $value) {
-
-             $Serviceinfo_parm[$value] = $this->param['Serviceinfo'][$key];
-        }
- 
-       foreach ($this->param['fklx'] as $key => $value) {
-           array_push($fklx,$this->param['fklx'][$key]['fklx']);
-           array_push($fklxval,$this->param['fklx'][$key]['fklxval']);
-       }
-       $this->param['chargeitem'] = $chargeitem_pram;
-       $this->param['Serviceinfo'] = $Serviceinfo_parm;
-       $this->param['fklx'] = array_filter($fklx);
-       $this->param['fklxval'] = array_filter($fklxval);
-
+        $this->param['chargeitem'] =  unsetArray($this->param['chargeitem']); 
+        $this->param['Serviceinfo'] =  unsetArray($this->param['Serviceinfo']); 
         ///////////////服务项目////////////
         $Serviceinfo_where["servicetype"] = array('like', '%,3,%');
         $Serviceinfoitem = $this->logicServiceinfo->getServiceinfoList($Serviceinfo_where, "a.id,a.servicename,a.price,a.manager,a.deptid", "sort", FALSE);
@@ -641,9 +577,8 @@ class Api extends AdminBase
         $member = session('member_info');
         $this->param['seller'] = $member['id'];
         $this->param['sellname'] = $member['nickname'];
-       unset( $this->param['serviceinfoId']);
-       unset( $this->param['chargeitemId']);
- 
+        $this->param['fklx'] =  unsetArray($this->param['fklx']); 
+      // p($this->param);
         if (empty($this->param['id'])) {
            $result = $this->logicSell->Sell_add_submit($this->param, $chargeitemlist, $Serviceinfoitem, 3); ////增加
         } else {
@@ -758,10 +693,6 @@ class Api extends AdminBase
        return $result;
     }
 
-    public  function Monumenservice_ajax_show_(){
-        print_r($this->param);
-    }
-
    public function Monumenservice_save_submit()
     {
          if (empty($this->param['cid']) ) {
@@ -810,7 +741,24 @@ class Api extends AdminBase
         // }
        exit(json_encode($result));
     }
- 
+
+     public function Monumenservice_delete_ajax() {
+        if (empty($this->param['id'])) {
+            $result = array("code" => 1, "msg" => "参数错误");
+            exit(json_encode($result));
+        }
+         $monumeninfo = $this->logicMonumen->getMonumenInfo(["id"=>$this->param['id']]);  
+          if (empty($monumeninfo)) {
+            $result = array("code" => 1, "msg" => "数据异常，请检查");
+            return $result;
+        }
+        $result =  $this->logicMonumen->Monumen_Del($monumeninfo);
+        // if($result1)
+        // {
+        //      $result = array("code" => 0,"msg" => "success","data" => $this->update_table($monumeninfo['cid']));
+        //  } 
+          exit(json_encode($result));
+    }
 
 }
 

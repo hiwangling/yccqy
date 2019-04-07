@@ -28,7 +28,7 @@
         label="地址">
       </el-table-column>
       <el-table-column
-        prop="monumename"
+        prop="deathname"
         label="逝者">
       </el-table-column>
       <el-table-column
@@ -81,9 +81,10 @@
     <el-dialog
       width="54%"
       :title="dialogStatus"
+      top="5vh"
       :visible.sync="innerVisible"
       append-to-body>
-      <el-form :inline="true" ref="dataForm" :model="temp" class="demo-form-inline">
+      <el-form :inline="true" ref="dataForm" :model="temp" class="demo-form-inline" id="save">
     <el-form-item label="请选择" style="display:block" v-if="dialogStatus==='登记'">
    <el-radio-group v-model="radio" @change="onRadioChange">
       <el-radio :label="item.value" :key="item.value" v-for="item in radio_">{{item.buyer}}</el-radio>
@@ -101,7 +102,7 @@
 	    <el-input v-model="temp.address" name="name"></el-input>
 	  </el-form-item>
 	  	  <el-form-item label="逝者姓名">
-	    <el-input v-model="temp.monumename" name="name"></el-input>
+	    <el-input v-model="temp.deathname" name="name"></el-input>
 	  </el-form-item>
 	  	  <el-form-item label="关系">
 	    <el-input v-model="temp.relation" name="name"></el-input>
@@ -214,7 +215,7 @@ module.exports = {
           relation: '',
           phone:'',
           address:'',
-          monumename:'',
+          deathname:'',
           savebegindate:'',
           saveenddate:'',
           saveprice:'',
@@ -245,7 +246,7 @@ module.exports = {
           relation: '',
           phone:'',
           address:'',
-          monumename:'',
+          deathname:'',
           savebegindate:'',
           saveenddate:'',
           saveprice:'',
@@ -376,3 +377,11 @@ module.exports = {
     }
 }
 </script>
+<style>
+  #save .el-input,#save .el-form-item__content{
+    width: 210px;
+  }
+  #save .el-form-item__label{
+width: 100px!important
+  }
+</style>

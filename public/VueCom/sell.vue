@@ -51,7 +51,6 @@
   </el-form-item>
   <div>
    <h3 class="title">墓主信息</h3>
- 
   <el-button type="primary" icon="el-icon-plus" @click="handleAdd" size="medium">添加</el-button>
     <el-button icon="el-icon-delete" @click="handleDelete" size="medium">取消</el-button>
   </div>
@@ -61,11 +60,11 @@
       :data="bury"
       style="width: 100%">
       <el-table-column
-        prop="monumename"
+        prop="deathname"
         align="center"
         label="姓名">
          <template slot-scope="scope">
-        <el-input v-model="bury[scope.$index].monumename" placeholder=""></el-input>
+        <el-input v-model="bury[scope.$index].deathname" placeholder=""></el-input>
         </template>
       </el-table-column>
       <el-table-column
@@ -210,7 +209,7 @@
     </el-row>
 </el-dialog>
     <h3 class="title">购买人信息</h3>
-     <el-button type="primary" @click="SelldialogVisible=true">添加认购信息</el-button>
+     <el-button type="primary" @click="SelldialogVisible=true" v-if="selldata.length == 0">添加认购信息</el-button>
      <el-table
       :data="selldata"
       border
@@ -230,7 +229,7 @@
           type="danger"
           class="ft"
           >结算/打印</el-button>
-          <div v-if="scope.row.orderstatus ==1">
+   
           <el-button
           size="small "
           type="primary"
@@ -238,10 +237,7 @@
           <el-button
           size="small "
           >删除</el-button>
-          </div>
-          <el-button
-          size="small" v-else
-          >删除</el-button>
+ 
       </template>
     </el-table-column>
      </el-table>
@@ -301,14 +297,14 @@
   width="60%"
   top="5vh"
   append-to-body>
-  <el-form :inline="true" :model="sellEditForm" class="demo-form-inline" ref="sellEditForm">
+  <el-form :inline="true" :model="sellEditForm" class="demo-form-inline" ref="sellEditForm" id="sell">
     <el-tag size="medium" type="danger" class="tagStyle">生态园/花坛葬三区/生态园花坛葬三区3-2</el-tag>
     <el-form-item label="墓主名称">
     <el-input v-model="sellEditForm.vcname"></el-input>
   </el-form-item>
 
   <el-form-item label="性别">
-  <el-select v-model="sellEditForm.sex" placeholder="请选择" style="width:100px">
+  <el-select v-model="sellEditForm.sex" placeholder="请选择">
     <el-option
       v-for="item in sex_"
       :key="item.value"
@@ -323,13 +319,13 @@
   </el-form-item>
 
 <el-form-item label="出生日期">
-        <el-date-picker type="date" placeholder="出生日期"  value-format="yyyy-MM-dd" v-model="sellEditForm.birth" style="width: 140px"></el-date-picker>
+        <el-date-picker type="date" placeholder="出生日期"  value-format="yyyy-MM-dd" v-model="sellEditForm.birth"></el-date-picker>
   </el-form-item>
   <el-form-item label="死亡日期">
-        <el-date-picker type="date" placeholder="死亡日期"  value-format="yyyy-MM-dd" v-model="sellEditForm.death" style="width: 140px"></el-date-picker>
+        <el-date-picker type="date" placeholder="死亡日期"  value-format="yyyy-MM-dd" v-model="sellEditForm.death"></el-date-picker>
   </el-form-item>
   <el-form-item label="安葬日期">
-        <el-date-picker type="date" placeholder="出生日期"  value-format="yyyy-MM-dd" v-model="sellEditForm.bury" style="width: 140px"></el-date-picker>
+        <el-date-picker type="date" placeholder="出生日期"  value-format="yyyy-MM-dd" v-model="sellEditForm.bury"></el-date-picker>
   </el-form-item>
       <el-form-item label="联系人">
     <el-input v-model="sellEditForm.buyer" ></el-input>
@@ -338,7 +334,7 @@
     <el-input v-model="sellEditForm.phone"></el-input>
   </el-form-item>
       <el-form-item label="关系">
-    <el-input v-model="sellEditForm.relation" style="width:80px"></el-input>
+    <el-input v-model="sellEditForm.relation"></el-input>
   </el-form-item>
         <el-form-item label="备注">
     <el-input v-model="sellEditForm.vcdesc" ></el-input>
@@ -476,7 +472,7 @@ module.exports = {
             },
         temp:{
             id:0,
-            monumename: '',
+            deathname: '',
             sex: '',
             sfz: '',
             birth:'',
@@ -485,7 +481,7 @@ module.exports = {
           },
         bury:[{
             id:0,
-            monumename: '',
+            deathname: '',
             sex: '',
             sfz: '',
             birth:'',
@@ -646,5 +642,11 @@ module.exports = {
     font-size: 25px;
         color: red;
     margin-right: 5px;
+  }
+   #sell .el-input,#sell .el-form-item__content{
+    width: 150px;
+  }
+  #sell .el-form-item__label{
+width: 100px!important
   }
 </style>

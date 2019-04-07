@@ -1,6 +1,6 @@
 <template>	
 <div> 
-<el-form :inline="true" :model="reserve" class="demo-form-inline" :rules="rules" ref="reserve">
+<el-form :inline="true" :model="reserve" class="demo-form-inline" :rules="rules" ref="reserve" id="server">
 	<el-form-item label="预订的人" prop="buyer">
     <el-input v-model="reserve.buyer" name="buyer"></el-input>
   </el-form-item>
@@ -173,3 +173,11 @@ module.exports = {
  }
 }
 </script>
+<style>
+ #server .el-input,#server .el-form-item__content{
+    width: 150px;
+  }
+  #server .el-form-item__label{
+width: 100px!important
+  }
+</style>
