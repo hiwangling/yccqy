@@ -588,6 +588,30 @@ class Api extends AdminBase
         exit(json_encode($result));
     }
 
+    public function Buryservice_delete_ajax() {
+        if (empty($this->param['id'])) {
+            $result = array("code" => 1, "msg" => "参数错误");
+            exit(json_encode($result));
+        }
+          $sellinfo = $this->logicSell->getSellInfo(["id" => $this->param['id']]);
+        
+        if (empty($sellinfo)) {
+            $result = array("code" => 1, "msg" => "数据异常，请检查");
+            return $result;
+        }
+
+        $result1 = $this->logicSell->Sellinfo_del($sellinfo['id']);
+        if($result1)
+        {
+          $result = array("code" => 0,"msg" => "success");
+           
+        } 
+        else {
+            $result = array("code" => 1, "msg" => "error");
+        }
+       
+        exit(json_encode($result));
+    }
     public  function Monumenservice_ajax_show()
     {
        if (empty($this->param['cid'])) {
@@ -753,12 +777,192 @@ class Api extends AdminBase
             return $result;
         }
         $result =  $this->logicMonumen->Monumen_Del($monumeninfo);
-        // if($result1)
-        // {
-        //      $result = array("code" => 0,"msg" => "success","data" => $this->update_table($monumeninfo['cid']));
-        //  } 
           exit(json_encode($result));
     }
+
+     public function getCemeteryList_ajax() {
+
+       $request = $this->param = $this->request->param();
+ 
+        $where['usestatus'] = 1;
+
+        if (!empty($request['param']['vno']))
+            $where['a.name'] = array('like', "%{$request['param']['vno']}%");
+
+        if (!empty($request['param']['gardenID']))
+            $where['a.gardenID'] = $request['param']['gardenID'];
+
+        if (!empty($request['param']['areaID']))
+            $where['a.areaID'] = $request['param']['areaID'];
+
+        if (!empty($request['param']['typeID']))
+            $where['a.typeID'] = $request['param']['typeID'];
+
+        if (!empty($request['param']['style']))
+            $where['a.styleID'] = $request['param']['style'];
+
+        //  if (!empty($request['usestatus']))
+        if (empty($request['param']['limit']))
+            $request['param']['limit'] = 100;
+
+       //var_dump($where);
+        $list = $this->logicCemetery->getCemeteryList($where, 'a.*,g.name as garden_name,r.name as area_name,t.name as type_name,s.name as style_name', 'a.create_time desc', $request['param']['limit']);
+        //var_dump(json_decode(json_encode($list))->data);
+        $data = array(
+            'code' => 0,
+            'msg' => '',
+            'count' => json_decode(json_encode($list))->total,
+            'data' => json_decode(json_encode($list))->data
+        );
+       exit(json_encode($list));
+    }
+     public function getCemeteryGarden_ajax() {
+          $res ="SELECT name,id FROM ky_cemetery_garden";
+          $list = $this->logicCemetery->query($res);
+         exit(json_encode($list));
+     }
+     public function getCemeterytype_ajax() {
+          $res ="SELECT name,id from ky_cemetery_type";
+          $list = $this->logicCemetery->query($res);
+         exit(json_encode($list));
+     }
+     public function getCemeteryStyle_ajax() {
+          $res ="select name,id from ky_cemetery_style";
+          $list = $this->logicCemetery->query($res);
+         exit(json_encode($list));
+     }
+     
+      public function getCemeteryArea_ajax() {
+          $id = input('post.id');
+          $where['a.gardenID'] = $id;
+          $list =$this->logicCemeteryArea->getCemeteryAreaList($where);
+         exit(json_encode(json_decode(json_encode($list))->data));
+     }
+
+
+      public function Sellchang_ajax_show() {
+        if (empty($this->param['cid'])) {
+            $result = array("code" => 1, "msg" => "参数错误");
+            exit(json_encode($result));
+        }
+        $info = $this->logicCemetery->getCemeteryList(['a.id' => $this->param['cid']], "a.*,g.name as gardename ,r.name as areaname,t.name as typename , s.name as stylename", null, 1);
+        if (empty($info[0])) {
+            $result = array("code" => 1, "msg" => "参数错误");
+            exit(json_encode($result));
+        }
+ 
+        $chargeitem = $this->logicChargeitem->getChargeitemStat_value(5, -1);
+        //////
+        $sellwhere["cid"] = $this->param['cid'];
+        $sellwhere["financetype"] = 1; ///购墓收费
+        $oldsellinfo = $this->logicSell->getsellinfo_ajax($sellwhere);
+        $buryanme = "";
+        if (isset($oldsellinfo["bury"])) {
+            foreach ($oldsellinfo["bury"] as $key => $value) {
+                $buryanme .= $value["vcname"] . ",";
+            }
+        }
+        $newsellid = 0;
+        $SellchangInfo = $this->logicSellchang->getSellchangInfo(["id" => $this->param['cid']]);
+        if (!empty($SellchangInfo)) {
+            $newsellid = $SellchangInfo["tid"];
+        }
+        $sellinfo = $this->logicSell->getsellinfo_ajax(["id" => $newsellid], true);
+        ////////服务项目///////
+        $Serviceinfo_where["servicetype"] = array('like', '%,5,%');
+        $Serviceinfoitem = $this->logicServiceinfo->getServiceinfoList($Serviceinfo_where, "a.id,a.servicename,a.price,a.manager,deptid", "sort", FALSE);
+        foreach ($Serviceinfoitem as $key => $value) {
+            $Serviceinfoitem[$key]["ischeck"] = 0;
+        }
+
+        ////////////初始化价格
+        if (isset($sellinfo["Financeinfo"])) {
+            foreach ($sellinfo["Financeinfo"] as $key => $value) {
+                if ($value["kmtype"] == 1) {////收费项目类型
+                    foreach ($chargeitem as $key => $value1) {
+                        if ($value1["id"] == $value["selltitleid"]) {
+                            $chargeitem[$key]["defaultprice"] = $value["realprice"];
+                        }
+                    }
+                } else { ///////服务项目价格获取
+                    foreach ($Serviceinfoitem as $key => $value1) {
+                        if ($value1["id"] == $value["selltitleid"]) {
+                            $Serviceinfoitem[$key]["ischeck"] = 1;
+                        }
+                    }
+                }
+            }
+        } else {
+            $sellinfo["billTolamount"] = 0;
+        }
+        //////联系人///////
+        $linkmanlist = $this->logicLinkman->getlinkmanList(['cid' => $this->param['cid']], "*", "id", FALSE);
+        $payarray = $this->logicSell->get_pay_array($sellinfo["payvarchar"]);
+        /////////////
+        $where['a.oldcid'] = $this->param['cid'];
+        $list = $this->logicSellchang->getSellchangList($where, 'a.*,s.orderNO,s.orderstatus', 'create_time desc', FALSE);
+        if (!empty($list[0]))
+        {
+            $orderstatus = $list[0]["orderstatus"];
+        }
+        else
+        {
+            $orderstatus = 1;
+        }
+        $usestatus = $this->logicCemetery->getCemeteryInfo(["id"=>$this->param['cid']],"usestatus");
+        $result = array(
+            "code" => 0, 
+            "msg" => "", 
+            'chargeitem' => $chargeitem,
+            'Serviceinfoitem' => $Serviceinfoitem,
+            'paytype' => $payarray,
+            'info' => $info[0],
+            'oldsellinfo' => $oldsellinfo,
+            'sellinfo' => $sellinfo,
+            'buryanme' => $buryanme,
+            'SellchangInfo' => $SellchangInfo,
+            'linkmanlist' => $linkmanlist,
+            'usestatus' => $usestatus["usestatus"],
+            'orderstate' =>$orderstatus,
+            'list' => $list
+        );
+        exit(json_encode($result));
+    }
+ 
+       public function Sellchang_submit_ajax() {
+        if (empty($this->param['newcid']) || empty($this->param['oldcid'])) {
+            $result = array("code" => 1, "msg" => "参数错误");
+            exit(json_encode($result));
+        }
+        ///////////////服务项目////////////
+        $Serviceinfo_where["servicetype"] = array('like', '%,5,%');
+        $Serviceinfoitem = $this->logicServiceinfo->getServiceinfoList($Serviceinfo_where, "a.id,a.servicename,a.price,a.manager,a.deptid", "sort", FALSE);
+        //////////获取收费项目
+        $chargeitem = $this->logicChargeitem->getChargeitemStat_value(5, -1);
+        $chargeitemlist = array();
+        if (!empty($chargeitem)) {
+            foreach ($chargeitem as $key => $value) {
+                $chargeitemlist[$value["id"]]["name"] = $value["name"];
+                $chargeitemlist[$value["id"]]["id"] = $value["id"];
+            }
+        }
+        //////////////
+
+        $member = session('member_info');
+        $this->param['seller'] = $member['id'];
+        $this->param['sellname'] = $member['nickname'];
+        // if (empty($this->param['changid'])) {
+        $result = $this->logicSellchang->Sellchang_add_submit($this->param, $chargeitemlist, $Serviceinfoitem, 3); ////增加
+        // } else {
+        //       $result = $this->logicSellchang->Sellchang_edit_submit($this->param, $chargeitemlist, $Serviceinfoitem); ////增加
+        //   }
+        /////
+        if ($result["code"] != 1) { ///更新表格
+            $result = array("code" => 0, "data" => $this->update_table($this->param['cid']));
+        }
+        exit(json_encode($result));
+    }
+
 
 }
 

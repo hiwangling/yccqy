@@ -24,10 +24,6 @@
         label="	电话">
       </el-table-column>
       <el-table-column
-        prop="address"
-        label="地址">
-      </el-table-column>
-      <el-table-column
         prop="deathname"
         label="逝者">
       </el-table-column>

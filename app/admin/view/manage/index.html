@@ -1,13 +1,13 @@
 <style>
   .el-dialog__body{
-        padding: 0px 20px 20px 20px;
+        padding: 0px 20px 10px 20px;
   }
 
   .title_{
 
   }
   .el-form-item{
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
   .pay{
     margin-right: 10px;
@@ -113,7 +113,7 @@
          <my-bury :burydata ="burydata" :buryfrom="buryFrom" @bury="bury"><my-bury>
   </el-tab-pane> -->
   <el-tab-pane label="换墓">
-         <my-chang><my-chang>
+         <my-chang :cid="cid" :changdata="changdata" ><my-chang>
   </el-tab-pane>
     <el-tab-pane label="碑文">
          <my-monumen :cid="cid" :monumen_show="monumen_show" :monumen_table="monumen_table"><my-monumen>
@@ -152,7 +152,7 @@
            buryinfo:[],
            Getmember:[],
            Schedulelist:[],
-           // burydata:[],
+           changdata:[],
            // buryFrom:[],
            dialogVisible: false,
            activeName:'reserve',
@@ -212,10 +212,14 @@
                   })
                 break;
                 case 4:
-                // axios.post("{:url('Api/BuryList')}",{msg:0,cid: this.cid})
+                // axios.post("{:url('Api/BuryList')}",{cid: this.cid})
                 //   .then (res=> {
                 //     this.burydata = res.data.data
                 //   })
+                     axios.post("../Api/Sellchang_ajax_show",{cid:this.cid})
+                        .then(res => {
+                            this.changdata = res .data
+                 })
                 break;
                 case 5:
                 axios.post("{:url('Api/Monumenservice_ajax_show')}",{cid: this.cid})

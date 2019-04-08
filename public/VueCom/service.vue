@@ -61,7 +61,7 @@
     <el-form-item label="电话">
   <el-input v-model="service.phone" style="width: 120px"></el-input>
     </el-form-item>
-    <el-form-item label="墓主" v-if="service.bury != ''">
+    <el-form-item label="墓主">
       <el-checkbox-group 
     v-model="service.bury">
     <el-checkbox v-for="item in service_show.bury" :label="item.vcname" :key="item.key">{{item.vcname}}</el-checkbox>
@@ -158,7 +158,7 @@
       { prop: 'orderNO', label: '编号' },
       { prop: 'buyer', label: '购买人' },
       { prop: 'phone', label: '手机' },
-      { prop: 'monumename', label: '墓主' },
+      { prop: 'buryname', label: '墓主' },
       { prop: 'orderbegin', label: '办理时间' },
       { prop: 'zj', label: '费用' },
       { prop: 'orderstatus', label: '缴费状态' }
@@ -187,6 +187,7 @@
                this.ServicedialogVisible = true
                this.service_show.chargeitem = res.data.chargeitem
                this.service.buyer = v.buyer
+               this.service.bury = v.buryname.split(',')
                this.service.phone = v.phone
                this.service.id = v.id
                this.service.orderNO = v.orderNO
@@ -207,24 +208,34 @@
                       
      })
       },
-
     //取消为空
      fklxvalChange:function(v){
       this.service.fklxval[v] = ''
      },
      serviceDelete:function(row){
-   
-     },
-     //关闭清空
-     closeDiaglog:function(){
-      this.$refs.multipleTable.clearSelection();
-      this.service.fklx=[]
-      this.service.fklxval=[]
-      this.service.buyer = ''
-      this.service.phone = ''
-      this.service.orderNO = ''
-      this.service.isvoice = '0'
-      this.service_show.chargeitem.find((item) =>item.defaultprice = 0)
+    const index = this.service_show_table.indexOf(row)
+     this.$confirm("您确认删除吗？", "提示", {}).then(() => {
+      axios.post("../Api/Buryservice_delete_ajax",{
+      id: row.id
+      })
+      .then(res => {
+          if(res.data.code == 0){
+             this.$message({
+                 message: '删除成功',
+                 type: 'success'
+              });
+             this.service_show_table.splice(index, 1)
+          }else{
+             this.$message({
+                 message: '删除失败',
+                 type: 'warning'
+              });
+          }
+      })  
+    })
+      .catch(() => {
+      this.$message({message: '已取消'});
+     })
      },
       //选择赋值
       Servicebury(v){
@@ -300,7 +311,7 @@
       selsChange: function (sels) {
       this.sels = sels;
       },
-      tableRowClassName({row}) {
+      tableRowClassName({row,rowIndex}) {
         if (row.title) {
           return 'Cent';
         }
@@ -316,6 +327,21 @@
           }
         }
       },
+         //关闭清空
+     closeDiaglog:function(){
+      this.$refs.multipleTable.clearSelection();
+      this.service.fklx=[]
+      this.service.fklxval=[]
+      this.service.chargeitem=[]
+      this.service.Serviceinfo=[]
+      this.service.bury = []
+      this.service.buyer = ''
+      this.service.phone = ''
+      this.service.orderNO = ''
+      this.service.id = 0
+      this.service.isvoice = '0'
+      this.service_show.chargeitem.find((item) =>item.defaultprice = 0)
+     },
    }
 
   }

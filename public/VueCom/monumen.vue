@@ -109,7 +109,11 @@
   </el-form-item>
 </div>
      <h3 class="title">配套服务</h3>
-     <el-form-item v-for="(item, index) in monumen_show.chargeitem" :label="item.name" prop="chargeitem" class='monumenServer'>
+     <el-form-item v-for="(item, index) in monumen_show.chargeitem" 
+     :key="index"
+     :label="item.name" 
+     prop="chargeitem" 
+     class='monumenServer'>
     <el-input v-model="monumen.chargeitem[item.id]" style="width: 120px" @blur="ChangeCount"></el-input>
     </el-form-item>
 

@@ -5,7 +5,7 @@
                 <el-input v-model="formInline.vno" placeholder="墓号"></el-input>
               </el-form-item>
               <el-form-item label="墓园 :">
-                <el-select v-model="formInline.gardenID" placeholder="墓园"  @change="getRole($event)">
+                <el-select v-model="formInline.gardenID" clearable  placeholder="墓园"  @change="getRole($event)">
                  <el-option
                   v-for="item in gardens"
                   :key="item.id"
@@ -15,7 +15,7 @@
                 </el-select>
               </el-form-item>
                     <el-form-item label="墓区 :">
-                  <el-select v-model="formInline.areaID" placeholder="墓园">
+                  <el-select v-model="formInline.areaID" clearable placeholder="墓园">
                  <el-option
                   v-for="item in areas"
                   :key="item.id"
@@ -25,7 +25,7 @@
                 </el-select>
               </el-form-item>
                 <el-form-item label="类型 :">
-                  <el-select v-model="formInline.typeID" placeholder="类型">
+                  <el-select v-model="formInline.typeID" clearable placeholder="类型">
                  <el-option
                   v-for="item in types"
                   :key="item.id"
@@ -35,7 +35,7 @@
                 </el-select>
               </el-form-item>
                 <el-form-item label="样式 :">
-                  <el-select v-model="formInline.style" placeholder="样式">
+                  <el-select v-model="formInline.style" clearable placeholder="样式">
                  <el-option
                   v-for="item in styles"
                   :key="item.id"

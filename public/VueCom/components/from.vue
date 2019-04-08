@@ -1,26 +1,26 @@
 <template>
     <div>
-    <div style="height: 40px;line-height: 30px;">
+<!--     <div style="height: 40px;line-height: 30px;">
   <el-form-item label="" label-width="1rem" >
   <el-radio-group v-model="radio" @change="onRadioChange">
       <el-radio :label="item.value" :key="item.value" v-for="item in radio_">{{item.buyer}}</el-radio>
   </el-radio-group>
 </el-form-item>
-  </div>
+  </div> -->
     <el-form-item label="姓名">
-    <el-input v-model="temp.buyer"></el-input>
+    <el-input v-model="temp.buyer" size="small"></el-input>
   </el-form-item>
   <el-form-item label="联系电话">
-    <el-input v-model="temp.phone" style="width:120px"></el-input>
+    <el-input v-model="temp.phone" size="small"></el-input>
   </el-form-item>
   <el-form-item label="家庭住址">
-    <el-input v-model="temp.adress"></el-input>
+    <el-input v-model="temp.adress" size="small"></el-input>
   </el-form-item>
   <el-form-item label="关系">
-    <el-input v-model="temp.relation" style="width:80px"></el-input>
+    <el-input v-model="temp.relation" size="small"></el-input>
   </el-form-item>
   <el-form-item label="性别">
-  <el-select v-model="temp.sex" placeholder="请选择" style="width:100px">
+  <el-select v-model="temp.sex" placeholder="请选择" size="small">
     <el-option
       v-for="item in sex_"
       :key="item.value"
@@ -32,19 +32,19 @@
   <el-form-item label="购买日期">
       <el-col>
       <el-form-item prop="date1">
-        <el-date-picker type="date" placeholder="选择日期" v-model="temp.ordainbegin" style="width: 140px"></el-date-picker>
+        <el-date-picker type="date" placeholder="选择日期" size="small" v-model="temp.ordainbegin"></el-date-picker>
       </el-form-item>
     </el-col>
   </el-form-item>
   <el-form-item label="到期日期">
       <el-col>
       <el-form-item prop="date2">
-        <el-date-picker placeholder="选择时间" v-model="temp.ordainend" style="width: 140px"></el-date-picker>
+        <el-date-picker placeholder="选择时间" size="small" v-model="temp.ordainend"></el-date-picker>
       </el-form-item>
     </el-col>
   </el-form-item>
   <el-form-item label="备注">
-    <el-input v-model="temp.vcdesc"></el-input>
+    <el-input v-model="temp.vcdesc" size="small"></el-input>
   </el-form-item>
     </div>
 </template>

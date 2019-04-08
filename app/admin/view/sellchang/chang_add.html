@@ -189,7 +189,7 @@
     new Vue({
         el: '#my-app',
         components: {
-            'my-component': httpVueLoader('__ROOT__/VueCom/itable.vue')
+            'my-component': httpVueLoader('__ROOT__/VueCom/table.vue')
         },
         data: {
             tamp: {},
@@ -218,8 +218,8 @@
         },
         created() {
             this.tableinit(),
-                    this.Gardeninit(),
-                    this.Typeinit()
+            this.Gardeninit(),
+            this.Typeinit()
             this.Styleinit()
         },
         methods: {
@@ -269,7 +269,6 @@
 
             rowdata: function (param) {
                 this.dialogTableVisible = false;
-
                 this.tamp = param
                 this.name = param.name
                 this.newcid = param.id
