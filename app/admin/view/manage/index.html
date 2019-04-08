@@ -1,10 +1,14 @@
 <style>
   .el-dialog__body{
         padding: 0px 20px 10px 20px;
+        
   }
+ 
 
-  .title_{
-
+  label{
+     margin-bottom: 0px; 
+     font-weight: 100; 
+         color: #99a9bf;
   }
   .el-form-item{
     margin-bottom: 10px;
@@ -118,6 +122,9 @@
     <el-tab-pane label="碑文">
          <my-monumen :cid="cid" :monumen_show="monumen_show" :monumen_table="monumen_table"><my-monumen>
   </el-tab-pane>
+      <el-tab-pane label="退墓">
+         <my-cancel :cid="cid"><my-cancel>
+  </el-tab-pane>
   </el-tabs>
 </el-dialog>
 
@@ -132,7 +139,8 @@
           // 'my-bury': httpVueLoader('__ROOT__/VueCom/bury.vue'),
           'my-service': httpVueLoader('__ROOT__/VueCom/service.vue'),
           'my-chang': httpVueLoader('__ROOT__/VueCom/chang.vue'),
-          'my-monumen': httpVueLoader('__ROOT__/VueCom/monumen.vue')
+          'my-monumen': httpVueLoader('__ROOT__/VueCom/monumen.vue'),
+          'my-cancel': httpVueLoader('__ROOT__/VueCom/cancel.vue')
         },
         data: {
            list:[],
@@ -227,6 +235,13 @@
                     this.monumen_show = res.data
                     this.monumen_table = res.data.data.data.data
                   })
+                break;
+                 case 6:
+                // axios.post("{:url('Api/Monumenservice_ajax_show')}",{cid: this.cid})
+                //   .then (res=> {
+                //     this.monumen_show = res.data
+                //     this.monumen_table = res.data.data.data.data
+                //   })
                 break;
               default:
                  

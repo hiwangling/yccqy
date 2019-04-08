@@ -249,19 +249,6 @@
             this.Styleinit()
 
         },
-         watch:{
-         changdata: function(newVal,oldVal){        
-              this.billTolamount = newVal.oldsellinfo.billTolamount
-              this.orderbegin = newVal.oldsellinfo.orderbegin
-              this.buryanme = newVal.buryanme
-              this.table = newVal.list
-              this.chang.oldsid=newVal.oldsellinfo.id
-              this.chang.oldcid=newVal.info.id
-              this.chang.sid=newVal.sellinfo.id || 0
-              this.chang.oldcname=newVal.info.name
-              this.chang.changid=newVal.SellchangInfo == null ? 0 : newVal.SellchangInfo.id
-              }  
-         }, 
          methods: {
             tableinit: function (param) {
                 axios.post("../Api/getCemeteryList_ajax", {
@@ -339,7 +326,20 @@
             closeDiaglog:function(){
 
             }
-        }
+        },
+     watch:{
+         changdata: function(newVal,oldVal){        
+              this.billTolamount = newVal.oldsellinfo.billTolamount
+              this.orderbegin = newVal.oldsellinfo.orderbegin
+              this.buryanme = newVal.buryanme
+              this.table = newVal.list
+              this.chang.oldsid=newVal.oldsellinfo.id
+              this.chang.oldcid=newVal.info.id
+              this.chang.sid=newVal.sellinfo.id || 0
+              this.chang.oldcname=newVal.info.name
+              this.chang.changid=newVal.SellchangInfo == null ? 0 : newVal.SellchangInfo.id
+              }  
+         }, 
      }
   </script>
      <style>
