@@ -965,5 +965,76 @@ class Api extends AdminBase
     }
 
 
+   
+    public function show_Cancel_sq_ajax() {
+
+        if (empty($this->param['cid'])) {
+            $result = array("code" => 1, "msg" => "参数错误");
+            exit(json_encode($result));
+        }
+        $info = $this->logicCemetery->getCemeteryList(['a.id' => $this->param['cid']], "a.*,g.name as gardename ,r.name as areaname,t.name as typename , s.name as stylename", null, 1);
+
+        if (empty($info[0])) {
+            $result = array("code" => 1, "msg" => "参数错误");
+            exit(json_encode($result));
+        }
+        $this->assign('info', $info[0]);
+        /////////判断是否有正在处理的退墓单据///////
+        $cwhere["cid"] = $this->param['cid'];
+        $cwhere["isok"] = array("neq", 1);
+        $cancelinfo = $this->logicCancel->get_Cancel_info($cwhere);
+        if (!empty($cancelinfo)) {
+            $result = array("code" => 1, "msg" => "有正在处理的申请，暂时不能提出申请");
+            exit(json_encode($result));
+        }
+        /////////获取购墓单据//////////////////////////////////////
+        $sellwhere["cid"] = $this->param['cid'];
+        $sellwhere["financetype"] = 1;
+        $sellwhere["orderstatus"] = 2;
+        $sellinfo = $this->logicSell->getsellinfo_ajax($sellwhere);
+        if ($sellinfo["billTolamount"] == 0) {
+            $result = array("code" => 1, "msg" => "无有效的购墓单据");
+            exit(json_encode($result));
+        }
+        $linkmanlist = $this->logicLinkman->getlinkmanList(['cid' => $this->param['cid']], "*", "id", FALSE);
+        // 收费项目，退墓手续费，指定的
+        $returnprice = $this->logicChargeitem->getChargeitemInfo(["id" => 9]);
+        if (empty($returnprice)) {
+            $result = array("code" => 1, "msg" => "参数错误");
+            exit(json_encode($result));
+        }
+        //////
+
+        $retrunprice_sxf = parse_config_array('retrunprice');
+        $returnprice["defaultprice"] = $sellinfo["billTolamount"] * $retrunprice_sxf[0];
+        $cancel_retrun = $sellinfo["billTolamount"] - $returnprice["defaultprice"];
+        //////
+        $chargeitem = $this->logicChargeitem->getChargeitemStat_value(6, 0);
+        $member = $this->logicMember->getMemberList(['m.status' => ['eq', 1], 'm.is_inside' => 1], 'm.id,m.nickname', 'm.create_time desc', false);
+
+           $where["a.cid"] = $this->param['cid'];
+        $list = $this->logicCancel->getCancelList($where, 'a.*,m.nickname,s.id as sid,s.orderstatus', 'create_time desc', FALSE);
+          if (!empty($list[0]))
+            $orderstatus = $list[0]["orderstatus"];
+        else
+            $orderstatus = 1;
+        
+        $this->assign('cid', $cid);
+        $this->assign('orderstate', $orderstatus);
+        $this->assign('list', $list);
+        $this->assign('info', $info[0]);
+        $this->assign('linkmanlist', $linkmanlist);
+        $this->assign('sellinfo', $sellinfo);
+        $this->assign('Financeinfo', $sellinfo["Financeinfo"]);
+        $this->assign('bury', $sellinfo["bury"]);
+        $this->assign('chargeitem', $chargeitem);
+        $this->assign('member', $member);
+        $this->assign('cancel_retrun', $cancel_retrun);
+        $this->assign('returnprice', $returnprice); ////退费项目
+     
+        exit(json_encode($result));
+    }
+
+
 }
 

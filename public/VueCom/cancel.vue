@@ -96,6 +96,9 @@ module.exports = {
         return { 
        ChangdialogVisible:false,
        cancel:{
+       	 cid:this.cid,
+       	 sid:'',
+         manager:'',
          buyer:'',
          phone:'',
          job:'',
@@ -126,16 +129,16 @@ module.exports = {
 </script>
 <style>
 	#cancel .el-form-item__label{
-		    width: 85px;
+	width: 85px;
     color: #99a9bf;
 	}
     #cancel .el-form-item__content{
     	width: 120px;
     }
- 
+
 	.ele{
-		background: url(../static/module/admin/img/ele.png) 0 100% repeat-x;
-		    padding-bottom: 5px;
+    background: url(../static/module/admin/img/ele.png) 0 100% repeat-x;
+	padding-bottom: 5px;
     margin-bottom: 15px;
 	}
 </style>
