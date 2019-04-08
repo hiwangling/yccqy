@@ -307,7 +307,19 @@
                         })
             },
            ChangConfirm:function(){
-                    console.log(this.chang)
+           axios.post("../Api/Sellchang_submit_ajax",this.chang)
+           .then (res=> {
+            if(res.data.code == 0){
+              this.ServicedialogVisible = false;
+              this.$message({
+              message: '操作成功',
+               type: 'success'
+                 });
+            }else{
+              this.$message.error('操作失败');
+            }
+               
+             })
            },
             rowdata: function (param) {
                 this.dialogTableVisible = false;

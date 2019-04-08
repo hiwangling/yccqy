@@ -935,6 +935,7 @@ class Api extends AdminBase
             exit(json_encode($result));
         }
         ///////////////服务项目////////////
+             $this->param['chargeitem'] =  unsetArray($this->param['chargeitem']); //去空
         $Serviceinfo_where["servicetype"] = array('like', '%,5,%');
         $Serviceinfoitem = $this->logicServiceinfo->getServiceinfoList($Serviceinfo_where, "a.id,a.servicename,a.price,a.manager,a.deptid", "sort", FALSE);
         //////////获取收费项目
@@ -958,7 +959,7 @@ class Api extends AdminBase
         //   }
         /////
         if ($result["code"] != 1) { ///更新表格
-            $result = array("code" => 0, "data" => $this->update_table($this->param['cid']));
+            $result = array("code" => 0);
         }
         exit(json_encode($result));
     }
