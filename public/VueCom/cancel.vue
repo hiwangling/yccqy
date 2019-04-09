@@ -1,6 +1,6 @@
  <template>
   	<div> 
-  <el-button type="primary" @click="CancelApply" >申请退墓</el-button>
+  <el-button type="primary" @click="CancelApply" v-if="ctable.list !== undefined && ctable.list.length == 0">申请退墓</el-button>
     <el-table
       :data="ctable.list"
       border
@@ -43,7 +43,7 @@
             <span>{{ list.phone }}</span>
           </el-form-item>
           <el-form-item label="墓主">
-            <span v-for="item in list.bury">{{ item }},</span>
+            <span v-for="item in list.bury">{{ item.vcname }},</span>
           </el-form-item>
           <el-form-item label="购买日期">
             <span>{{ list.orderbegin }}</span>
@@ -102,6 +102,10 @@
       
 </el-form>
         <div slot="footer" class="dialog-footer">
+         <template v-if="cancellist.isok == 0">
+        <el-button type="primary" @click="CancelCheckConfirm(2)">同意</el-button>
+        <el-button type="primary" @click="CancelCheckConfirm(1)">不同意</el-button>
+        </template>
         <el-button @click="CanceldialogVisible = false">关闭</el-button>
           </div>
  </el-dialog>
@@ -292,8 +296,6 @@ module.exports = {
                   this.CanceldialogVisible = true
                }
         })
-     
-
        },
        CancelConfirm:function(){
         this.cancel.cid = this.cid

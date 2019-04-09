@@ -459,7 +459,7 @@ class Api extends AdminBase
 
         $sellwhere["id"] = $this->param['id'];
         $sellinfo = $this->logicSell->getSellInfo($sellwhere);
-           
+        // p($sellinfo);
         if (empty($sellinfo)) {
             $result = array("code" => 1, "msg" => "参数错误");
             exit(json_encode($result));
@@ -468,9 +468,9 @@ class Api extends AdminBase
             $result = array("code" => 0, "msg" => "success");
             exit(json_encode($result));
         }
-  
+   
         $result = $this->logicSell->Buryservice_pay($sellinfo, "2");
-  
+      p($result);
         exit(json_encode($result));
     }
     
@@ -1173,6 +1173,50 @@ class Api extends AdminBase
         }
 
         exit(json_encode($result));
+    }
+       public function movelist_ajax() {
+        $where["a.cid"] = $this->param['cid'];
+        
+        $list = $this->logicMove->getMoveList($where, 'a.*,c.expiredate, g.name as garden_name,r.name as area_name,c.name as c_canme', 'create_time desc', FALSE);
+
+        $result = array(
+            "code" => 0, 
+            "msg" => "success", 
+            "list" => $list
+        );
+        exit(json_encode($result));
+    }
+
+
+    public function Move_submit_ajax() {
+        if (empty($this->param['cid'])) {
+            $result = array("code" => 1, "msg" => "参数错误");
+            exit(json_encode($result));
+        }
+     
+        $member = session('member_info');
+        $this->param['operater'] = $member['id'];
+        $this->param['operatername'] = $member['nickname'];
+        if (empty($this->param['id']))
+            $result = $this->logicMove->Move_add_submit($this->param);
+        else
+            $result = $this->logicMove->Move_edit_submit($this->param);
+        exit(json_encode($result));
+    }
+
+        public function Move_delete_ajax() {
+        if (empty($this->param['id'])) {
+            $result = array("code" => 1, "msg" => "参数错误");
+            exit(json_encode($result));
+        }
+        $MoveInfo = $this->logicMove->getMoveInfo(['id' => $this->param['id']]); ////获取点灯的记录
+         if (empty($MoveInfo)) {
+            $result = array("code" => 1, "msg" => "数据异常，请检查");
+            return $result;
+        }
+        $result = $this->logicMove->Move_Del($MoveInfo);
+          exit(json_encode($result));
+         
     }
 
 }

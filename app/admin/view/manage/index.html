@@ -125,6 +125,9 @@
       <el-tab-pane label="退墓">
          <my-cancel :cid="cid" :cancel_show="cancel_show" :ctable="ctable"><my-cancel>
   </el-tab-pane>
+      <el-tab-pane label="迁墓">
+         <my-move :cid="cid" :mtable="mtable"><my-move>
+  </el-tab-pane>
   </el-tabs>
 </el-dialog>
 
@@ -140,7 +143,8 @@
           'my-service': httpVueLoader('__ROOT__/VueCom/service.vue'),
           'my-chang': httpVueLoader('__ROOT__/VueCom/chang.vue'),
           'my-monumen': httpVueLoader('__ROOT__/VueCom/monumen.vue'),
-          'my-cancel': httpVueLoader('__ROOT__/VueCom/cancel.vue')
+          'my-cancel': httpVueLoader('__ROOT__/VueCom/cancel.vue'),
+          'my-move': httpVueLoader('__ROOT__/VueCom/move.vue')
         },
         data: {
            list:[],
@@ -152,6 +156,7 @@
            loading:true,
            savearea:[],
            savedata:[],
+           mtable:[],
            monumen_show:{},
            cancel_show:{},
            service_show_table:[],
@@ -222,11 +227,7 @@
                   })
                 break;
                 case 4:
-                // axios.post("{:url('Api/BuryList')}",{cid: this.cid})
-                //   .then (res=> {
-                //     this.burydata = res.data.data
-                //   })
-                     axios.post("../Api/Sellchang_ajax_show",{cid:this.cid})
+                axios.post("../Api/Sellchang_ajax_show",{cid:this.cid})
                         .then(res => {
                             this.changdata = res .data
                  })
@@ -247,7 +248,16 @@
                   .then (res=> {
                     this.cancel_show = res.data
                   })
-                  console.log(this.ctable)
+                break;
+                 case 7:
+                 axios.post("{:url('Api/movelist_ajax')}",{cid: this.cid})
+                 .then (res=> {
+                    this.mtable = res.data
+                  })
+                // axios.post("{:url('Api/show_Cancel_sq_ajax')}",{cid: this.cid})
+                //   .then (res=> {
+                //     this.cancel_show = res.data
+                //   })
                 break;
               default:
                  
@@ -256,14 +266,12 @@
           initdata:function(){
                    axios.post("{:url('Api/ajax_cemetery')}").then ( response=> {
                         this.list = response.data.data
-                        console.log(this.list)
                   })
           },
          getCategoryId:function(id,status){
                    this.dialogVisible = true;
                    this.usestatus = status;
                    this.cid = id;
-                   console.log(this.cid)
                 axios.post("{:url('Api/Schedulelist')}",{cid: this.cid}).then(res=> {
                        this.Schedulelist = res.data.data
                   })

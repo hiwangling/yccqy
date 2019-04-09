@@ -9,23 +9,22 @@
 namespace app\admin\validate;
 
 /**
- * Description of Light
+ * Description of Move
  *
  * @author Administrator
  */
-class Light extends AdminBase {
-
-    // 验证规则
+class Move extends AdminBase {
+     // 验证规则
     protected $rule = [
         'buyer' => 'require',
         'phone' => 'require',
         'cid' => 'require',
-        'lightplanid' => 'require',
+       
     ];
     // 验证提示
     protected $message = [
         'buyer.require' => '购买人不能为空',
-        'lightplanid.require' => '点灯时间不能为空',
+       
          'cid.require' => '墓穴不能为空',
         'phone.require' => '电话不能为空',
     ];

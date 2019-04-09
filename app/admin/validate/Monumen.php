@@ -9,29 +9,29 @@
 namespace app\admin\validate;
 
 /**
- * Description of Light
+ * Description of Monumen
  *
  * @author Administrator
  */
-class Light extends AdminBase {
+class Monumen extends AdminBase {
 
     // 验证规则
     protected $rule = [
         'buyer' => 'require',
         'phone' => 'require',
         'cid' => 'require',
-        'lightplanid' => 'require',
+        'monumendate' => 'require',
     ];
     // 验证提示
     protected $message = [
         'buyer.require' => '购买人不能为空',
-        'lightplanid.require' => '点灯时间不能为空',
+        'monumendate.require' => '刻碑时间不能为空',
          'cid.require' => '墓穴不能为空',
         'phone.require' => '电话不能为空',
     ];
     // 应用场景
     protected $scene = [
-        'edit' => ['buyer', 'phone', 'cid','lightdate'],
+        'edit' => ['buyer', 'phone', 'cid','monumendate'],
     ];
 
 }

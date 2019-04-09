@@ -25,7 +25,7 @@ data: function() {
         	label:'生于',
           type:'min',
         	styleObject: {
-			    left: '834px',
+			    left: '254px',
 			    top: '82px',
 			  }
         },{
@@ -33,7 +33,7 @@ data: function() {
         	label:'逝于',
           type:'max',
         	styleObject: {
-			    left: '701px',
+			    left: '351px',
 			    top: '88px',
 			  }
         },{
@@ -41,7 +41,7 @@ data: function() {
           label:'逝于',
           type:'max',
           styleObject: {
-          left: '600px',
+          left: '400px',
           top: '88px',
         },
 
@@ -50,7 +50,7 @@ data: function() {
           label:'逝于',
           type:'max',
           styleObject: {
-          left: '600px',
+          left: '500px',
           top: '128px',
         },
         },{
@@ -58,7 +58,7 @@ data: function() {
           label:'逝于',
           type:'max',
           styleObject: {
-          left: '600px',
+          left: '460px',
           top: '128px',
         },
         }
