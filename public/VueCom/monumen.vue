@@ -175,7 +175,7 @@ data: function() {
     bury:[],
     id:0,
     sid:0,
-    cid:this.cid,
+    cid:'',
     isvoice:'0',
     monumenstyle:'',
     monumenttype:'',
@@ -210,6 +210,7 @@ data: function() {
       this.monumen.phone = obj.phone
 },
  MonumenConfirm:function(){
+   this.monumen.cid = this.cid
   axios.post("../Api/Monumenservice_save_submit",this.monumen)
          .then (res=> {
             if(res.data.code == 0){

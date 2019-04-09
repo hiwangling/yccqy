@@ -95,7 +95,7 @@
       class-name="tableClassTd"
       label="实收">
      <template scope="scope">
-        <el-input v-if="scope.row.status == 1" v-model="scope.row.defaultprice" style="width: 80px" @blur="CheckRow(scope.row,false)">
+        <el-input v-if="scope.row.status == 1" v-model.number="scope.row.defaultprice" style="width: 80px" @blur="CheckRow(scope.row,false)">
         </el-input>
       </template>
     </el-table-column>
@@ -168,7 +168,7 @@
       sels:[],
       service:{
       isvoice:'0',
-      cid:this.cid,
+      cid:'',
       id:0,
       chargeitem:[],
       Serviceinfo:[],
@@ -183,7 +183,7 @@
   },
      methods: {
       serviceEdit:function(v){
-        axios.post("../Api/Buryservice_ajax_show",{cid: this.service.cid,id:v.id}).then(res=>{
+        axios.post("../Api/Buryservice_ajax_show",{cid: this.cid,id:v.id}).then(res=>{
                this.ServicedialogVisible = true
                this.service_show.chargeitem = res.data.chargeitem
                this.service.buyer = v.buyer
@@ -212,6 +212,7 @@
      fklxvalChange:function(v){
       this.service.fklxval[v] = ''
      },
+ 
      serviceDelete:function(row){
     const index = this.service_show_table.indexOf(row)
      this.$confirm("您确认删除吗？", "提示", {}).then(() => {
@@ -262,6 +263,8 @@
      },
      //服务提交
      ServiceConfirm:function(){
+ 
+      this.service.cid = this.cid
       this.sels.forEach((v,k)=>{
         //区分服务、归类
         v.status == 1 ? 
@@ -277,7 +280,7 @@
              type: 'success'
                });
           }else{
-            this.$message.error('操作失败');
+            this.$message.error(res.data.msg);
           }
              
            })
@@ -342,6 +345,11 @@
       this.service.isvoice = '0'
       this.service_show.chargeitem.find((item) =>item.defaultprice = 0)
      },
+   },
+   watch:{
+    service_show:function(n,o){
+      console.log(n)
+    }
    }
 
   }

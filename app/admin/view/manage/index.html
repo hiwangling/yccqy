@@ -123,7 +123,7 @@
          <my-monumen :cid="cid" :monumen_show="monumen_show" :monumen_table="monumen_table"><my-monumen>
   </el-tab-pane>
       <el-tab-pane label="退墓">
-         <my-cancel :cid="cid"><my-cancel>
+         <my-cancel :cid="cid" :cancel_show="cancel_show" :ctable="ctable"><my-cancel>
   </el-tab-pane>
   </el-tabs>
 </el-dialog>
@@ -153,6 +153,7 @@
            savearea:[],
            savedata:[],
            monumen_show:{},
+           cancel_show:{},
            service_show_table:[],
            service_show:{},
            monumen_table:[],
@@ -161,6 +162,7 @@
            Getmember:[],
            Schedulelist:[],
            changdata:[],
+           ctable:[],
            // buryFrom:[],
            dialogVisible: false,
            activeName:'reserve',
@@ -237,11 +239,15 @@
                   })
                 break;
                  case 6:
-                // axios.post("{:url('Api/Monumenservice_ajax_show')}",{cid: this.cid})
-                //   .then (res=> {
-                //     this.monumen_show = res.data
-                //     this.monumen_table = res.data.data.data.data
-                //   })
+                 axios.post("{:url('Api/show_Cancel_ajax')}",{cid: this.cid})
+                 .then (res=> {
+                    this.ctable = res.data
+                  })
+                axios.post("{:url('Api/show_Cancel_sq_ajax')}",{cid: this.cid})
+                  .then (res=> {
+                    this.cancel_show = res.data
+                  })
+                  console.log(this.ctable)
                 break;
               default:
                  
@@ -250,12 +256,14 @@
           initdata:function(){
                    axios.post("{:url('Api/ajax_cemetery')}").then ( response=> {
                         this.list = response.data.data
+                        console.log(this.list)
                   })
           },
          getCategoryId:function(id,status){
                    this.dialogVisible = true;
                    this.usestatus = status;
                    this.cid = id;
+                   console.log(this.cid)
                 axios.post("{:url('Api/Schedulelist')}",{cid: this.cid}).then(res=> {
                        this.Schedulelist = res.data.data
                   })

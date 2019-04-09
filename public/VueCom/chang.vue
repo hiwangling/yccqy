@@ -143,7 +143,7 @@
 
 	 </el-form>
    <div slot="footer" class="dialog-footer">
-        <el-button>取消</el-button>
+        <el-button @click="ChangdialogVisible = false">取消</el-button>
         <el-button type="primary" @click="ChangConfirm">确定</el-button>
           </div>
    </el-dialog>
@@ -199,7 +199,6 @@
             oldcname:'',
             sid:'',
             changid:'',
-            cid:this.cid,
             movetime:'',
             chargeitem:[],
             buyer:'',
@@ -294,6 +293,7 @@
                         })
             },
            ChangConfirm:function(){
+            this.chang.cid = this.cid
            axios.post("../Api/Sellchang_submit_ajax",this.chang)
            .then (res=> {
             if(res.data.code == 0){

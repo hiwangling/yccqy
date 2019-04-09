@@ -364,7 +364,7 @@ function getChargeitem_publictype($id) {
         return "所有";
     }
 }
-
+ 
 function getisInvoic($id) {
     if ($id == 1) {
         return "开票";
@@ -414,3 +414,5 @@ function get_cw_OrderNo($data="1"){
 function getOrderNo(){
 	return date('Ymdhis',TIME_NOW);
 }
+
+ 
