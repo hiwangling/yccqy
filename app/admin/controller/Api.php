@@ -456,8 +456,10 @@ class Api extends AdminBase
             $result = array("code" => 1, "msg" => "参数错误");
             exit(json_encode($result));
         }
+
         $sellwhere["id"] = $this->param['id'];
         $sellinfo = $this->logicSell->getSellInfo($sellwhere);
+           
         if (empty($sellinfo)) {
             $result = array("code" => 1, "msg" => "参数错误");
             exit(json_encode($result));
@@ -466,8 +468,9 @@ class Api extends AdminBase
             $result = array("code" => 0, "msg" => "success");
             exit(json_encode($result));
         }
+  
         $result = $this->logicSell->Buryservice_pay($sellinfo, "2");
-
+  
         exit(json_encode($result));
     }
     

@@ -20,6 +20,7 @@
           size="small"
           type="danger"
           class="ft"
+          @click="settle(scope.row)"
           >结算/打印</el-button>
           <div >
           <el-button
@@ -212,7 +213,12 @@
      fklxvalChange:function(v){
       this.service.fklxval[v] = ''
      },
- 
+     settle(v){
+        axios.post("../Api/Buryservice_pay_ajax",{id: v.id})
+       .then(res => {
+           console.log(res)
+      })
+     },
      serviceDelete:function(row){
     const index = this.service_show_table.indexOf(row)
      this.$confirm("您确认删除吗？", "提示", {}).then(() => {
